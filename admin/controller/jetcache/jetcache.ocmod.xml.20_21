@@ -1,0 +1,15 @@
+<file path="admin/controller/error/permission.php">
+	<operation error="skip">
+        <search position="before"><![CDATA[if (isset($this->request->get]]></search>
+        <add position="before"><![CDATA[
+        if (!is_callable(array($this->cache, 'json_error'))) {
+			$Cache = $this->registry->get('cache');
+			$this->registry->set('cache_old', $Cache);
+			loadlibrary('agoo/cache');
+			$jcCache = new agooCache($this->registry);
+			$jcCache->agooconstruct();
+			$this->registry->set('cache', $jcCache);
+		}
+    ]]></add>
+	</operation>
+</file>

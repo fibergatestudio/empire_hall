@@ -1,0 +1,55 @@
+<div class="instashop">
+    <div class="instashop__main-title">
+        <svg width="34" height="37" viewBox="0 0 34 37" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M23.375 0H10.625C4.75787 0 0 5.17769 0 11.5625V25.4375C0 31.8223 4.75787 37 10.625 37H23.375C29.2421 37 34 31.8223 34 25.4375V11.5625C34 5.17769 29.2421 0 23.375 0ZM30.8125 25.4375C30.8125 29.9006 27.4762 33.5312 23.375 33.5312H10.625C6.52375 33.5312 3.1875 29.9006 3.1875 25.4375V11.5625C3.1875 7.09938 6.52375 3.46875 10.625 3.46875H23.375C27.4762 3.46875 30.8125 7.09938 30.8125 11.5625V25.4375Z" fill="url(#paint0_linear)"/>
+            <path d="M17 9.25C12.3059 9.25 8.5 13.3917 8.5 18.5C8.5 23.6083 12.3059 27.75 17 27.75C21.6941 27.75 25.5 23.6083 25.5 18.5C25.5 13.3917 21.6941 9.25 17 9.25ZM17 24.2812C14.0718 24.2812 11.6875 21.6866 11.6875 18.5C11.6875 15.3111 14.0718 12.7188 17 12.7188C19.9282 12.7188 22.3125 15.3111 22.3125 18.5C22.3125 21.6866 19.9282 24.2812 17 24.2812Z" fill="url(#paint1_linear)"/>
+            <path d="M26.137 9.78847C26.7625 9.78847 27.2696 9.23664 27.2696 8.55591C27.2696 7.87518 26.7625 7.32335 26.137 7.32335C25.5114 7.32335 25.0043 7.87518 25.0043 8.55591C25.0043 9.23664 25.5114 9.78847 26.137 9.78847Z" fill="url(#paint2_linear)"/>
+            <defs>
+                <linearGradient class="paint0_linear" x1="0.641509" y1="19.964" x2="33.1456" y2="19.9401" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#8F6D55"/>
+                    <stop offset="1" stop-color="#4D4444"/>
+                </linearGradient>
+                <linearGradient class="paint1_linear" x1="0.641509" y1="19.964" x2="33.1456" y2="19.9401" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#8F6D55"/>
+                    <stop offset="1" stop-color="#4D4444"/>
+                </linearGradient>
+                <linearGradient id="paint2_linear" x1="0.641509" y1="19.964" x2="33.1456" y2="19.9401" gradientUnits="userSpaceOnUse">
+                    <stop offset="0" stop-color="#8F6D55"/>
+                    <stop offset="1" stop-color="#4D4444"/>
+                </linearGradient>
+            </defs>
+        </svg>
+        {{ heading_title }}
+    </div>
+    <a href="{{ instagram_link }}" class="show-all">{{ hashtag }}</a>
+    <div class="instashop__list">
+        {% for image in images %}
+        <div class="instashop__item">
+            <div class="instashop__image">
+                <img decoding="async" src="{{ image.img }}" width="{{ width }}" height="{{ height }}" alt="">
+            </div>
+            <div class="instashop__box">
+                <div class="instashop__title">
+
+                </div>
+                <div class="instashop__text">
+                    {{ image.description }}
+                </div>
+                <a href="{{ image.link }}" class="instashop__link" target="_blank">{{ text_more_btn }}</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{#<script>#}
+    {#document.addEventListener('DOMContentLoaded', function() {#}
+        {#var access = '{{ token }}',#}
+            {#container = $('.instashop__list');#}
+        {#$.getJSON("https://api.instagram.com/v1/users/self/media/recent?access_token=" + access, function (json) {#}
+            {#for (var i = 0; i < '{{ count }}'; i++) {#}
+                {#container.append('<div class="instashop__item"><div class="instashop__image"><img src="' + json.data[i].images.standard_resolution.url + '" width="{{ width }}" height="{{ height }}" alt="' + json.data[i].caption.from.full_name + '"></div><div class="instashop__box"><div class="instashop__title">' + json.data[i].caption.from.full_name + '</div><div class="instashop__text">' + json.data[i].caption.text + '</div><a href="' + json.data[i].link + '" class="instashop__link" target="_blank">{{ text_more_btn }}</a></div></div>');#}
+            {#}#}
+        {#});#}
+    {#});#}
+{#</script>#}

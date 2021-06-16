@@ -1,0 +1,71 @@
+<div class="basket-popup">
+	<div class="basket-popup__close">
+		<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#close"></use></svg>
+	</div>
+	<div class="basket-popup__top">
+		<div class="basket-popup__top-title">{{ text_cart_list }}</div>
+		<div class="basket-popup__top-text">{{ header_items }}</div>
+	</div>
+	<div class="basket-popup__content">
+		<div class="basket-block__list scroll-text mCustomScrollbar">
+			{% for product in products %}
+				<div class="basket-block__item">
+					<div class="basket-block__delete" onclick="cart.remove('{{ product.cart_id }}');">
+						<svg width="8" height="8" viewBox="0 0 8 8" xmlns="http://www.w3.org/2000/svg">
+							<rect width="0.905089" height="10.4085" transform="matrix(0.707104 -0.707109 0.707104 0.707109 0 0.640045)"/>
+							<rect width="0.905089" height="10.4085" transform="matrix(0.707104 0.707109 -0.707104 0.707109 7.35938 0)"/>
+						</svg>
+					</div>
+					<div class="basket-block__image">
+						<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="{{ product.image }}" width="170" height="170" alt="{{ product.name }}" class="lazyload">
+					</div>
+					<div class="basket-block__main">
+						<div class="basket-block__info">
+							<div class="basket-block__title"><a href="{{ product.href }}">{{ product.name }}</a></div>
+							<div class="basket-block__article">
+								{% if product.option %}
+									{% for option in product.option %}
+										{{ option.value }} /
+									{% endfor %}
+								{% endif %}
+								{{ text_cart_model }}: {{ product.model }}
+							</div>
+							<div class="product-quantity">
+								<button class="product-quantity__button product-quantity__minus incart_dec" data-prod-id="{{ product.cart_id }}" data-quant="{{ product.quantity }}">
+									<svg xmlns="http://www.w3.org/2000/svg" width="7" height="1" viewBox="0 0 7 1"><rect  class="cls-1" width="7" height="1"/></svg>
+								</button>
+								<input class="product-quantity__input" type="number" name="quantity" value="{{ product.quantity }}" min="0" max="999" readonly>
+								<button class="product-quantity__button product-quantity__plus incart_inc" data-prod-id="{{ product.cart_id }}" data-quant="{{ product.quantity }}">
+									<svg xmlns="http://www.w3.org/2000/svg" width="7" height="7" viewBox="0 0 7 7"><path d="M1308,350h7v1h-7v-1Zm3-3h1v7h-1v-7Z" transform="translate(-1308 -347)"/></svg>
+								</button>
+							</div>
+						</div>
+						{% if product.total > 0 %}
+							<div class="basket-block__price">{{ product.total }}</div>
+						{% else %}
+							<div class="basket-block__price no-price">{{ text_no_price }}</div>
+						{% endif %}
+					</div>
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	
+	<div class="basket-popup__bottom">
+		<div class="basket-popup__bottom-inner">
+			{% for total in totals %}
+				<div class="basket-popup__total">
+					<div class="basket-popup__total-text">{{ text_cart_total }}:</div>
+					<div class="basket-popup__total-price">{{ total.text }}</div>
+				</div>
+			{% endfor %}
+			{% if show_no_price %}
+				<div class="basket-popup__alert">
+					<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#info-svg"></use></svg>
+					{{ text_manager }}
+				</div>
+			{% endif %}
+		</div>
+		<a {% if not products %} style="display: none;" {% endif %}href="{{ checkout }}" class="main-button main-button--black ">{{ text_checkout }}</a>
+	</div>
+</div>

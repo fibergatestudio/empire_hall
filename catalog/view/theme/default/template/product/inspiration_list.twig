@@ -1,0 +1,65 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        {% for counter, breadcrumb in breadcrumbs %}
+            {% if counter + 1 < breadcrumbs|length %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% else %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ breadcrumb.text }}</span>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    <div class="head-title">{{ heading_title }}</div>
+</div>
+
+<div class="inspiration-block">
+    {% if page_subtitle %}
+        <div class="inspiration-block__description">{{ page_subtitle }}</div>
+    {% endif %}
+    {% if inspirations %}
+        <div class="inspiration-block__list">
+            {% set counter = 1 %}
+            {% for inspiration in inspirations %}
+                {% if counter == 1 or counter == 4 or counter == 7 or counter == 10 or counter == 13 or counter == 16 or counter == 19 or counter == 22  or counter == 25 %}
+                    <a href="{{ inspiration.href }}" class="inspiration-block__item inspiration-block__item--large">
+                        <div class="inspiration-block__image">
+                            <img decoding="async" src="{{ inspiration.image }}" width="1400" height="680" alt="{{ inspiration.name }}">
+                        </div>
+                        <div class="inspiration-block__box">
+                            <div class="inspiration-block__title">{{ inspiration.name }}</div>
+                            <div class="inspiration-block__text">{{ inspiration.subtext }}</div>
+                        </div>
+                    </a>
+                {% else %}
+                    <a href="{{ inspiration.href }}" class="inspiration-block__item">
+                        <div class="inspiration-block__image">
+                            <img decoding="async" src="{{ inspiration.image_small }}" width="680" height="680" alt="{{ inspiration.name }}">
+                        </div>
+                        <div class="inspiration-block__box">
+                            <div class="inspiration-block__title">{{ inspiration.name }}</div>
+                            <div class="inspiration-block__text">{{ inspiration.subtext }}</div>
+                        </div>
+                    </a>
+                {% endif %}
+                {% set counter = counter + 1 %}
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if page_description %}
+        <div class="inspiration-block__content">
+            <div class="inspiration-block__content-title">{{ heading_title }}</div>
+            <div class="inspiration-block__content-text text scroll-text">
+                <p>{{ page_description }}</p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+{{ footer }}

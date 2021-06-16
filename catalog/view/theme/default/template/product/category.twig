@@ -1,0 +1,169 @@
+{{ header }}
+<main>
+<div class="head-block">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <span itemprop="name">{{ breadcrumb.text }}</span>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <h1 class="head-title">{{ heading_title }}</h1>
+</div>
+
+<div class="catalog">
+  <div class="catalog__sidebar-button main-button">{{ text_filter }}</div>
+  <aside class="catalog__sidebar">
+    {{ column_left }}
+  </aside>
+  <div class="catalog__main">
+    {% if products %}
+      <div class="catalog__top">
+          <div class="catalogue-filters">
+
+
+
+
+
+        <select  class="sorting-select" name="sorting" id="input-sort" onchange="location = this.value;">
+          {% for sortz in sorts %}
+          {% if sortz.value == '%s-%s'|format(sort, order) %}
+            <option value="{{ sortz.href }}" selected="selected">{{ sortz.text }}</option>
+          {% else %}
+            <option value="{{ sortz.href }}">{{ sortz.text }}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+              <div class="catalog__top-info">{{ text_limit }}
+                  <select id="input-limit" class="sorting-select form-control" onchange="location = this.value;">
+                      {% for limits in limits %}
+                          {% if limits.value == limit %}
+                              <option value="{{ limits.href }}" selected="selected">{{ limits.text }}</option>
+                          {% else %}
+                              <option value="{{ limits.href }}">{{ limits.text }}</option>
+
+                          {% endif %}
+                      {% endfor %}
+                  </select>
+              </div>
+
+          </div>
+          <div class="catalog__top-info">{{ text_find }} <span> {{ count_products }}</span></div>
+
+
+
+
+      </div>
+      <div class="catalog__list">
+        {% for product in products %}
+          <div class="product__item">
+            <div class="product__title">
+              <a href="{{ product.href }}">{{ product.name }}</a>
+                <ol class="breadcrumb brand-breadcrumb">
+                    {% if  product.manufacturer_href %}
+                        <li>
+                            <a href="{{ product.manufacturer_href }}"><span>{{ product.manufacturer }}</span></a>
+                        </li>
+                    {% endif %}
+                    {% if product.collection %}
+                        <li>
+                            <a href="{{ product.collection_href }}"><span>{{ product.collection }}</span></a>
+                        </li>
+                    {% endif %}
+                </ol>
+
+            </div>
+
+            <div class="product__image">
+              <a href="{{ product.href }}">
+                <img decoding="async" src="{{ product.image }}" data-src="{{ product.image }}" width="370" height="370" alt="{{ product.name }}" class="lazyload">
+              </a>
+            </div>
+            <div class="product__box">
+              <div class="product__price">
+                {% if product.price > 0 %}
+                    {% if product.special %}
+                      <div class="product__price-old">{{ product.price }}</div>
+                      <div class="product__price-new">{{ product.special }}</div>
+                    {% else %}
+                      <div class="product__price-new">{{ product.price }}</div>
+
+
+                    {% endif %}
+                {% else %}
+                    <div class="product__no-price-btm" onclick="location.href='{{ product.href }}'">{{ text_no_price }}</div>
+
+                    <a style="display: none;" href="#" class="request-price__button">
+                        <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M23.6284 12.7614C23.4325 12.7426 23.2584 12.8863 23.2396 13.0823C22.9908 15.6816 21.835 18.1319 19.9853 19.9818C18.1553 21.8115 15.8318 22.9303 13.2659 23.2174C10.7748 23.4961 8.23321 22.9323 6.10924 21.63C5.94132 21.527 5.72193 21.5797 5.61903 21.7475C5.51613 21.9153 5.56875 22.1348 5.73657 22.2377C7.61787 23.3913 9.80672 23.9999 12.0158 23.9999C12.4588 23.9999 12.9029 23.9754 13.3453 23.9259C14.6687 23.7778 15.9473 23.4148 17.1455 22.8468C18.3853 22.2591 19.5104 21.4648 20.4894 20.4859C22.456 18.5193 23.6847 15.9141 23.9493 13.1502C23.968 12.9543 23.8244 12.7802 23.6284 12.7614Z" fill="url(#paint0_linear)"/>
+                            <path d="M20.039 6.27574C20.0474 6.27631 20.0557 6.27664 20.064 6.27664C20.2496 6.27664 20.4062 6.13282 20.4192 5.94485L20.5139 4.57927C22.2273 6.54032 23.2074 9.01981 23.2902 11.6414C23.2963 11.8344 23.4546 11.9866 23.6463 11.9866C23.6501 11.9866 23.6539 11.9866 23.6577 11.9864C23.8545 11.9802 24.009 11.8156 24.0027 11.6189C23.9153 8.85237 22.8884 6.23467 21.0919 4.15718L22.3713 4.24591C22.5668 4.25936 22.7379 4.11136 22.7516 3.91498C22.7652 3.71859 22.617 3.54834 22.4206 3.5347L20.2394 3.38342C20.0437 3.36992 19.8728 3.51797 19.8592 3.71436L19.7079 5.89551C19.6944 6.09185 19.8425 6.2621 20.039 6.27574Z" fill="url(#paint1_linear)"/>
+                            <path d="M3.9741 17.7242C3.77777 17.7106 3.60747 17.8588 3.59383 18.0552L3.49916 19.4209C1.6998 17.3646 0.716825 14.7581 0.716825 12.0001C0.716825 8.98501 1.89105 6.15026 4.0232 4.01806C5.85284 2.18843 8.17619 1.06957 10.742 0.782501C13.233 0.50375 15.7747 1.06757 17.8986 2.36993C18.0666 2.47293 18.286 2.42022 18.3889 2.2524C18.4918 2.08458 18.4391 1.86509 18.2713 1.76219C16.0128 0.377278 13.3104 -0.222287 10.6628 0.0740021C9.33934 0.222052 8.0608 0.585118 6.86266 1.15308C5.6229 1.74076 4.49796 2.53505 3.51903 3.51393C1.25223 5.78078 0.00390625 8.79457 0.00390625 12.0001C0.00390625 14.9113 1.03365 17.664 2.92055 19.8427L1.64172 19.754C1.44533 19.7402 1.27509 19.8886 1.26145 20.085C1.24785 20.2814 1.396 20.4516 1.59243 20.4652L3.77358 20.6165C3.782 20.6171 3.79031 20.6174 3.79858 20.6174C3.98418 20.6174 4.14079 20.4736 4.15386 20.2856L4.30514 18.1045C4.31868 17.9081 4.17054 17.7378 3.9741 17.7242Z" fill="url(#paint2_linear)"/>
+                            <path d="M13.5023 11.4876C13.0782 11.2447 12.6273 11.0597 12.1809 10.8677C11.9219 10.7566 11.6742 10.6271 11.4554 10.4467C11.0246 10.0904 11.1072 9.51215 11.6117 9.28314C11.7545 9.21837 11.9041 9.19755 12.0559 9.1883C12.6407 9.15592 13.1965 9.26695 13.7255 9.53065C13.9889 9.6625 14.076 9.62086 14.1652 9.33634C14.259 9.03563 14.3371 8.73029 14.4242 8.42727C14.4822 8.22371 14.4108 8.08955 14.2255 8.00396C13.8862 7.84898 13.538 7.73794 13.1719 7.6778C12.6943 7.60147 12.6943 7.59915 12.692 7.10182C12.6898 6.40093 12.6898 6.40093 12.0112 6.40093C11.913 6.40093 11.8148 6.39862 11.7166 6.40093C11.3996 6.41018 11.346 6.46801 11.3371 6.7988C11.3327 6.94684 11.3371 7.09488 11.3349 7.24524C11.3327 7.68474 11.3304 7.6778 10.9242 7.83047C9.94203 8.20058 9.33489 8.89453 9.27016 10.0049C9.21212 10.9879 9.70766 11.6518 10.4867 12.1353C10.9666 12.4337 11.4978 12.6095 12.0068 12.8431C12.2054 12.9333 12.3952 13.0374 12.5603 13.1808C13.0492 13.5995 12.9599 14.2958 12.3795 14.5595C12.0693 14.7006 11.7411 14.7353 11.4041 14.6913C10.884 14.6243 10.3862 14.4832 9.91748 14.231C9.64292 14.083 9.56257 14.1223 9.46882 14.4299C9.38846 14.696 9.31703 14.9643 9.2456 15.2326C9.14962 15.5935 9.18533 15.6791 9.51792 15.8479C9.94203 16.0607 10.3952 16.1695 10.8572 16.2458C11.2188 16.3059 11.23 16.3221 11.2344 16.7107C11.2367 16.8865 11.2367 17.0646 11.2389 17.2404C11.2411 17.4625 11.3438 17.5921 11.5648 17.5967C11.8148 17.6013 12.067 17.6013 12.317 17.5944C12.5224 17.5897 12.6273 17.4741 12.6273 17.259C12.6273 17.0184 12.6385 16.7755 12.6295 16.5349C12.6184 16.2897 12.7211 16.1648 12.9487 16.1001C13.4733 15.952 13.9197 15.6606 14.2635 15.2257C15.2188 14.0228 14.855 12.2625 13.5023 11.4876Z" fill="url(#paint3_linear)"/>
+                            <defs>
+                                <linearGradient class="paint0_linear" x1="5.91328" y1="18.8246" x2="23.4889" y2="18.8016" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#8F6D55"/>
+                                    <stop offset="1" stop-color="#4D4444"/>
+                                </linearGradient>
+                                <linearGradient class="paint1_linear" x1="19.7881" y1="8.02503" x2="23.895" y2="8.02339" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#8F6D55"/>
+                                    <stop offset="1" stop-color="#4D4444"/>
+                                </linearGradient>
+                                <linearGradient id="paint2_linear" x1="0.351785" y1="11.1245" x2="17.9782" y2="11.1119" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#8F6D55"/>
+                                    <stop offset="1" stop-color="#4D4444"/>
+                                </linearGradient>
+                                <linearGradient id="paint3_linear" x1="9.30488" y1="12.4431" x2="14.6585" y2="12.4409" gradientUnits="userSpaceOnUse">
+                                    <stop offset="0" stop-color="#8F6D55"/>
+                                    <stop offset="1" stop-color="#4D4444"/>
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                        <span>{{ text_get_price }}</span>
+                    </a>
+
+                {% endif %}
+
+              </div>
+
+                <span class="product-nav ">
+               <span data-id="{{ product.product_id }}" class="{% if product.is_wishlist %}active{% endif %} add-wishlist product__link link-favorite {% if not logged %} loginza {% endif %}" {% if logged %} onclick="{% if product.is_wishlist %} wishlist.remove('{{ product.product_id }}');  {% else %}wishlist.add('{{ product.product_id }}'); {% endif %}"  {% endif %}>
+                  <svg>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#wishlist"></use>
+                  </svg>
+                </span>
+                <a class="product__link" href="{{ product.href }}">
+                  <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#link-arrow"></use></svg>
+                </a>
+              </span>
+
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <div class="catalog__top no_products">{{ text_empty_cat }}</div>
+    {% endif %}
+
+    {{ pagination }}
+
+    {% if description %}
+      <div class="contacts-block">
+        <div class="contacts-block__title">{{ h1 }}</div>
+        <div class="contacts-block__text text scroll-text">
+          {{ description }}
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+</main>
+<script src="catalog/view/javascript/ocfilter/ocfilter.js"></script>
+{{ footer }}

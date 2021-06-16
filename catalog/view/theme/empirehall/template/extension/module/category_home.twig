@@ -1,0 +1,24 @@
+{% if categories %}
+	<div class="main-catalog lazyload" data-bg="catalog/view/theme/empirehall/data/main-catalog-bg.webp">
+		<div class="main-catalog__inner">
+			<div class="main-subtitle main-subtitle--silver">{{ heading_title }}</div>
+			<div class="main-catalog__top">
+				<div class="main-catalog__top-image">
+					<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="catalog/view/theme/empirehall/data/title-img.svg" width="575" height="51" alt="" class="lazyload">
+				</div>
+				<a class="show-all" href="{{ categories_link }}">{{ text_all_categories }}</a>
+			</div>
+			<div class="main-catalog__list">
+				{% for category in categories %}
+					<a href="{{ category.href }}" class="main-catalog__item">
+						<div class="main-catalog__image">
+							<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="{{ category.image }}" width="430" height="524" alt="" class="lazyload">
+							<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#catalog-decore"></use></svg>
+						</div>
+						<div class="main-catalog__title">{{ category.name }}</div>
+					</a>
+					{% endfor %}
+			</div>
+		</div>
+	</div>
+{% endif %}

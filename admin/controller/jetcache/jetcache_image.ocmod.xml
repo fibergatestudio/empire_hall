@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{NAME}</name>
+    <id>{NAME}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <code>{MOD}</code>
+    <link>https://opencartadmin.com</link>
+
+<file path="catalog/model/tool/image.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)image->save[(]DIR_IMAGE(.*?)[;]~]]></search>
+        <add position="replace"><![CDATA[
+$1image->save(DIR_IMAGE$2;
+
+		        if ($this->registry->get('seocms_cache_status')) {
+					if ($this->registry->get('controller_jetcache_jetcache')) {
+						if (SC_VERSION < 23 && isset($new_image)) $jc_newimage = $new_image; else $jc_newimage = $image_new;
+						$this->controller_jetcache_jetcache->hook_image($jc_newimage);
+					}
+				}
+    ]]></add>
+	</operation>
+</file>
+
+<file path="catalog/model/tool/image.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)copy[(]DIR_IMAGE(.*?)[;]~]]></search>
+        <add position="replace"><![CDATA[
+$1copy(DIR_IMAGE$2;
+
+		        if ($this->registry->get('seocms_cache_status')) {
+					if ($this->registry->get('controller_jetcache_jetcache')) {
+						if (SC_VERSION < 23 && isset($new_image)) $jc_newimage = $new_image; else $jc_newimage = $image_new;
+						$this->controller_jetcache_jetcache->hook_image($jc_newimage);
+					}
+				}
+    ]]></add>
+	</operation>
+</file>
+
+</modification>

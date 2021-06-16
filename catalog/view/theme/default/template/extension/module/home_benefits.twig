@@ -1,0 +1,33 @@
+{% if triggers %}
+    <div class="main-advantages" style="background-image: url(front/dist/data/main-catalog-bg.png);">
+        <div class="main-advantages__inner">
+            <div class="main-subtitle main-subtitle--silver">{{ heading_title }}</div>
+            <div class="main-advantages__top">
+                <div class="main-advantages__main-image">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="front/dist/data/title-img.svg" width="575" height="51" alt="{{ heading_title }}" class="lazyload">
+                </div>
+                <div class="main-advantages__navigation">
+                    <div class="prev-arrow"></div>
+                    <div class="next-arrow"></div>
+                </div>
+            </div>
+            {% if triggers %}
+                <div class="main-advantages__list">
+                    {% for trigger in triggers %}
+                        <div class="main-advantages__item" style="background-image: url(front/dist/data/advantages-bg.png);">
+                        <div class="main-advantages__box">
+                            <div class="main-advantages__image">
+                                <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="image/{{ trigger.image }}" width="80" height="109" alt="{{ trigger.title }}" class="lazyload">
+                            </div>
+                            <div class="main-advantages__title">{{ trigger.title }}</div>
+                            {% if trigger.description %}
+                                <div class="main-advantages__text">{{ trigger.description }}</div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endif %}

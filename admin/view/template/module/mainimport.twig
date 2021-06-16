@@ -1,0 +1,106 @@
+﻿{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <a href="{{ cancel }}" data-toggle="tooltip" title="Назад" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+		<ul class="breadcrumb">
+			{% for breadcrumb in breadcrumbs %}
+				<li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+			{% endfor %}
+		</ul>
+		{% if error_warning %}
+		<div class="warning">{{ error_warning }}</div>
+		{% endif %}
+    </div>
+  </div>
+  <div class="panel">
+    <style>
+		#ajaxyForm { margin-top: 10px;}
+		#info {margin-bottom: 10px; padding: 3px; display: none;}
+		#datails {display: none;}
+		.padding30{padding: 30px;}
+    </style>
+
+      <div class="panel-heading">
+
+      </div>
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-general" data-toggle="tab">Импорт во временное хранение</a></li>
+            <li><a href="#tab-data" data-toggle="tab">Генерация товара</a></li>
+          </ul>
+
+
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-general">
+				<div class="padding30">
+					<div id="progress-bar"></div>
+					{% if filenow %}
+						<button id="importstart">Начать импорт</button>
+					{% else %}
+						<form action="{{ form_link }}" method="post" enctype="multipart/form-data">
+							<b>Выберите файл Excel</b><br />
+							<input name="userfile" type="file"><br />
+							<input type="hidden" name="update" value="OK" />
+							<input type="submit" value="Загрузить" /><br />
+					   </form>
+					{% endif %}
+					<div id="content">
+						<br /><br />
+						Всего на данный момент во временном хранении строк - {{ fields }}
+					</div>
+				</div>
+			</div>
+			<div class="tab-pane" id="tab-data">
+				<div class="padding30">
+					<div id="progress-bar2"></div>
+					<button id="gener">Генерировать товар</button>
+					<div id="content">
+						<br /><br />
+						Всего на данный момент во временном хранении строк - {{ fields }}
+					</div>
+				</div>
+			</div>
+		  </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function () {
+	$('#importstart').on('click', function () {
+		$("#progress-bar").html("<p>Идет процесс обработки, подождите...</p>");
+		repeat_import();
+	});
+	$('#gener').on('click', function () {
+		$("#progress-bar2").html("<p>Идет процесс обработки, подождите...</p>");
+		repeat_gener();
+	});
+
+});
+
+function repeat_import() {
+	$.ajax({
+			url: "{{ form_link_ajax }}",
+			async: false,
+			success: function(data, textStatus){
+				$("#content").html("<h2>Импорт завершен!</h2>");
+				setInterval("fresh()",1500);
+			},
+	});
+}
+function fresh() {
+    location.reload();
+}
+function repeat_gener() {
+	$.ajax({
+			url: "{{ form_link_gener_ajax }}",
+            async: false,
+			success: function(data, textStatus){
+				$("#content").html("<h2>Генерация завершена!</h2>");
+				setInterval("fresh()",2000);
+			}
+	});
+}
+</script>
+{{ footer }}

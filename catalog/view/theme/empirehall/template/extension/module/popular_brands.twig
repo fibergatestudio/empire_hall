@@ -1,0 +1,16 @@
+<div class="popular-brands">
+    <div class="popular-brands__main-title">{{ text_popular_brand }}</div>
+    <div class="popular-brands__slider">
+        {% for brand in brands %}
+            <a href="{{ brand.href }}" class="popular-brands__slide">
+                <div class="popular-brands__image">
+                    <img decoding="async" src="{{ brand.image }}" width="446" height="446" alt="{{ brand.name }}">
+                </div>
+                <div class="popular-brands__box">
+                    <div class="popular-brands__title">{{ brand.name }}</div>
+                    <div class="popular-brands__text">{{ brand.subtext }}</div>
+                </div>
+            </a>
+        {% endfor %}
+    </div>
+</div>

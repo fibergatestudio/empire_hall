@@ -1,0 +1,147 @@
+{{ header }}
+
+
+<div class="head-block">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        {% for counter, breadcrumb in breadcrumbs %}
+            {% if counter + 1 < breadcrumbs|length %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% else %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ breadcrumb.text }}</span>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    <div class="head-title">{{ heading_title }}</div>
+</div>
+
+
+<div class="search-page">
+    <div class="search-page__form">
+
+        <input type="text" name="search" value="{{ search }}" placeholder="{{ text_keyword }}" id="input-search"
+               class="form-control"/>
+        <button>
+            <svg class="search-btn">
+                <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/images/sprite.svg#search"></use>
+            </svg>
+        </button>
+        <input style="display: none;" type="button" value="{{ text_search }}" id="button-search" class="btn btn-primary">
+    </div>
+    <div class="search-page__found">
+        {{ count_resault }}
+    </div>
+    {% if product_listing %}
+        <div class="search-page__content">
+
+            {{ product_listing }}
+
+            {{ pagination }}
+
+        </div>
+
+    {% else %}
+
+
+        <div class="not-found">
+            <img decoding="async" src="/front/dist/images/not-found.svg" alt="">
+            <div class="title">{{ text_empty2 }}</div>
+            <div class="text">{{ text_empty3 }}</div>
+        </div>
+
+    {% endif %}
+
+
+</div>
+
+
+<script type="text/javascript"><!--
+    $('#button-search').bind('click', function () {
+        url = '{{csp_search_url}}';
+
+        var search = $('.search-page input[name=\'search\']').prop('value');
+
+        if (search) {
+            
+      if (url.indexOf('?') > -1) {
+        url += '&search=' + encodeURIComponent(search);
+      } else {
+        url += '?search=' + encodeURIComponent(search);
+      }
+      
+        }
+
+        var category_id = $('.search-page select[name=\'category_id\']').prop('value');
+
+        if (category_id > 0) {
+            url += '&category_id=' + encodeURIComponent(category_id);
+        }
+
+        var sub_category = $('.search-page input[name=\'sub_category\']:checked').prop('value');
+
+        if (sub_category) {
+            url += '&sub_category=true';
+        }
+
+        var filter_description = $('.search-page input[name=\'description\']:checked').prop('value');
+
+        if (filter_description) {
+            url += '&description=true';
+        }
+
+        location = url;
+    });
+
+    $('.search-page input[name=\'search\']').bind('keydown', function (e) {
+        if (e.keyCode == 13) {
+            $('#button-search').trigger('click');
+        }
+    });
+
+    $('select[name=\'category_id\']').on('change', function () {
+        if (this.value == '0') {
+            $('input[name=\'sub_category\']').prop('disabled', true);
+        } else {
+            $('input[name=\'sub_category\']').prop('disabled', false);
+        }
+    });
+
+    $('select[name=\'category_id\']').trigger('change');
+    --></script>
+
+{% if ee_tracking and ee_impression %}
+    <script type="text/javascript"><!--
+        $(document).ready(function() {
+            setIntervalEE(function() {
+                var ee_data = JSON.parse('{{ ee_impression_data }}');
+                ee_data['url'] = window.location.href;
+                ee_data['title'] = document.title;
+                $.ajax({
+                    url: 'index.php?route=extension/module/ee_tracking/listview',
+                    type: 'post',
+                    data: ee_data,
+                    dataType: 'json',
+                    success: function(json) {
+                        if (json) {
+                            console.log(json);
+                        }
+                    },
+                    {% if ee_impression_log %}
+                    error: function(xhr, exc, error) {
+                        $.post('index.php?route=extension/module/ee_tracking/listviewlog', { 'error': error + ' (exc: ' + exc + ' status: ' + xhr.statusText + ')', 'url': window.location.href }, function( logs ) {
+                            console.log(logs);
+                        });
+                    }
+                    {% endif %}
+                });
+            }, {% if ee_ga_callback %}{{ ee_ga_callback }}{% else %}0{% endif %}, {% if ee_generate_cid %}{{ ee_generate_cid }}{% else %}0{% endif %});
+        });
+        //--></script>
+{% endif %}
+{{ footer }}
+			

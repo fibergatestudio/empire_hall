@@ -1,0 +1,129 @@
+<style type="text/css">
+  .cache_panel{
+    background-color: {{ cache_background }};
+    border-color: {{ cache_background }};
+    bottom:0;
+    height: auto;
+    z-index: 2000;
+    vertical-align: center;
+    text-align: center;
+    padding: 30px 30px 30px 30px;
+    width: 100%;
+  }.cache_panel_msg {
+   color: {{ cache_color }};
+   font-size: 16px;
+  }
+  .wk-demo-bar-module {
+    margin-top: 10px !important;
+   }
+   {% if cache_position == 'bottom' %}
+    .cache_panel {
+      bottom: 0px;
+      position: fixed;
+    }
+  {% endif %}
+  {% if cache_position == 'top' %}
+  .cache_panel {
+    top: 0px;
+    position: sticky;
+  }
+  {% endif %}
+
+</style>
+
+
+<div class="cache_panel col-sm-12">
+  <div class="cache_panel_msg col-sm-8">
+    <div class="col-sm-8">{{ cache_message }}</div>
+      {% if cache_expiretime_show is defined and cache_expiretime_show %}
+      <div class="col-sm-4">
+        <div id="countdown_dashboard_cache" class="time_container">
+
+            <div class="dash">
+
+              <div class="digit_container weeks_dash">
+                <div class="digit">0</div><div class="digit">0</div>
+              </div>
+            </div>
+
+            <div class="dash">
+
+              <div class="digit_container days_dash">
+                <div class="digit">0</div><div class="digit">0</div>
+              </div>
+            </div>
+
+            <div class="dash">
+
+              <div class="digit_container hours_dash">
+                <div class="digit">0</div><div class="digit">0</div>
+              </div>
+            </div>
+
+            <div class="dash">
+
+              <div class="digit_container minutes_dash">
+                <div class="digit">0</div><div class="digit">0</div>
+              </div>
+            </div>
+
+            <div class="dash">
+
+              <div class="digit_container seconds_dash">
+                <div class="digit">0</div><div class="digit">0</div>
+              </div>
+            </div>
+
+          </div>
+            {% set date_time = cache_clear_date_time|split(' ') %}
+            {% set date = date_time[0]|split('-') %}
+            {% set time = date_time[1]|split(':') %}
+          </div>
+      {% endif %}
+  </div>
+  <div style="float:right;">
+    {% if clear_cache_status is defined and clear_cache_status %}
+      <button class="btn btn-danger" type="button" id="clear_cache" style="background-color:#f56b6b;background-image:none;"><i class="fa fa-eraser" aria-hidden="true"></i>{{ "Clear Cache" }}</button>
+    {% endif %}
+  </div>
+</div>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jstimezonedetect/1.0.7/jstz.min.js'></script>
+<script src="catalog/view/javascript/jquery.lwtCountdown-1.0.js"></script>
+<script>
+  $(document).ready(function() {
+	  timezone = jstz.determine();
+		var customer_timezone = timezone.name();
+    document.cookie = escape("demo_timezone") + "=" + customer_timezone + "; path=/";
+    
+    var date  = "{{ cache_clear_date_time_twig }}";
+    $("#countdown_dashboard_cache").countdown(date, function(event) {
+      $(this).text(
+        event.strftime('%D days %H:%M:%S')
+      );
+    });
+	});
+</script>
+
+
+<script type="text/javascript">
+  $(document).on('click',"#clear_cache", function(){
+    $.ajax({
+      url: 'index.php?route=common/oc_cache/clear',
+      dataType: "json",
+      cache: false,
+      success:function(json){
+        $(".cache_panel_msg").find(".alert").remove();
+        if(json){
+          $(".cache_panel_msg").prepend('<div class="alert alert-success col-sm-5"> <i class="fa fa-check-circle"></i>  Cache clear successfully!   <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+          setTimeout(function(){
+            location.reload();
+          }, 2000);
+        }
+      },
+      error: function (xhr, msg) {
+        console.log(msg + '\n' + xhr.responseText);
+      },
+    });
+  });
+</script>

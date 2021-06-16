@@ -1,0 +1,47 @@
+{% if banners %}
+	<div class="main-section"> 
+		<div class="main-section__slider">
+			{% for banner in banners %}
+				<a href="{% if banner.link %}{{ banner.link }}{% else %}javascript:void(0);{% endif %}" class="main-section__slide">
+					<!--
+					<img src="{% if (not isMobile) and (not isTablet) %}{{ banner.image }}{% elseif (not isMobile) and (isTablet) %}{{ banner.image_lg }}{% else %}{{ banner.image_sm }}{% endif %}" class="img-main-banner">
+					-->
+					{% if  banner.title  %}
+						<div class="shadow"></div>
+					{% endif %}
+					<div class="main-section__content" style="opacity: 0;">
+						<div class="main-section__title">{{ banner.title }}</div>
+						<div class="main-section__text">{{ banner.description }}</div>
+						{% if banner.link %}
+							<div class="main-section__button">
+								<span>
+									<svg viewBox="0 0 100 100" style="display: block; width: 100%;">
+										<path d="M 50,50 m 0,-49.5 a 49.5,49.5 0 1 1 0,99 a 49.5,49.5 0 1 1 0,-99" stroke="#fff" stroke-width="1" fill-opacity="0" ></path>
+									</svg>
+								</span>
+								{{ text_to_catalog }}
+							</div>
+						{% endif %}
+					</div>
+				</a>
+			{% endfor %}
+		</div>
+	</div>
+	
+	<script>
+		html = '<style>';
+	</script>
+    {% for i,banner in banners %}
+        {% if banner.image %}
+            <script>
+				html += '.main-section__slider .main-section__slide[data-slick-index="{{ i }}"]{ background: url("{{ banner.image }}") no-repeat center; } @media only screen and (max-width: 1364px){ .main-section__slider .main-section__slide[data-slick-index="{{ i }}"]{ background: url("{{ banner.image_lg }}") no-repeat center; } } @media only screen and (max-width: 991px){ .main-section__slider .main-section__slide[data-slick-index="{{ i }}"]{ background: url("{{ banner.image_md }}") no-repeat center; } } @media only screen and (max-width: 480px){ .main-section__slider .main-section__slide[data-slick-index="{{ i }}"]{ background: url("{{ banner.image_sm }}") no-repeat center; } }';
+            </script>
+        {% endif %}
+    {% endfor %}
+	<script>
+		html += '</style>';
+		$('head').append(html);
+	</script>
+	
+{% endif %}
+

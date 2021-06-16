@@ -1,0 +1,29 @@
+<?php
+// Text
+$_['text_subject']          = '%s - замовлення %s';
+$_['text_greeting']         = 'Благодарим за интерес к товарам %s . Ваш заказ получен и поступит в обработку в ближайшее время.';
+$_['text_link']             = 'Для просмотра Вашего заказа перейдите по ссылке:';
+$_['text_order_detail']     = 'Інформація про замовлення';
+$_['text_instruction']      = 'Инструкции';
+$_['text_order_id']         = '№ замовлення:';
+$_['text_date_added']       = 'Дата замовлення:';
+$_['text_order_status']     = 'Статус заказа:';
+$_['text_payment_method']   = 'Способ оплаты:';
+$_['text_shipping_method']  = 'Способ доставки:';
+$_['text_email']            = 'Email:';
+$_['text_telephone']        = 'Телефон:';
+$_['text_ip']               = 'IP-адрес:';
+$_['text_payment_address']  = 'Адрес плательщика';
+$_['text_shipping_address'] = 'Адрес доставки';
+$_['text_products']         = 'Товары';
+$_['text_product']          = 'Товар';
+$_['text_model']            = 'Артикул';
+$_['text_quantity']         = 'Количество';
+$_['text_price']            = 'Цена';
+$_['text_order_total']      = 'Заказ итого';
+$_['text_total']            = 'Итого';
+$_['text_download']         = 'После подтверждения оплаты, загружаемые товары будут доступны по ссылке:';
+$_['text_comment']          = 'Комментарий к Вашему заказу:';
+$_['text_footer']           = 'Если у Вас есть какие-либо вопросы, ответьте на это сообщение.';
+$_['text_order_copy']       = '%s EmpireHall. Все права защищены';
+$_['text_order_name']       = 'Имя:';

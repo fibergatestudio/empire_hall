@@ -1,0 +1,56 @@
+{% if inspirations %}
+	<div class="main-inspiration">
+		<div class="main-inspiration__subtitle">{{ heading_title }}</div>
+		<ul class="main-inspiration__nav-list">
+			{% for inspiration in inspirations %}
+				<li class="main-inspiration__nav-item">{{ inspiration.name }}</li>
+			{% endfor %}
+		</ul>
+		<div class="main-inspiration__slider">
+			{% for inspiration in inspirations %}
+				<div class="main-inspiration__slide">
+					<div class="main-inspiration__slide-image">
+						<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="{{ inspiration.image }}" width="895" height="604" alt="{{ inspiration.name }}" class="lazyload">
+					</div>
+					{% if inspiration.products %}
+						<div class="main-inspiration__products">
+							{% for product in inspiration.products %}
+								<div class="product__item">
+									<div class="product__title">
+										<a href="{{ product.href }}">{{ product.name }}</a>
+									</div>
+									<div class="product__image">
+										<a href="{{ product.href }}">
+											<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="{{ product.image }}" width="370" height="370" alt="{{ product.name }}" class="lazyload">
+										</a>
+									</div>
+									<div class="product__box">
+										{% if product.price > 0 %}
+												<div class="product__price">
+													{% if product.special %}
+														<div class="product__price-old">{{ product.price }}</div>
+														<div class="product__price-new">{{ product.special }}</div>
+													{% else %}
+														<div class="product__price-new">{{ product.price }}</div>
+													{% endif %}
+												</div>
+										{% else %}
+											<div class="product__price">
+												<div class="product__no-price-text">{{ text_no_price }}</div>
+												<div class="product__no-price-btm popup-open" data-for="popup-callback">{{ text_get_price }}</div>
+											</div>
+										{% endif %}
+										<a class="product__link" href="{{ product.href }}">
+											<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#link-arrow"></use></svg>
+										</a>
+									</div>
+								</div>
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+				{% endfor %}
+		</div>
+		<a class="show-all" href="{{ inspiration_link }}">{{ text_all_combinations }}</a>
+	</div>
+{% endif %}

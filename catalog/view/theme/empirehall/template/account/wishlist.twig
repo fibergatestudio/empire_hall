@@ -1,0 +1,111 @@
+{{ header }}
+
+<div class="head-block">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <span itemprop="name">{{ breadcrumb.text }}</span>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="head-title">{{ heading_title }}</div>
+</div>
+
+<div class="area">
+
+  {{ column_left }}
+
+  {% if products %}
+    <div class="area__main">
+    <div class="area__top">
+      <div class="area__title">{{ heading_title_wish }}</div>
+    </div>
+    <div class="wishlist__list">
+      {% for product in products %}
+        <div class="product__item" data-id="{{ product.product_id }}">
+        <div class="product__remove" onclick="wishlist.removeOnPage({{ product.product_id }})">
+          <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#close"></use></svg>
+          {{ column_action }}
+        </div>
+        <div class="product__title">
+          <a href="{{ product.href }}">{{ product.name }}</a>
+            <ol class="breadcrumb brand-breadcrumb">
+                {% if  product.manufacturer_href %}
+                    <li>
+                        <a href="{{ product.manufacturer_href }}"><span>{{ product.manufacturer }}</span></a>
+                    </li>
+                {% endif %}
+                {% if product.collection %}
+                    <li>
+                        <a href="{{ product.collection_href }}"><span>{{ product.collection }}</span></a>
+                    </li>
+                {% endif %}
+            </ol>
+
+        </div>
+        <div class="product__image">
+          <a href="{{ product.href }}">
+            <img decoding="async" src="{{ product.thumb }}" width="370" height="370" alt="{{ product.name }}">
+          </a>
+        </div>
+          <div class="product__box">
+              <div class="product__price">
+                  {% if product.price > 0 %}
+                      {% if product.special %}
+                          <div class="product__price-old">{{ product.price }}</div>
+                          <div class="product__price-new">{{ product.special }}</div>
+                      {% else %}
+                          <div class="product__price-new">{{ product.price }}</div>
+                      {% endif %}
+                  {% else %}
+                      <div class="product__no-price-btm" onclick="location.href='{{ product.href }}'">{{ text_no_price }}</div>
+                  {% endif %}
+              </div>
+              <span class="product-nav">
+             <span data-id="{{ product.product_id }}" class="{% if product.is_wishlist %}active{% endif %} add-wishlist product__link link-favorite {% if not logged %} loginza {% endif %}" {% if logged %} onclick="{% if product.is_wishlist %} wishlist.remove('{{ product.product_id }}');  {% else %}wishlist.add('{{ product.product_id }}'); {% endif %}"  {% endif %}>
+                  <svg>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#wishlist"></use>
+                  </svg>
+                </span>
+            <a class="product__link" href="{{ product.href }}">
+              <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#link-arrow"></use></svg>
+            </a></span>
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+    <div class="area__main">
+      <div class="area__top">
+        <div class="area__title">{{ heading_title_wish }}</div>
+      </div>
+      <div class="clear-block">
+        <div class="clear-block__image">
+          <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#clear-block-img"></use></svg>
+        </div>
+        <div class="clear-block__content">
+          <div class="clear-block__title">{{ text_empty_wish }}</div>
+          <div class="clear-block__text">
+            {{ text_empty_wish2 }}
+          </div>
+          <div class="clear-block__contacts">
+            <a href="tel:{{ phone }}">{{ phone }}</a>
+            <a href="tel:{{ phone2 }}">{{ phone2 }}</a>
+          </div>
+          <a class="main-button" href="{{ shopping }}">{{ text_to_catalog }}</a>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+
+{{ footer }}

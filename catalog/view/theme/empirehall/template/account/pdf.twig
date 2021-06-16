@@ -1,0 +1,49 @@
+{{ header }}
+
+<div class="head-block">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        {% for counter, breadcrumb in breadcrumbs %}
+            {% if counter + 1 < breadcrumbs|length %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% else %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ breadcrumb.text }}</span>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    <div class="head-title">{{ heading_title }}</div>
+</div>
+
+<div class="area">
+    {{ column_left }}
+    <div class="area__main">
+        <div class="area__top">
+            <div class="area__title">{{ heading_title_pdf }}</div>
+        </div>
+        {% if catalogs %}
+            <div class="pdf-block__list">
+                {% for catalog in catalogs %}
+                    <div class="pdf-block__item">
+                        <a href="{{ catalog.href }}" target="_blank" class="pdf-block__image">
+                            <img decoding="async" src="{{ catalog.image }}" width="452" height="320" alt="{{ catalog.title }}">
+                        </a>
+                        <div class="pdf-block__title">{{ catalog.title }}</div>
+                        <a class="pdf-block__link" href="{{ catalog.href }}" download="">
+
+                            <img decoding="async" class="icon-pdf" src="/front/dist/images/pdf.svg" alt="">
+                            <span>{{ text_download }}</span>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+</div>
+
+{{ footer }}

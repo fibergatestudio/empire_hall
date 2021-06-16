@@ -1,0 +1,20 @@
+<div class="delivery-block__content">
+	<div class="form-block" id="wrap_np_city">
+		<label>{{ text_checkout_label_city }}*</label>
+		<select name="city_ref" id="city" class="search-select" data-search="{{ text_search_city }}" data-error="{{ text_search_region_not }}">
+			<option value="0"{% if city_ref is not defined %} selected="selected"{% endif %}>{{ text_checkout_select_city }}</option>
+			{% for city in cities %}
+				<option value="{{ city.ref }}"{% if city_ref == city.ref %} selected="selected"{% endif %}>{{ city.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="form-block" id="wrap_np_warehouses">
+		<label>{{ text_checkout_label_wh }}*</label>
+		<select name="warehouse_ref" id="department" class="search-select" data-search="{{ text_search_depart }}" data-error="{{ text_search_region_not }}">
+			<option value="0"{% if warehouse_ref is not defined %} selected="selected"{% endif %}>{{ text_checkout_select_wh }}</option>
+			{% for warehouse in warehousies %}
+				<option value="{{ warehouse.ref }}"{% if warehouse_ref == warehouse.ref %} selected="selected"{% endif %}>{{ warehouse.name }}</option>
+			{% endfor %}
+		</select>
+	</div>
+</div>

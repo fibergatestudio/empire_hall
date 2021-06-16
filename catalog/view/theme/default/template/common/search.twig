@@ -1,0 +1,32 @@
+
+
+<div id="search" class="header-search">
+  <div class="header-search__container">
+    <label for="header-search-input" class="header-search__content">
+
+      <input id="header-search-input" type="text" name="search" value="{{ search }}" placeholder="" class="form-control input-lg" />
+      <span class="search-btn">
+              <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#search"></use></svg>
+            </span>
+      <span class="search-text">{{ text_search }}...</span>
+
+    </label>
+    <span class="icon-close" style="display: none;">
+            <svg class="">
+              <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#close"></use>
+            </svg>
+          </span>
+  </div>
+  <div class="header-search__found">
+    <div class="found-content mCustomScrollbar">
+
+
+    </div>
+    <a class="res_serch main-button" href="#">{{ button_result_search }}<svg>
+            <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#link-arrow"></use>
+        </svg>
+    </a>
+      <button type="button" style="display: none;"></button>
+
+  </div>
+</div>

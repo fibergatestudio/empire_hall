@@ -1,0 +1,95 @@
+{{ header }}
+
+<div class="head-block">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+          <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <span itemprop="name">{{ breadcrumb.text }}</span>
+          <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="head-title">{{ heading_title }}</div>
+</div>
+
+<div class="area">
+  {{ column_left }}
+  <div class="area__main">
+    <div class="area__top">
+      <div class="area__title">{{ text_my_account }}</div>
+    </div>
+
+    <form class="area__form" action="{{ action }}" method="post">
+      <div class="area__form-inner">
+        <div class="form-block__col">
+          <div class="form-block">
+            <input class="main-input{% if error_firstname %} error{% endif %}" type="text" value="{{ firstname }}" name="firstname">
+            <div class="form-label">{{ text_field_firstname }}</div>
+            {% if error_firstname %}
+              <p class="error">{{ error_firstname }}</p>
+            {% endif %}
+          </div>
+          <div class="form-block">
+            <input class="main-input{% if error_lastname %} error{% endif %}" type="text" value="{{ lastname }}" name="lastname">
+            <div class="form-label">{{ text_field_lastname }}</div>
+            {% if error_lastname %}
+              <p class="error">{{ error_lastname }}</p>
+            {% endif %}
+          </div>
+          <div style="display: none" class="form-block">
+              <input class="main-input" type="text" value="{{ zone_id }}" name="zone_id">
+              <div class="form-label">{{ text_field_region }}</div>
+          </div>
+          <div class="form-block">
+            <input class="main-input" type="date" name="date" value="{{ day_birthday }}">
+            <div class="form-label">{{ text_day_birthday }}</div>
+          </div>
+
+          <div class="form-block">
+            <input class="main-input" type="text" value="{{ street }}" name="street">
+            <div class="form-label">{{ text_field_street }}</div>
+          </div>
+        </div>
+        <div class="form-block__col">
+          <div class="form-block">
+            <input class="main-input{% if error_telephone %} error{% endif %}" type="tel" value="{{ telephone }}" name="telephone">
+            <div class="form-label">{{ text_field_phone }}</div>
+            {% if error_telephone %}
+              <p class="error">{{ error_telephone }}</p>
+            {% endif %}
+          </div>
+          <div class="form-block">
+            <input class="main-input{% if error_email %} error{% endif %}" type="email" value="{{ email }}" name="email">
+            <div class="form-label">{{ text_field_email }}</div>
+            {% if error_email %}
+              <p class="error">{{ error_email }}</p>
+            {% endif %}
+          </div>
+          <div class="form-block">
+            <input class="main-input" type="text" value="{{ city_id }}" name="city_id">
+            <div class="form-label">{{ text_field_city }}</div>
+          </div>
+          <div class="form-block__row">
+            <div class="form-block">
+              <input class="main-input" type="text" value="{{ house }}" name="house">
+              <div class="form-label">{{ text_field_house }}</div>
+            </div>
+            <div class="form-block">
+              <input class="main-input" type="text" value="{{ room }}" name="room">
+              <div class="form-label">{{ text_field_room }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="main-button" type="submit">{{ text_field_btn }}</button>
+    </form>
+  </div>
+</div>
+{{ footer }}

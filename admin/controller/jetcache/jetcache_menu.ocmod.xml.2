@@ -1,0 +1,6 @@
+<file path="admin/view/template/common/column_left.tpl">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)[<][/]nav[>](.*?)~]]></search>
+        <add position="replace"><![CDATA[$1<?php if (isset($jc_menus)) { echo $jc_menus; } ?></nav>$2]]></add>
+    </operation>
+</file>

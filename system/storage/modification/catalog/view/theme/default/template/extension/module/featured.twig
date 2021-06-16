@@ -1,0 +1,95 @@
+{% if products %}
+  <div class="popular-products">
+    <div class="main-subtitle">{{ heading_title }}</div>
+
+{% if ee_tracking and ee_impression %}
+  <script type="text/javascript"><!--
+    $(document).ready(function() {
+      setIntervalEE(function() {
+        var ee_data = JSON.parse('{{ ee_impression_data }}');
+        ee_data['url'] = window.location.href;
+        ee_data['title'] = document.title;
+        $.ajax({
+          url: 'index.php?route=extension/module/ee_tracking/listview',
+          type: 'post',
+          data: ee_data,
+          dataType: 'json',
+          success: function(json) {
+            if (json) {
+              console.log(json);
+            }
+          },
+          {% if ee_impression_log %}
+          error: function(xhr, exc, error) {
+            $.post('index.php?route=extension/module/ee_tracking/listviewlog', { 'error': error + ' (exc: ' + exc + ' status: ' + xhr.statusText + ')', 'url': window.location.href }, function( logs ) {
+              console.log(logs);
+            });
+          }
+          {% endif %}
+        });
+      }, {% if ee_ga_callback %}{{ ee_ga_callback }}{% else %}0{% endif %}, {% if ee_generate_cid %}{{ ee_generate_cid }}{% else %}0{% endif %});
+    });
+    //--></script>
+{% endif %}
+            
+    <div class="popular-products__top">
+      <div class="popular-products__title">{{ text_store }}</div>
+      <div class="popular-products__navigation">
+        <div class="prev-arrow"></div>
+        <div class="next-arrow"></div>
+        <span class="popular-products__progress"></span>
+      </div>
+    </div>
+    <div class="popular-products__slider">
+      {% for product in products %}
+        <div class="product__item">
+          <div class="product__title">
+            <a href="{{ product.href }}" {% if ee_tracking and ee_click %}onclick="ee_product.click('{{ product.product_id }}', '{{ product.ee_position }}', '{{ ee_type }}')"{% endif %}>{{ product.name }}</a>
+            <ol class="breadcrumb brand-breadcrumb">
+              {% if  product.manufacturer_href %}
+                <li>
+                  <a href="{{ product.manufacturer_href }}"><span>{{ product.manufacturer }}</span></a>
+                </li>
+              {% endif %}
+              {% if product.collection %}
+                <li>
+                  <a href="{{ product.collection_href }}"><span>{{ product.collection }}</span></a>
+                </li>
+              {% endif %}
+            </ol>
+          </div>
+          <div class="product__image">
+            <a href="{{ product.href }}" {% if ee_tracking and ee_click %}onclick="ee_product.click('{{ product.product_id }}', '{{ product.ee_position }}', '{{ ee_type }}')"{% endif %}>
+              <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ product.image }}" width="370" height="370" alt="{{ product.name }}" class="lazyload">
+            </a>
+          </div>
+          <div class="product__box">
+            <div class="product__price">
+              {% if product.price > 0 %}
+                {% if product.special %}
+                  <div class="product__price-old">{{ product.price }}</div>
+                  <div class="product__price-new">{{ product.special }}</div>
+                {% else %}
+                  <div class="product__price-new">{{ product.price }}</div>
+                {% endif %}
+              {% else %}
+                <div class="product__no-price-btm" onclick="location.href='{{ product.href }}'">{{ text_no_price }}</div>
+              {% endif %}
+            </div>
+              <span class="product-nav">
+              <span data-id="{{ product.product_id }}" class="{% if product.is_wishlist %}active{% endif %} add-wishlist product__link link-favorite {% if not logged %} loginza {% endif %}" {% if logged %} onclick="{% if product.is_wishlist %} wishlist.remove('{{ product.product_id }}');  {% else %}wishlist.add('{{ product.product_id }}'); {% endif %}"  {% endif %}>
+                  <svg>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#wishlist"></use>
+                  </svg>
+                </span>
+            <a class="product__link" href="{{ product.href }}" {% if ee_tracking and ee_click %}onclick="ee_product.click('{{ product.product_id }}', '{{ product.ee_position }}', '{{ ee_type }}')"{% endif %}>
+              <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#link-arrow"></use></svg>
+            </a></span>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <a class="show-all" href="{{ all_offers }}">{{ text_all_prods }}</a>
+  </div>
+{% endif %}

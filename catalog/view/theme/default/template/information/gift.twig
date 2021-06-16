@@ -1,0 +1,97 @@
+{{ header }}
+
+
+
+<div class="top-section" style="background-image: url('/front/dist/data/gift-card-cover.JPG');">
+    <div class="head-block head-block--center">
+        <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+            {% for counter, breadcrumb in breadcrumbs %}
+                {% if counter + 1 < breadcrumbs|length %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                        <meta itemprop="position" content="{{ counter+1 }}" />
+                    </li>
+                {% else %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <span itemprop="name">{{ breadcrumb.text }}</span>
+                        <meta itemprop="position" content="{{ counter+1 }}" />
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="top-section__box">
+        <div class="top-section__title">{{ heading_title }}</div>
+    </div>
+</div>
+
+<div class="gift-card">
+    <div class="gift-card__inner">
+
+        <ul class="gift-card__tabs">
+            <li class="gift-card__tabs-item">
+                <a href="#" class="active">Мужская карта</a>
+            </li>
+            <li class="gift-card__tabs-item">
+                <a href="#">Женская карта</a>
+            </li>
+            <li class="gift-card__tabs-item">
+                <a href="#">Свадебный сертификат</a>
+            </li>
+        </ul>
+
+        <div class="gift-card__box">
+            <div class="gift-card__slider">
+                <div class="gift-card__slide">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="/front/dist/data/gift-card-img-1.jpg" width="1200" height="600" alt="" class="lazyload">
+                </div>
+                <div class="gift-card__slide">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="/front/dist/data/gift-card-img-1.jpg" width="1200" height="600" alt="" class="lazyload">
+                </div>
+                <div class="gift-card__slide">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="/front/dist/data/gift-card-img-1.jpg" width="1200" height="600" alt="" class="lazyload">
+                </div>
+                <div class="gift-card__slide">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="/front/dist/data/gift-card-img-1.jpg" width="1200" height="600" alt="" class="lazyload">
+                </div>
+            </div>
+            <div class="gift-card__item">
+                <div class="gift-card__content">
+                    <div class="main-subtitle">номиналом от 0 до 50000 грн</div>
+                    <div class="gift-card__title">Подарочная карта для него</div>
+                    <div class="gift-card__description">Подарочная карта даёт право её владельцу единоразово приобрести товар на сумму номинала.</div>
+                    <div class="gift-card__text">При выборе товара на сумму меньше номинала - остаток не компенсируется, если сумма превышает номинал - требуется дополнительная оплата разницы.</div>
+                    <ul class="gift-card__content-list">
+                        <li class="gift-card__content-item">Подарочная карта не подлежит обмену на денежный эквивалент.</li>
+                        <li class="gift-card__content-item">Подарочная карта обмену и возврату не подлежит.</li>
+                        <li class="gift-card__content-item">Подарочная карта бессрочная.</li>
+                    </ul>
+                </div>
+                <div class="gift-card__form" style="background-image: url('/front/dist/data/gift-card-form-bg.png');">
+                    <div class="gift-card__form-inner">
+                        <div class="gift-card__form-title">Приобрести карту</div>
+                        <select name="select-sum">
+                            <option value="" selected disabled>-- Сумма на карте --</option>
+                            <option value="">1000</option>
+                            <option value="">100000</option>
+                            <option value="">500000</option>
+                        </select>
+                        <div class="gift-card__quantity">
+                            <div class="gift-card__quantity-title">Количество:</div>
+                            <div class="product-quantity">
+                                <button class="product-quantity__button product-quantity__minus"><svg xmlns="http://www.w3.org/2000/svg" width="7" height="1" viewBox="0 0 7 1"><rect  class="cls-1" width="7" height="1"/></svg></button>
+                                <input class="product-quantity__input" type="number" name="product-quantity" value="1" min="1" max="999" readonly>
+                                <button class="product-quantity__button product-quantity__plus"><svg xmlns="http://www.w3.org/2000/svg" width="7" height="7" viewBox="0 0 7 7"><path d="M1308,350h7v1h-7v-1Zm3-3h1v7h-1v-7Z" transform="translate(-1308 -347)"/></svg></button>
+                            </div>
+                        </div>
+                        <a class="main-button" href="#">Добавить в список покупок </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+
+{{ footer }}

@@ -1,0 +1,1631 @@
+{{ header }}{{ column_left }}
+<div id="content">
+<style type="text/css">
+  .nav-tabs .fa{
+    font-size: 16px;
+  }
+  .cache-dashboard {
+    position: relative;
+    display: block;
+  }
+  .wk-loader-container{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.6);
+  }
+  .loader {
+    text-align: center;
+  }
+</style>
+  <div class="page-header">
+    <div class="container-fluid">
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+          <li><a href="{{ breadcrumb['href'] }}">{{ breadcrumb['text'] }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+     <div class="btn alert alert-info" style="width:100%;">
+      <div class="pull-right">
+        <button type="submit" form="form-cache" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-success"><i class="fa fa-save"></i> {{ button_save }}</button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i> {{ button_cancel }}</a> |
+        <a href="https://webkul.com/blog/opencart-cache-system/" target="_blank" class="btn btn-info" data-toggle="tooltip" title="{{ button_user_guide }}"><i class="fa fa-info-circle" aria-hidden="true"></i> {{ button_user_guide }}</a>
+        <a href="https://webkul.uvdesk.com/" class="btn btn-danger" target="_blank" data-toggle="tooltip" title="{{ button_support }}"><i class="fa fa-ticket" aria-hidden="true"></i> {{ button_support }}</a>
+      </div>
+      <h2 class="text-left">{{ text_module_version }}</h2>
+    </div>
+    {% if success %}
+    <div class="alert alert-success"><i class="fa fa-exclamation-circle"></i> {{ success }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    {% if error_warning %}
+    <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default" id="oc_cache">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-cache" class="form-horizontal">
+            <ul class="nav nav-tabs">
+              {# <li class=""><a href="#tab-dashboard" data-toggle="tab"><i class="fa fa-dashboard fw text-primary" aria-hidden="true"></i>  {{ tab_dashboard }}</a></li> #}
+              <li class="active"><a href="#tab-setting" data-toggle="tab"><i class="fa fa-cogs text-default" aria-hidden="true"></i>  {{ tab_setting }}</a></li>
+              <li><a href="#tab-combine-minify" data-toggle="tab"><i class="fa fa-clone text-warning" aria-hidden="true"></i>  {{ tab_combine_minify }}</a></li>
+              <li><a href="#tab-image" data-toggle="tab"><i class="fa fa-picture-o  text-danger" aria-hidden="true"></i>  {{ tab_image_optimization }}</a></li>
+              <li><a href="#tab-leverage" data-toggle="tab"><i class="fa fa-recycle text-success" aria-hidden="true"></i></i>  {{ tab_leverage }}</a></li>
+              <li><a href="#tab-compression" data-toggle="tab"><i class="fa fa-compress text-warning" aria-hidden="true"></i>  {{ tab_compression }}</a></li>
+              <li><a href="#tab-cache" data-toggle="tab"><i class="fa fa-address-card text-warning" aria-hidden="true"></i>  {{ tab_cache }}</a></li>
+              <li><a href="#tab-panel" data-toggle="tab"><i class="fa fa-bars" aria-hidden="true"></i>  {{ tab_panel }}</a></li>
+              <li><a href="#tab-info" data-toggle="tab"><i class="fa fa-info-circle text-primary" aria-hidden="true"></i>  {{ tab_info }}</a></li>
+              <li><a href="#tab-clear" data-toggle="tab"><i class="fa fa-eraser text-danger" aria-hidden="true"></i>  {{ tab_clear_cache }}</a></li>
+            </ul>
+
+            <div class="tab-content">
+              <div class="tab-pane" id="tab-dashboard">
+                <div class="col-sm-12 hide cache-dashboard">
+                  <div class="wk-loader-container">
+                    <div class="loader">
+                      <i class="fa fa-spin fa-spinner text-primary" style="font-size:100px"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane active" id="tab-setting">
+
+                <div class="col-sm-8">
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-4 control-label" for="input-status">{{ entry_status }}</label>
+                    <div class="col-sm-8">
+                      <select name="module_oc_cache_status" id="input-status" class="form-control">
+                        {% if module_oc_cache_status %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                    </div>
+                    {% if error_status %}
+                      <div class="text-danger">{{ error_status }}</div>
+                    {% endif %}
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-4 control-label" for="input-status">{{ entry_default_timezone }}</label>
+                    <div class="col-sm-8">
+                      <select name="module_oc_cache_timezone" id="input-status" class="form-control">
+                        <option value="">{{ text_select_timezone }}</option>
+                        {% for key, value in cache_zonelist %}
+                          <option value="{{ key }}" {% if key == module_oc_cache_timezone %}{{ 'selected' }}{% endif %} >{{ value }}</option>
+                        {% endfor %}
+                      </select>
+                       {% if error_timezone %}
+                         <div class="text-danger">{{ error_timezone }}</div>
+                       {% endif %}
+                    </div>
+
+                  </div>
+
+                  {# <div class="form-group col-sm-12">
+                    <label class="col-sm-4 control-label" for="input-speedtest-api-key">{{ entry_google_pagespeed_api_key }}</label>
+                    <div class="col-sm-8">
+                      <input type="text" name="module_oc_cache_google_speedtest_api_key" id="input-speedtest-api-key" class="form-control" value="{% if module_oc_cache_google_speedtest_api_key is defined %}{{ module_oc_cache_google_speedtest_api_key }}{% endif %}" />
+                    </div>
+                  </div> #}
+
+                  </div>
+                  <div class="col-sm-4">
+                    <div class="panel panel-info">
+                      <div class="panel-heading"><b>{{ text_module_info }}</b></div>
+                      <div class="panel-body">{{ text_module_details }}
+                      </div>
+                    </div>
+                  </div>
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="table-responsive">
+                      <table class="table" style="border-spacing:2px;border-collapse:separate;">
+                        <thead>
+                          <tr class="info">
+                            <th class="text-left">{{ entry_cache_layout }}</th>
+                            <th class="text-left">{{ entry_cache_expire }}</th>
+                            <th class="text-center">{{ entry_cache_filesize }}</th>
+                            <th class="text-center">{{ entry_cache_status }}</th>
+                            <th class="text-center">{{ entry_action }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_feature_module }}</b></td>
+                              <td class="text-center">
+                                <input type="number"  name="module_oc_cache_featured[expire]" value="{% if module_oc_cache_featured['expire'] is defined and module_oc_cache_featured['expire'] %}{{ module_oc_cache_featured['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+                                 {% if error_expire_featured is defined and error_expire_featured%}
+                                    <div class="text-danger">{{ error_expire_featured }}</div>
+                                 {% endif %}
+                              </td>
+
+                              <td class="text-center"><input type="text" name="module_oc_cache_featured[filesize]" value="{% if cache_file_info['product_featured']['size'] is defined and cache_file_info['product_featured']['size'] %}{{ cache_file_info['product_featured']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_featured[status]" class="form-control">
+                                  {% if module_oc_cache_featured['status'] is defined and module_oc_cache_featured['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                  {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                  {% endif %}
+                                </select>
+                                 {% if error_status_featured is defined and error_status_featured%}
+                                    <div class="text-danger">{{ error_status_featured }}</div>
+                                 {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_featured[clear]"  onclick="clearCache(this.id);" id="{% if cache_file_info['product_featured']['keyword'] is defined and cache_file_info['product_featured']['keyword'] %}{{ cache_file_info['product_featured']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_latest_module }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_latest[expire]" value="{% if module_oc_cache_latest['expire'] is defined and module_oc_cache_latest['expire'] %}{{ module_oc_cache_latest['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_latest is defined and error_expire_latest %}
+                                  <div class="text-danger"> {{ error_expire_latest }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_latest[filesize]" value="{% if cache_file_info['product_latest']['size'] is defined and cache_file_info['product_latest']['size'] %}{{ cache_file_info['product_latest']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_latest[status]" class="form-control">
+                                   {% if module_oc_cache_latest['status'] is defined and module_oc_cache_latest['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                  {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                 {% if error_status_latest is defined and error_status_latest %}
+                                    <div class="text-danger"></div>
+                                 {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_latest[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['product_latest']['keyword'] is defined and cache_file_info['product_latest']['keyword'] %}{{ cache_file_info['product_latest']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_category_module }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_category[expire]" value="{% if module_oc_cache_category['expire'] is defined and module_oc_cache_category['expire'] %}{{ module_oc_cache_category['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_category is defined and error_expire_category %}
+                                  <div class="text-danger">{{ error_expire_category }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_category[filesize]" value="{% if cache_file_info['category_module']['size'] is defined and cache_file_info['category_module']['size'] %}{{ cache_file_info['category_module']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_category[status]" class="form-control">
+                                  {% if module_oc_cache_category['status'] is defined and module_oc_cache_category['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_category is defined and error_status_category %}
+                                  <div class="text-danger">{{ error_status_category }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_category[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['category_module']['keyword'] is defined and cache_file_info['category_module']['keyword'] %}{{ cache_file_info['category_module']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_product }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_product[expire]" value="{% if module_oc_cache_product['expire'] is defined and module_oc_cache_product['expire'] %}{{ module_oc_cache_product['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                 {% if error_expire_product is defined and error_expire_product %}
+                                  <div class="text-danger">{{ error_expire_product }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_product[filesize]" value="{% if cache_file_info['product']['size'] is defined and cache_file_info['product']['size'] %}{{ cache_file_info['product']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_product[status]" class="form-control">
+                                   {% if module_oc_cache_product['status'] is defined and module_oc_cache_product['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_product is defined and error_status_product %}
+                                  <div class="text-danger">{{ error_status_product }}</div>
+                                {% endif %}
+
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_product[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['product']['keyword'] is defined and cache_file_info['product']['keyword'] %}{{ cache_file_info['product']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_manufacturer }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_manufacturer[expire]" value="{% if module_oc_cache_manufacturer['expire'] is defined %}{{ module_oc_cache_manufacturer['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_manufacturer is defined and error_expire_manufacturer %}
+                                  <div class="text-danger">{{ error_expire_manufacturer }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_manufacturer[filesize]" value="{% if cache_file_info['manufacturer']['size'] is defined and cache_file_info['manufacturer']['size'] %}{{ cache_file_info['manufacturer']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_manufacturer[status]" class="form-control">
+                                   {% if module_oc_cache_manufacturer['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                  {% if error_status_manufacturer is defined and error_status_manufacturer %}
+                                  <div class="text-danger">{{ error_status_manufacturer }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_manufacturer[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['manufacturer']['keyword'] is defined and cache_file_info['manufacturer']['keyword'] %}{{ cache_file_info['manufacturer']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_menu_list }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_menu_layout[expire]" value="{% if module_oc_cache_menu_layout['expire'] is defined and module_oc_cache_menu_layout['expire'] %}{{ module_oc_cache_menu_layout['expire'] }}{% else %}{{ '' }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_menu_layout is defined and error_expire_menu_layout %}
+                                  <div class="text-danger">{{ error_expire_menu_layout }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_menu_layout[filesize]" value="{% if cache_file_info['header_category']['size'] is defined and cache_file_info['header_category']['size']%}{{ cache_file_info['header_category']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_menu_layout[status]" class="form-control">
+                                  {% if module_oc_cache_menu_layout['status'] is defined and module_oc_cache_menu_layout['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_menu_layout is defined and error_status_menu_layout %}
+                                  <div class="text-danger">{{ error_status_menu_layout }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_menu_layout[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['header_category']['keyword'] is defined and cache_file_info['header_category']['keyword'] %}{{ cache_file_info['header_category']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_banner_module }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_banner_module[expire]" value="{% if module_oc_cache_banner_module['expire'] is defined and module_oc_cache_banner_module['expire'] %}{{ module_oc_cache_banner_module['expire'] }}{% else %}{{ '' }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_banner_module is defined and error_expire_banner_module %}
+                                  <div class="text-danger">{{ error_expire_banner_module }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_banner_module[filesize]" value="{% if cache_file_info['banner_design']['size'] is defined and cache_file_info['banner_design']['size'] %}{{ cache_file_info['banner_design']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_banner_module[status]" class="form-control">
+                                   {% if module_oc_cache_banner_module['status'] is defined and module_oc_cache_banner_module['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                  {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_banner_module is defined and error_status_banner_module %}
+                                  <div class="text-danger">{{ error_status_banner_module }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_banner_module[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['banner_design']['keyword'] is defined and cache_file_info['banner_design']['keyword'] %}{{ cache_file_info['banner_design']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_filter_module }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_filter_module[expire]" value="{% if module_oc_cache_filter_module['expire'] is defined and module_oc_cache_filter_module['expire'] %}{{ module_oc_cache_filter_module['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_filter_module is defined and error_expire_filter_module %}
+                                  <div class="text-danger">{{ error_expire_filter_module }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_filter_module[filesize]" value="{% if cache_file_info['filter_module']['size'] is defined and cache_file_info['filter_module']['size'] %}{{ cache_file_info['filter_module']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_filter_module[status]" class="form-control">
+                                   {% if module_oc_cache_filter_module['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_filter_module is defined and error_status_filter_module %}
+                                  <div class="text-danger">{{ error_status_filter_module }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_filter_module[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['filter_module']['keyword'] is defined and cache_file_info['filter_module']['keyword'] %}{{ cache_file_info['filter_module']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_information_module }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_information_module[expire]" value="{% if module_oc_cache_information_module['expire'] is defined and module_oc_cache_information_module['expire'] %}{{ module_oc_cache_information_module['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+
+                                {% if error_expire_information_module is defined and error_expire_information_module %}
+                                  <div class="text-danger">{{ error_expire_information_module }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_information_module[filesize]" value="{% if cache_file_info['information_module']['size'] is defined and cache_file_info['information_module']['size'] %}{{ cache_file_info['information_module']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_information_module[status]" class="form-control">
+                                   {% if module_oc_cache_information_module['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                 {% if error_status_information_module is defined and error_status_information_module %}
+                                  <div class="text-danger">{{ error_status_information_module }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_information_module[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['information_module']['keyword'] is defined and cache_file_info['information_module']['keyword'] %}{{ cache_file_info['information_module']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+
+                            <tr class="active">
+                              <td class="text-left"><b>{{ entry_store_location }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_store_location[expire]" value="{% if module_oc_cache_store_location['expire'] is defined and module_oc_cache_store_location['expire'] %}{{ module_oc_cache_store_location['expire'] }}{% endif %}" class="form-control number" placeholder="{{ text_ms }}" />
+                                 {% if error_expire_store_location is defined and error_expire_store_location %}
+                                  <div class="text-danger">{{ error_expire_store_location }}</div>
+                                {% endif %}
+
+                              </td>
+                              <td class="text-center"><input type="text" name="module_oc_cache_compare_layout[filesize]" value="{% if cache_file_info['store_location']['size'] is defined and cache_file_info['store_location']['size'] %}{{ cache_file_info['store_location']['size'] }}{% else %}{{ '0' }}{% endif %}" class="form-control" disabled /></td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_store_location[status]" class="form-control">
+                                   {% if module_oc_cache_store_location['status'] is defined and module_oc_cache_store_location['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_store_location is defined and error_status_store_location %}
+                                  <div class="text-danger">{{ error_status_store_location }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center"><button type="button" class="btn btn-warning" name="module_oc_cache_store_location[clear]" onclick="clearCache(this.id);" id="{% if cache_file_info['store_location']['keyword'] is defined and cache_file_info['store_location']['keyword'] %}{{ cache_file_info['store_location']['keyword'] }}{% else %}{{ '' }}{% endif %}" ><i class="fa fa-eraser" aria-hidden="true"></i> {{ text_clear }} </button></td>
+                            </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="tab-pane" id="tab-combine-minify">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_minify_css }}</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" name="module_oc_cache_minify_css">
+                      {% if module_oc_cache_minify_css %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                      {% if error_oc_cache_minify_css is defined and error_oc_cache_minify_css %}
+                        <div class="text-danger">{{ error_oc_cache_minify_css }}</div>
+                      {% endif %}
+                  </div>
+                </div>
+                <div class="form-group hide">
+                  <label class="col-sm-2 control-label">{{ entry_combine_css }}</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" name="module_oc_cache_combine_css">
+                      {% if module_oc_cache_combine_css %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                     {% if error_oc_cache_combine_css is defined and error_oc_cache_combine_css %}
+                        <div class="text-danger">{{ error_oc_cache_combine_css }}</div>
+                      {% endif %}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_css_cdn }}</label>
+                  <div class="col-sm-10">
+                    <div class="well well-sm" style="height:100px;overflow:auto">
+                      {% for value in cdn_css %}
+                        <div class="checkbox">
+                          <label for="{{ 'css-'~value }}" >
+                            <input type="checkbox" name="module_oc_cache_css_cdn[{{ value }}]" value="{{ value }}" id="{{ 'css-'~value }}" {% if module_oc_cache_css_cdn is defined and value in module_oc_cache_css_cdn  %}{{ "checked" }}{% endif %} />
+                            {{ value|capitalize }}
+                          <label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                      {% if error_oc_cache_css_cdn is defined and error_oc_cache_css_cdn %}
+                        <div class="text-danger">{{ error_oc_cache_css_cdn }}</div>
+                      {% endif %}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_minify_js }}</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" name="module_oc_cache_minify_js">
+                      {% if module_oc_cache_minify_js %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                    {% if error_oc_cache_minify_js is defined and error_oc_cache_minify_js %}
+                      <div class="text-danger">{{ error_oc_cache_minify_js }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="form-group hide">
+                  <label class="col-sm-2 control-label">{{ entry_combine_js }}</label>
+                  <div class="col-sm-10">
+                    <select class="form-control" name="module_oc_cache_combine_js">
+                      {% if module_oc_cache_combine_js %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                      {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                      {% endif %}
+                    </select>
+                    {% if error_oc_cache_combine_js is defined and error_oc_cache_combine_js %}
+                      <div class="text-danger">{{ error_oc_cache_combine_js }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">{{ entry_js_cdn }}</label>
+                  <div class="col-sm-10">
+                    <div class="well well-sm" style="height:100px;overflow:auto">
+                      {% for value in cdn_js %}
+                        <div class="checkbox">
+                          <label for="{{ 'js-'~value }}" >
+                            <input type="checkbox" name="module_oc_cache_js_cdn[{{ value }}]" value="{{ value }}" id="{{ 'js-'~value }}" {% if module_oc_cache_js_cdn is defined and value in module_oc_cache_js_cdn  %}{{ "checked" }}{% endif %} />
+                            {{ value|capitalize }}
+                          <label>
+                        </div>
+                      {% endfor %}
+                    </div>
+                    {% if error_oc_cache_js_cdn is defined and error_oc_cache_js_cdn %}
+                      <div class="text-danger">{{ error_oc_cache_js_cdn }}</div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+              <div class="tab-pane" id="tab-compression">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_enable_compression }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_compression_status">
+                          {% if module_oc_cache_compression_status %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_compression_status is defined and error_oc_cache_compression_status %}
+                          <div class="text-danger">{{ error_oc_cache_compression_status }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#tab-basic-compression" data-toggle="tab">{{ tab_basic }}</a></li>
+                  <li><a href="#tab-adv-compression" data-toggle="tab"><i class="" aria-hidden="true"></i>  {{ tab_advanced }}</a></li>
+                  <li class="hide"><a href="#tab-security-compression" data-toggle="tab"><i class=" text-danger hide" aria-hidden="true"></i>  {{ tab_secure }}</a></li>
+                  <li><a href="#tab-reseve-compression" data-toggle="tab"><i class="text-danger" aria-hidden="true"></i>  {{ tab_reseve }}</a></li>
+                </ul>
+                <div class="tab-content">
+                 <div class="tab-pane active" id="tab-basic-compression">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_css_compression }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_css_compression">
+                          {% if module_oc_cache_css_compression %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                         {% if error_oc_cache_css_compression is defined and error_oc_cache_css_compression %}
+                          <div class="text-danger">{{ error_oc_cache_css_compression }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    {# <div class="form-group hide">
+                      <label class="col-sm-2 control-label">CSS Compression level</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_css_compression_level">
+                          {% for i in 1..6 %}
+                            <option value="{{ i }}" {% if module_oc_cache_css_compression_level is defined and module_oc_cache_css_compression_level == i %}{{ 'selected' }}{% endif %} >{{ i }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div> #}
+
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_js_compression }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_js_compression">
+                          {% if module_oc_cache_js_compression %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_js_compression is defined and error_oc_cache_js_compression %}
+                          <div class="text-danger">{{ error_oc_cache_js_compression }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    {# <div class="form-group">
+                      <label class="col-sm-2 control-label">JS Compression level</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_js_compression_level">
+                          {% for i in 1..9 %}
+                            <option value="{{ i }}" {% if module_oc_cache_js_compression_level is defined and module_oc_cache_js_compression_level == i %}{{ 'selected' }}{% endif %} >{{ i }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div> #}
+
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_html_compression }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_html_compression">
+                          {% if module_oc_cache_html_compression %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                         {% if error_oc_cache_html_compression is defined and error_oc_cache_html_compression %}
+                          <div class="text-danger">{{ error_oc_cache_html_compression }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+
+                    {# <div class="form-group hide">
+                      <label class="col-sm-2 control-label">Html Compression level</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_html_compression_level">
+                          {% for i in 1..9 %}
+                            <option value="{{ i }}" {% if module_oc_cache_html_compression_level is defined and module_oc_cache_html_compression_level == i %}{{ 'selected' }}{% endif %} >{{ i }}</option>
+                          {% endfor %}
+                        </select>
+                      </div>
+                    </div> #}
+
+                 </div>
+
+                  <div class="tab-pane" id="tab-adv-compression">
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_image_compression }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_image_compression">
+                          {% if module_oc_cache_image_compression %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_image_compression is defined and error_oc_cache_image_compression %}
+                          <div class="text-danger">{{ error_oc_cache_image_compression }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="form-group hide">
+                      <label class="col-sm-2 control-label">
+                        <span data-toggle="tooltip" title="{{ entry_image_compression_quality_info }}" >
+                          {{ entry_image_compression_quality }}
+                        </span>
+                      </label>
+                      <div class="col-sm-10">
+                        <input type="number" class="form-control" name="module_oc_cache_image_compression_quality" value="{% if module_oc_cache_image_compression_quality is defined %}{{ module_oc_cache_image_compression_quality }}{% endif %}" />
+                      </div>
+                    </div>
+                   <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ entry_xml_compression }}</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" name="module_oc_cache_xml_compression">
+                        {% if module_oc_cache_xml_compression %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                      {% if error_oc_cache_xml_compression is defined and error_oc_cache_xml_compression %}
+                        <div class="text-danger">{{ error_oc_cache_xml_compression }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group hide">
+                    <label class="col-sm-2 control-label">{{ entry_image_icon_compression }}</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" name="module_oc_cache_image_icon_compression">
+                        {% if module_oc_cache_image_icon_compression %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                      {% if error_oc_cache_image_icon_compression is defined and error_oc_cache_image_icon_compression %}
+                        <div class="text-danger">{{ error_oc_cache_image_icon_compression }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ entry_xhtml_xml_compression }}</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" name="module_oc_cache_xhtml_xml_compression">
+                        {% if module_oc_cache_xhtml_xml_compression %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                      {% if error_oc_cache_xhtml_xml_compression is defined and error_oc_cache_xhtml_xml_compression %}
+                        <div class="text-danger">{{ error_oc_cache_xhtml_xml_compression }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <label class="col-sm-2 control-label">{{ entry_rss_xml_compression }}</label>
+                    <div class="col-sm-10">
+                      <select class="form-control" name="module_oc_cache_rss_xml_compression">
+                        {% if module_oc_cache_rss_xml_compression %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                      {% if error_oc_cache_rss_xml_compression is defined and error_oc_cache_rss_xml_compression %}
+                        <div class="text-danger">{{ error_oc_cache_rss_xml_compression }}</div>
+                      {% endif %}
+                    </div>
+                  </div>
+
+
+                 </div>
+
+                 <div class="tab-pane hide" id="tab-security-compression">
+
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_old_browser_bug }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_old_browser_bug">
+                          {% if module_oc_cache_old_browser_bug %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_deflate_proxy_server }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_deflate_proxy_server">
+                          {% if module_oc_cache_deflate_proxy_server %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                      </div>
+                    </div>
+                 </div>
+
+                 <div class="tab-pane" id="tab-reseve-compression">
+                     <div class="form-group">
+                      <label class="col-sm-2 control-label">{{ entry_reserve_gzip_data }}</label>
+                      <div class="col-sm-10">
+                        <select class="form-control" name="module_oc_cache_resever_compressed_data">
+                          {% if module_oc_cache_resever_compressed_data %}
+                            <option value="1" selected="selected">{{ text_enabled }}</option>
+                            <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                            <option value="1">{{ text_enabled }}</option>
+                            <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_resever_compressed_data is defined and error_oc_cache_resever_compressed_data %}
+                        <div class="text-danger">{{ error_oc_cache_resever_compressed_data }}</div>
+                      {% endif %}
+                      </div>
+                    </div>
+                 </div>
+
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-cache">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">
+                      {{ text_page_cache }}
+                    </h3>
+                  </div>
+                  <div class="panel-content">
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label">
+                        {{ "Total page cache size" }}
+                      </label>
+                      <div class="col-sm-6">
+                        <div class="input-group">
+                          <input type="text" id="page-cache-size" disabled class="form-control" value="{{ total_page_cache_size~' byte(s)' }}" />
+                          <span class="input-group-btn">
+                            <button class="btn btn-danger" id="clear-page-cache" type="button" >
+                              <i class="fa fa-eraser"></i>
+                              Clear Cache
+                            </button>
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label">
+                        {{ entry_page_cache_status }}
+                      </label>
+                      <div class="col-sm-6">
+                        <select class="form-control" name="module_oc_cache_page_cache_status">
+                          {% if module_oc_cache_page_cache_status %}
+                            <option value="0">{{ text_disabled }}</option>
+                            <option value="1" selected>{{ text_enabled }}</option>
+                          {% else %}
+                            <option value="0" selected>{{ text_disabled }}</option>
+                            <option value="1">{{ text_enabled }}</option>
+                          {% endif %}
+                        </select>
+                         {% if error_oc_cache_page_cache_status is defined and error_oc_cache_page_cache_status %}
+                          <div class="text-danger">{{ error_oc_cache_page_cache_status }}</div>
+                       {% endif %}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label">
+                        {{ entry_expiry_time }}
+                      </label>
+                      <div class="col-sm-6">
+                        <input type="number" class="form-control number" name="module_oc_cache_page_cache_expiry" value="{% if module_oc_cache_page_cache_expiry is defined %}{{ module_oc_cache_page_cache_expiry }}{% endif %}" />
+                       {% if error_oc_cache_page_cache_expiry is defined and error_oc_cache_page_cache_expiry %}
+                          <div class="text-danger">{{ error_oc_cache_page_cache_expiry }}</div>
+                       {% endif %}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label">
+                        {{ entry_customer_login }}
+                      </label>
+                      <div class="col-sm-6">
+                        <select class="form-control" name="module_oc_cache_page_cache_on_login">
+                          {% if module_oc_cache_page_cache_on_login %}
+                            <option value="0">{{ text_disabled }}</option>
+                            <option value="1" selected>{{ text_enabled }}</option>
+                          {% else %}
+                            <option value="0" selected>{{ text_disabled }}</option>
+                            <option value="1">{{ text_enabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_page_cache_on_login is defined and error_oc_cache_page_cache_on_login %}
+                          <div class="text-danger">{{ error_oc_cache_page_cache_on_login }}</div>
+                       {% endif %}
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <label class="col-sm-3 control-label">
+                        {{ entry_ignore_route }}
+                      </label>
+                      <div class="col-sm-6">
+                        <textarea class="form-control" name="module_oc_cache_ignore_route" style="height:200px" placeholder="{{ entry_ignore_route_help }}" >{{ module_oc_cache_ignore_route }}</textarea>
+                      </div>
+                       {% if error_oc_cache_ignore_route is defined and error_oc_cache_ignore_route %}
+                          <div class="text-danger">{{ error_oc_cache_ignore_route }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-panel">
+                  <div class="form-group col-sm-12">
+                  <label class="col-sm-3 control-label" for="input-panel-status"><span data-toggle="tooltip" title="{{ help_frontpanel_status }}">{{ entry_frontpanel_status }}</span></label>
+                    <div class="col-sm-8">
+                      <select name="module_oc_cache_frontpanel_status" id="input-panel-status" class="form-control">
+                        {% if module_oc_cache_frontpanel_status %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                       {% if error_oc_cache_frontpanel_status is defined and error_oc_cache_frontpanel_status %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_status }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                  <label class="col-sm-3 control-label" for="input-clear"><span data-toggle="tooltip" title="{{ help_frontpanel_clearCacheOption }}">{{ entry_frontpanel_clearCacheOption }}</span></label>
+                    <div class="col-sm-8">
+                      <select name="module_oc_cache_frontpanel_clear_status" id="input-clear" class="form-control">
+                        {% if module_oc_cache_frontpanel_clear_status %}
+                        <option value="1" selected="selected">{{ text_enabled }}</option>
+                        <option value="0">{{ text_disabled }}</option>
+                        {% else %}
+                        <option value="1">{{ text_enabled }}</option>
+                        <option value="0" selected="selected">{{ text_disabled }}</option>
+                        {% endif %}
+                      </select>
+                       {% if error_oc_cache_frontpanel_clear_status is defined and error_oc_cache_frontpanel_clear_status %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_clear_status }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                   <label class="col-sm-3 control-label" for="input-position"><span data-toggle="tooltip" title="{{ help_frontpanel_position }}">{{ entry_frontpanel_position }}</span></label>
+                    <div class="col-sm-8">
+                      <select name="module_oc_cache_frontpanel_position" id="input-position" class="form-control">
+                        <option value="" >{{ text_select }}</option>
+                        <option value="top" {% if module_oc_cache_frontpanel_position is defined and module_oc_cache_frontpanel_position == 'top' %}{{ 'selected' }}{% endif %} >{{ text_top }}</option>
+                        <option value="bottom" {% if module_oc_cache_frontpanel_position is defined and module_oc_cache_frontpanel_position == 'bottom' %}{{ 'selected' }}{% endif %} >{{ text_bottom }}</option>
+                      </select>
+                       {% if error_oc_cache_frontpanel_position is defined and error_oc_cache_frontpanel_position %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_position }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-backgroundcolor"><span data-toggle="tooltip" title="{{ help_frontpanel_backgroundcolor }}">{{ entry_frontpanel_backgroundcolor }}</span></label>
+                    <div class="col-sm-8">
+                      <div class="input-group bgcolorpicker">
+                        <span class="input-group-addon"><i></i></span>
+                        <input type="text" name="module_oc_cache_frontpanel_backgroundcolor" value=" {% if module_oc_cache_frontpanel_backgroundcolor is defined and module_oc_cache_frontpanel_backgroundcolor %}{{ module_oc_cache_frontpanel_backgroundcolor }}{% else %}{{ '#31B0D5' }}{% endif %}" placeholder="" id="input-backgroundcolor" class="form-control" />
+                      </div>
+                      {% if error_oc_cache_frontpanel_backgroundcolor is defined and error_oc_cache_frontpanel_backgroundcolor %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_backgroundcolor }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-fontcolorpicker">{{ entry_frontpanel_color }}</label>
+                    <div class="col-sm-8">
+                      <div class="input-group fontcolorpicker">
+                        <span class="input-group-addon"><i></i></span>
+                        <input type="text" name="module_oc_cache_frontpanel_color" value=" {% if module_oc_cache_frontpanel_color is defined and module_oc_cache_frontpanel_color %}{{ module_oc_cache_frontpanel_color }}{% else %}{{ '#000000' }}{% endif %}" placeholder="" id="input-fontcolorpicker" class="form-control" />
+                      </div>
+                       {% if error_oc_cache_frontpanel_color is defined and error_oc_cache_frontpanel_color %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_color }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-cachemsg"><span data-toggle="tooltip" title="{{ help_frontpanel_cachemsg }}">{{ entry_frontpanel_cachemsg }}</span></label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" name="module_oc_cache_frontpanel_cachemsg" placeholder="Enter cache panel message here..." id="input-cachemsg">{% if module_oc_cache_frontpanel_cachemsg is defined and module_oc_cache_frontpanel_cachemsg %}{{ module_oc_cache_frontpanel_cachemsg }}{% endif %}</textarea>
+                       {% if error_oc_cache_frontpanel_cachemsg is defined and error_oc_cache_frontpanel_cachemsg %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_cachemsg }}</div>
+                       {% endif %}
+                    </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-clear"><span data-toggle="tooltip" title="{{ help_frontpanel_expiretime }}">{{ entry_frontpanel_expiretime }}</span></label>
+                      <div class="col-sm-8">
+                        <select name="module_oc_cache_frontpanel_expiretime" id="input-clear" class="form-control">
+                          {% if module_oc_cache_frontpanel_expiretime %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_frontpanel_expiretime is defined and error_oc_cache_frontpanel_expiretime %}
+                          <div class="text-danger">{{ error_oc_cache_frontpanel_expiretime }}</div>
+                        {% endif %}
+                      </div>
+                    </div>
+
+              </div>
+
+              <div class="tab-pane" id="tab-info">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#tab-system-info" data-toggle="tab"><i class="fa fa-desktop text-warning" aria-hidden="true"></i>  {{ tab_system_info }}</a></li>
+                  <li><a href="#tab-files-info" data-toggle="tab"><i class="fa fa-files-o text-warning" aria-hidden="true"></i>  {{ tab_files_info }}</a></li>
+                </ul>
+                  <div class="tab-content">
+                    <div class="tab-pane active" id="tab-system-info">
+                        <div class="text-center">
+                          <div class="alert alert-info"><i class="fa fa-exclamation-circle"></i>{{ cache_info_message }}<button type="button" class="close" data-dismiss="alert">&times;</button></div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="table-responsive">
+                              <table class="table table-hover table-bordered" style="text-align: center;width:40%;margin: 0 auto">
+                                <!-- On rows -->
+                                <tr class="danger"><th>{{ text_particular }}</th><th class="text-center">{{ text_value }}</th></tr>
+                                <tr>
+                                  <th class="warning">{{ text_cache_driver }}</th>
+                                  <td class="success">{{ getDriverStats ? getDriverStats['driver'] : '' }}</td>
+                                </tr>
+                                <tr>
+                                  <th class="warning">{{ text_cache_file_size }}</th>
+                                  <td class="success">{{ getDriverStats ? getDriverStats['total_size'] ~ text_bytes : '' }}</td>
+                                </tr>
+                                <tr>
+                                  <th class="warning">{{ text_cache_total_file }}</th>
+                                  <td class="success">{{ getDriverStats ? getDriverStats['total_files'] : '' }}</td>
+                                </tr>
+                                <tr>
+                                  <th class="warning">{{ text_cache_globel_second }}</th>
+                                  <td class="success">{{ dateTime_diff ~ text_second }}</td>
+                                </tr>
+                                <tr>
+                                  <th class="warning">{{ text_cache_expiretime }}</th>
+                                  <td class="success">{{ getDriverStats ? getDriverStats['expire_time'].date : '' }}</td>
+                                </tr>
+
+                              </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane" id="tab-files-info">
+                      <div class="table-responsive">
+                          <table class="table table-hover table-bordered">
+                            <thead>
+                              <tr class="alert-info">
+                                <th>{{ entry_layout }}</th>
+                                <th>{{ entry_keyword }}</th>
+                                <th>{{ entry_file_path }}</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                            {% if cache_file_info is defined and cache_file_info %}
+                              {% for key, value  in cache_file_info %}
+                                <tr>
+                                  <td>{{ (key|capitalize)|replace({'_': ''}) }}</td>
+                                  <td>{{ key }}</td>
+                                  <td>{{ value['path'] }}</td>
+                                </tr>
+                              {% endfor %}
+                            {% endif %}
+                            </tbody>
+                          </table>
+                        </div>
+                    </div>
+                  </div>
+              </div>
+
+
+               <div class="tab-pane" id="tab-image">
+                 <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-image_webp"><span data-toggle="tooltip" title="{{ help_image_webp }}">{{ entry_image_webp }}</span></label>
+                      <div class="col-sm-8">
+                        <select name="module_oc_cache_image_webp" id="input-image_webp" class="form-control">
+                          {% if module_oc_cache_image_webp %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_image_webp is defined and error_oc_cache_image_webp %}
+                          <div class="text-danger">{{ error_oc_cache_image_webp }}</div>
+                        {% endif %}
+                      </div>
+                  </div>
+
+                  <div class="form-group col-sm-12 hide">
+                    <label class="col-sm-3 control-label" for="input-image_sprite"><span data-toggle="tooltip" title="{{ help_image_sprite }}">{{ entry_image_sprite }}</span></label>
+                      <div class="col-sm-8">
+                        <select name="module_oc_cache_image_sprite" id="input-image_sprite" class="form-control">
+                          {% if module_oc_cache_image_sprite %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-image_lazy_load"><span data-toggle="tooltip" title="{{ help_image_lazy_load }}">{{ entry_image_lazy_load }}</span></label>
+                      <div class="col-sm-8">
+                        <select name="module_oc_cache_image_lazyload" id="input-image_lazy_load" class="form-control">
+                          {% if module_oc_cache_image_lazyload %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_image_lazyload is defined and error_oc_cache_image_lazyload %}
+                          <div class="text-danger">{{ error_oc_cache_image_lazyload }}</div>
+                        {% endif %}
+                      </div>
+                  </div>
+
+                  <div class="form-group col-sm-12 hide">
+                    <label class="col-sm-3 control-label" for="input-image_multi_image_sizing"><span data-toggle="tooltip" title="{{ help_image_multi_image_sizing }}">{{ entry_image_multi_image_sizing }}</span></label>
+                      <div class="col-sm-8">
+                        <select name="module_oc_cache_image_multi_sizing" id="input-image_multi_image_sizing" class="form-control">
+                          {% if module_oc_cache_image_multi_sizing %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                      </div>
+                  </div>
+
+                  <div class="form-group col-sm-12">
+                   <label class="col-sm-3 control-label">{{ entry_image_compression }}</label>
+                   <div class="col-sm-9">
+                     <select class="form-control" name="module_oc_cache_image_compression">
+                       {% if module_oc_cache_image_compression %}
+                         <option value="1" selected="selected">{{ text_enabled }}</option>
+                         <option value="0">{{ text_disabled }}</option>
+                       {% else %}
+                         <option value="1">{{ text_enabled }}</option>
+                         <option value="0" selected="selected">{{ text_disabled }}</option>
+                       {% endif %}
+                     </select>
+                   </div>
+                 </div>
+               <div class="form-group col-sm-12">
+                 <label class="col-sm-3 control-label">
+                   <span data-toggle="tooltip" title="{{ entry_image_compression_quality_info }}" >
+                     {{ entry_image_compression_quality }}
+                   </span>
+                 </label>
+                 <div class="col-sm-9">
+                   <input type="number" class="form-control" name="module_oc_cache_image_compression_quality" value="{% if module_oc_cache_image_compression_quality is defined %}{{ module_oc_cache_image_compression_quality }}{% endif %}" />
+                   {% if error_module_oc_cache_image_compression_quality is defined and error_module_oc_cache_image_compression_quality %}
+                    <p class="text-danger">{{ error_module_oc_cache_image_compression_quality }}</p>
+                  {% endif %}
+                 </div>
+               </div>
+
+              </div>
+
+              <div class="tab-pane" id="tab-leverage">
+                  <div class="form-group col-sm-12">
+                    <label class="col-sm-3 control-label" for="input-image_lev_browser_cache"><span data-toggle="tooltip" title="{{ help_image_lev_browser_cache }}">{{ entry_image_lev_browser_cache }}</span></label>
+                      <div class="col-sm-8">
+                        <select name="module_oc_cache_leverage_browser_cache" id="input-image_lev_browser_cache" class="form-control">
+                          {% if module_oc_cache_leverage_browser_cache %}
+                          <option value="1" selected="selected">{{ text_enabled }}</option>
+                          <option value="0">{{ text_disabled }}</option>
+                          {% else %}
+                          <option value="1">{{ text_enabled }}</option>
+                          <option value="0" selected="selected">{{ text_disabled }}</option>
+                          {% endif %}
+                        </select>
+                        {% if error_oc_cache_leverage_browser_cache is defined and error_oc_cache_leverage_browser_cache %}
+                          <div class="text-danger">{{ error_oc_cache_leverage_browser_cache }}</div>
+                        {% endif %}
+                      </div>
+                  </div>
+                 {{info_leverage}}
+
+                  <div class="form-group">
+                  <div class="col-sm-12">
+                    <div class="table-responsive">
+
+                      <table class="table" style="border-spacing:2px;border-collapse:separate;">
+                        <thead>
+                          <tr class="success">
+                            <th class="text-left required">{{ entry_leverage_type }}</th>
+                            <th class="text-left required">{{ entry_leverage_time }}</th>
+                            <th class="text-center required">{{ entry_leverage_age_type }}</th>
+                            <th class="text-center required">{{ entry_leverage_status }}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                           <tr class="active">
+                            <td class="text-left"><b>{{ entry_leverage_image }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_leverage_image[time]" value="{% if module_oc_cache_leverage_image['time'] is defined and module_oc_cache_leverage_image['time'] %}{{ module_oc_cache_leverage_image['time'] }}{% endif %}" class="form-control number" placeholder="{{ 'Max age' }}" />
+                                 {% if oc_cache_leverage_image_error is defined and oc_cache_leverage_image_error %}
+                                  <div class="text-danger">{{ oc_cache_leverage_image_error }}</div>
+                                {% endif %}
+                                {% if error_time_leverage_image is defined and error_time_leverage_image %}
+                                  <div class="text-danger">{{ error_time_leverage_image }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                              <select name="module_oc_cache_leverage_image[type]" class="form-control">
+                                {% for type in agetypes %}
+                                  {% if module_oc_cache_leverage_image['type'] == type %}
+                                    <option value="{{ type }}" selected="selected">{{ type|capitalize }}</option>
+                                  {% else %}
+                                    <option value="{{ type }}">{{ type|capitalize }}</option>
+                                  {% endif %}
+                                {% endfor %}
+                                </select>
+                                {% if error_type_leverage_image is defined and error_type_leverage_image %}
+                                  <div class="text-danger">{{ error_type_leverage_image }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_leverage_image[status]" class="form-control">
+                                  {% if module_oc_cache_leverage_image['status'] is defined and module_oc_cache_leverage_image['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_leverage_image is defined and error_status_leverage_image %}
+                                  <div class="text-danger">{{ error_status_leverage_image }}</div>
+                                {% endif %}
+                              </td>
+                            </tr>
+                            <tr class="active">
+                            <td class="text-left"><b>{{ entry_leverage_videos }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_leverage_videos[time]" value="{% if module_oc_cache_leverage_videos['time'] is defined and module_oc_cache_leverage_videos['time'] %}{{ module_oc_cache_leverage_videos['time'] }}{% endif %}" class="form-control number" placeholder="{{ 'Max age' }}" />
+                                 {% if error_time_leverage_videos is defined and error_time_leverage_videos %}
+                                  <div class="text-danger">{{ error_time_leverage_videos }}</div>
+                                {% endif %}
+                            </td>
+                           <td class="text-center">
+                              <select name="module_oc_cache_leverage_videos[type]" class="form-control">
+                                {% for type in agetypes %}
+                                  {% if module_oc_cache_leverage_videos['type'] == type %}
+                                    <option value="{{ type }}" selected="selected">{{ type|capitalize }}</option>
+                                  {% else %}
+                                    <option value="{{ type }}">{{ type|capitalize }}</option>
+                                  {% endif %}
+                                {% endfor %}
+                                </select>
+                                {% if error_type_leverage_videos is defined and error_type_leverage_videos %}
+                                  <div class="text-danger">{{ error_type_leverage_videos }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_leverage_videos[status]" class="form-control">
+                                  {% if module_oc_cache_leverage_videos['status'] is defined and module_oc_cache_leverage_videos['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_leverage_videos is defined and error_status_leverage_videos %}
+                                  <div class="text-danger">{{ error_status_leverage_videos }}</div>
+                                {% endif %}
+                              </td>
+                          </tr>
+                          <tr class="active">
+                            <td class="text-left"><b>{{ entry_leverage_css }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_leverage_css[time]" value="{% if module_oc_cache_leverage_css['time'] is defined and module_oc_cache_leverage_css['time'] %}{{ module_oc_cache_leverage_css['time'] }}{% endif %}" class="form-control number" placeholder="{{ 'Max age' }}" />
+                                 {% if error_time_leverage_css is defined and error_time_leverage_css %}
+                                  <div class="text-danger">{{ error_time_leverage_css }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                              <select name="module_oc_cache_leverage_css[type]" class="form-control">
+                                {% for type in agetypes %}
+                                  {% if module_oc_cache_leverage_css['type'] == type %}
+                                    <option value="{{ type }}" selected="selected">{{ type|capitalize }}</option>
+                                  {% else %}
+                                    <option value="{{ type }}">{{ type|capitalize }}</option>
+                                  {% endif %}
+                                {% endfor %}
+                                </select>
+                                {% if error_type_leverage_css is defined and error_type_leverage_css %}
+                                  <div class="text-danger">{{ error_type_leverage_css }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_leverage_css[status]" class="form-control">
+                                  {% if module_oc_cache_leverage_css['status'] is defined and module_oc_cache_leverage_css['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_leverage_css is defined and error_status_leverage_css %}
+                                  <div class="text-danger">{{ error_status_leverage_css }}</div>
+                                {% endif %}
+                              </td>
+                            </tr>
+                            <tr class="active">
+                            <td class="text-left"><b>{{ entry_leverage_js }}</b></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_leverage_js[time]" value="{% if module_oc_cache_leverage_js['time'] is defined and module_oc_cache_leverage_js['time'] %}{{ module_oc_cache_leverage_js['time'] }}{% endif %}" class="form-control number" placeholder="{{ 'Max age' }}" />
+                                 {% if error_time_leverage_js is defined and error_time_leverage_js %}
+                                  <div class="text-danger">{{ error_time_leverage_js }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                              <select name="module_oc_cache_leverage_js[type]" class="form-control">
+                                {% for type in agetypes %}
+                                  {% if module_oc_cache_leverage_js['type'] == type %}
+                                    <option value="{{ type }}" selected="selected">{{ type|capitalize }}</option>
+                                  {% else %}
+                                    <option value="{{ type }}">{{ type|capitalize }}</option>
+                                  {% endif %}
+                                {% endfor %}
+                                </select>
+                                {% if error_type_leverage_js is defined and error_type_leverage_js %}
+                                  <div class="text-danger">{{ error_type_leverage_js }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_leverage_js[status]" class="form-control">
+                                  {% if module_oc_cache_leverage_js['status'] is defined and module_oc_cache_leverage_js['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_leverage_js is defined and error_status_leverage_js %}
+                                  <div class="text-danger">{{ error_status_leverage_js }}</div>
+                                {% endif %}
+                              </td>
+                            </tr>
+
+                            <tr class="active">
+                            <td class="text-left"><span data-toggle="tooltip" title="{{ help_leverage_other }}"><b>{{ entry_leverage_other }}</b></span></td>
+                              <td class="text-center">
+                                <input type="number" name="module_oc_cache_leverage_other[time]" value="{% if module_oc_cache_leverage_other['time'] is defined and module_oc_cache_leverage_other['time'] %}{{ module_oc_cache_leverage_other['time'] }}{% endif %}" class="form-control number"  placeholder="{{ 'Max age' }}" />
+                                 {% if error_time_leverage_other is defined and error_time_leverage_other %}
+                                  <div class="text-danger">{{ error_time_leverage_other }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                              <select name="module_oc_cache_leverage_other[type]" class="form-control">
+                                {% for type in agetypes %}
+                                  {% if module_oc_cache_leverage_other['type'] == type %}
+                                    <option value="{{ type }}" selected="selected">{{ type|capitalize }}</option>
+                                  {% else %}
+                                    <option value="{{ type }}">{{ type|capitalize }}</option>
+                                  {% endif %}
+                                {% endfor %}
+                                </select>
+                                {% if error_type_leverage_other is defined and error_type_leverage_other %}
+                                  <div class="text-danger">{{ error_type_leverage_other }}</div>
+                                {% endif %}
+                              </td>
+                              <td class="text-center">
+                                <select name="module_oc_cache_leverage_other[status]" class="form-control">
+                                  {% if module_oc_cache_leverage_other['status'] is defined and module_oc_cache_leverage_other['status'] %}
+                                    <option value="1" selected="selected">{{ text_enabled }}</option>
+                                    <option value="0">{{ text_disabled }}</option>
+                                    {% else %}
+                                    <option value="1">{{ text_enabled }}</option>
+                                    <option value="0" selected="selected">{{ text_disabled }}</option>
+                                    {% endif %}
+                                </select>
+                                {% if error_status_leverage_other is defined and error_status_leverage_other %}
+                                  <div class="text-danger">{{ error_status_leverage_other }}</div>
+                                {% endif %}
+                              </td>
+                            </tr>
+
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="tab-pane" id="tab-clear">
+                <div class="table-responsive">
+                  <table class="table table-hover table-bordered">
+                    <thead>
+                      <tr class="alert-info">
+                        <th class="text-center">{{ entry_select }}</th>
+                        <th class="text-center">{{ entry_cache }}</th>
+                        <th class="text-center">{{ entry_action }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                    {% if clear_cache_option is defined and clear_cache_option %}
+                    {% for cache_option in clear_cache_option %}
+                        <tr>
+                          <td class="text-center">
+                            <input type="checkbox" name="option" value="{{ cache_option }}" /></td>
+                          <td class="text-center">{{ ((cache_option ~ ' Cache')|capitalize)|replace({'_':''}) }}</td>
+                          <td class="text-center"><button class="btn btn-danger" id="{{ cache_option }}" onclick="deleteCache(this);" type="button"><i class="fa fa-trash-o" aria-hidden="true"></i> {{ button_clear }}</button></td>
+                        </tr>
+                      {% endfor %}
+                    {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+
+  $('#clear-page-cache').on('click', function() {
+    var confirmation = confirm("Are you sure?");
+    if(confirmation) {
+      $.ajax({
+        url: 'index.php?route=extension/module/oc_cache/clearPageCache&user_token={{ user_token }}',
+        beforeSend: function() {
+          $('.alert-danger, .alert-success').remove();
+          $('#clear-page-cache').button('loading');
+        },
+        complete: function() {
+          $('#clear-page-cache').button('reset');
+        },
+        success: function(response) {
+          if(response.success = true) {
+            $('#page-cache-size').val(response.size);
+            html = '<div class="alert alert-success">Page cache is cleared successfully.<i class="fa fa-check-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+            $('.panel-default').before(html);
+          } else {
+            html = '<div class="alert alert-danger">There is some issue, please try again after some time!<i class="fa fa-exclamation-circle"></i><button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+            $('.panel-default').before(html);
+          }
+        }
+      })
+    }
+  });
+
+
+  function getDashboardData(api_key) {
+    if(api_key == undefined || api_key == '') {
+      api_key = $('input[name="module_oc_cache_google_speedtest_api_key"]').val();
+    }
+
+    if(api_key != undefined && api_key != '') {
+      $.ajax({
+        url: 'index.php?route=extension/module/oc_cache/dashboard&user_token={{ user_token }}',
+        data: {
+          api_key: api_key,
+        },
+        dataType: 'json',
+        method: 'post',
+        beforeSend: function() {
+
+        },
+        complete: function() {
+
+        },
+        success: function(response) {
+          if(response['status'] == true) {
+
+          } else {
+            //alert(response['msg']);
+          }
+        }
+      })
+    }
+  }
+
+  //getDashboardData($('input[name="module_oc_cache_google_speedtest_api_key"]').val());
+
+
+</script>
+
+<script type="text/javascript">
+  function clearCache(thisthis){
+    if(thisthis.length > 1){
+        $.ajax({
+          url: 'index.php?route=extension/module/oc_cache/clearCache&user_token={{ user_token }}&cache_index='+ thisthis,
+          type: 'post',
+          dataType: 'json',
+          beforeSend: function() {
+            $('#'+thisthis).button('loading');
+          },
+          complete: function() {
+            $('#'+thisthis).button('reset');
+          },
+          success: function(json) {
+            $('#oc_cache .alert').remove();
+            if(json['success']){
+              location.reload();
+            }
+            if(json['error']){
+               html = ' <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['error'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+               $('#oc_cache').prepend(html);
+            }
+          }
+        });
+    }
+  }
+
+  function deleteCache(thisthis){
+  	$(thisthis).parents("tr").find("input[type=checkbox]").prop('checked', true);
+    console.log(thisthis)
+  	var getId = $(thisthis).attr("id");
+
+    if(getId.length > 1){
+        $.ajax({
+          url: 'index.php?route=extension/module/oc_cache/deleteCache&user_token={{ user_token }}&cache_option='+ getId,
+          type: 'post',
+          dataType: 'json',
+          beforeSend: function() {
+            $('#tab-clear alert-danger').remove();
+            $('#'+getId).button('loading');
+          },
+          complete: function() {
+            $('#'+getId).button('reset');
+          },
+          success: function(json) {
+
+            $('#tab-clear .alert').remove();
+            if(json['success']){
+              location.reload();
+            }
+            if(json['warning']){
+               html = ' <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> ' + json['warning'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div>';
+               $('#tab-clear').prepend(html);
+            }
+          }
+        });
+    }
+  }
+  // Restricts input for the given textbox to the given inputFilter.
+function setInputFilter(textbox, inputFilter) {
+  ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+    textbox.addEventListener(event, function() {
+      if (inputFilter(this.value)) {
+        this.oldValue = this.value;
+        this.oldSelectionStart = this.selectionStart;
+        this.oldSelectionEnd = this.selectionEnd;
+      } else if (this.hasOwnProperty("oldValue")) {
+        this.value = this.oldValue;
+        this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+      }
+    });
+  });
+}
+
+
+
+//setInputFilter(document.getElementByClass("number"), function(value) {
+ //return /^[0-9]*$/i.test(value); });
+
+// Install input filters.
+{# setInputFilter(document.getElementById("uintTextBox"), function(value) {
+  return /^\d*$/.test(value); });
+setInputFilter(document.getElementById("intLimitTextBox"), function(value) {
+  return /^\d*$/.test(value) && (value === "" || parseInt(value) <= 500); });
+
+
+setInputFilter(document.getElementById("floatTextBox"), function(value) {
+  return /^-?\d*[.,]?\d*$/.test(value); });
+setInputFilter(document.getElementById("currencyTextBox"), function(value) {
+  return /^-?\d*[.,]?\d{0,2}$/.test(value); });
+setInputFilter(document.getElementById("basicLatinTextBox"), function(value) {
+  return /^[a-z]*$/i.test(value); });
+setInputFilter(document.getElementById("extendedLatinTextBox"), function(value) {
+  return /^[a-z\u00c0-\u024f]*$/i.test(value); });
+setInputFilter(document.getElementById("hexTextBox"), function(value) {
+  return /^[0-9a-f]*$/i.test(value); }); #}
+
+</script>
+<link href="view/javascript/color-picker/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+<script src="view/javascript/color-picker/js/bootstrap-colorpicker.min.js"></script>
+<script type="text/javascript">
+$(function(){
+
+  getTabOpenedForTheError();
+
+  function getTabOpenedForTheError() {
+    $('#tab-setting').removeClass('active');
+    $('[href="#tab-setting"]').parent().removeClass('active');
+
+    let error_selected1 = $('.has-error').closest('.tab-pane');
+    let error_selected2 = $(error_selected1).parents('.tab-pane');
+    let flag1 = false;
+    let flag2 = false;
+
+    if(error_selected2.length) {
+      $('[href="#' + $(error_selected2).attr('id') + '"]').parent().addClass('active');
+      $(error_selected2).addClass('active');
+      flag1 = true;
+    }
+
+    if(error_selected1.length) {
+      $('[href="#' + $(error_selected1).attr('id') + '"]').parent().addClass('active');
+      $(error_selected1).addClass('active');
+      flag2 = true;
+      $('.has-error input').focus();
+    }
+
+    if(!flag1 && !flag2) {
+      $('#tab-setting').addClass('active');
+      $('[href="#tab-setting"]').parent().addClass('active');
+    }
+
+}
+
+  $('.bgcolorpicker').colorpicker({'format':'hex'});
+  $('.fontcolorpicker').colorpicker({'format':'hex'});
+});
+</script>
+{{ footer }}

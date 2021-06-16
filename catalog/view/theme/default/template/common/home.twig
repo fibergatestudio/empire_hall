@@ -1,0 +1,33 @@
+{{ header }}
+{{ content_top }}
+{{ column_left }}
+{{ column_right }}
+{{ content_bottom }}
+{{ footer }}
+
+{#<div class="preloader" id="preloader">
+    <img src="/front/dist/images/preloader.gif" alt="">
+</div>#}
+{% if popaps_banners.image %}
+{% if popaps_login==0 %}
+<div class="modal-banner" data-time="3" style="display: none;">
+    <div class="banner-content">
+        <div class="banner-content__image" style="background-image:url({{ popaps_banners.image }});">
+            <div class="close-banner">
+                <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#close"></use></svg>
+            </div>
+            <div class="banner-content__holder">
+
+                <div class="title">{{ popaps_banners.title }}</div>
+                <div class="text">{{ popaps_banners.description }}</div>
+                <a href="{{ popaps_banners.link }}" class="main-button">{{ popaps_banners.title_button }}</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% else %}
+    <script>
+        $('.login-popup').addClass('open')
+    </script>
+{% endif %}
+{% endif %}

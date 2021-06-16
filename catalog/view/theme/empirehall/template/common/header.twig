@@ -1,0 +1,287 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+		<meta name="description" content="test">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<meta name="format-detection" content="telephone=no">
+		
+		{% if (open_to_index) %}
+			<meta name="robots" content="index, follow" />
+		{% else %}
+			<meta name="robots" content="noindex, nofollow" />
+		{% endif %}
+		
+		<base href="{{ base }}" />
+		<title>{{ title }}</title>
+		{% if description %}
+			<meta name="description" content="{{ description }}" />
+		{% endif %}
+		{% if keywords %}
+			<meta name="keywords" content="{{ keywords }}" />
+		{% endif %}
+		
+		<link rel="icon" type="image/png" sizes="16x16 32x32" href="catalog/view/theme/empirehall/images/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="192x192" href="catalog/view/theme/empirehall/images/android-icon-192x192.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="catalog/view/theme/empirehall/images/apple-icon-180x180.png">
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link rel="preload" href="catalog/view/theme/empirehall/css/index.css" as="style">
+		<link href="catalog/view/theme/empirehall/css/index.css" rel="stylesheet">
+		
+		{% for style in styles %}
+			<link href="{{ style.href }}" type="text/css" rel="{{ style.rel }}" media="{{ style.media }}" />
+		{% endfor %}
+		{% for link in links %}
+			<link href="{{ link.href }}" rel="{{ link.rel }}" />
+		{% endfor %}
+	</head>
+	
+	<body class="main-page main {{ body_class }}">
+		<div class="preloader" id="preloader">
+			<video autoplay loop muted playsinline>
+				<source src="catalog/view/theme/empirehall/images/preloader.webm" type="video/webm">
+				<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="catalog/view/theme/empirehall/images/preloader.gif" alt="" class="lazyload">
+			</video>
+		</div>
+		
+		<div class="wrapper">
+
+			<header class="header">
+				<div class="header__inner">
+					<div class="header__left">
+						<div class="menu__open">
+							<span></span>
+							<span></span>
+						</div>
+						<nav class="main-nav">
+							<ul class="main-nav__list">
+								<li class="main-nav__item main-nav__item--shop">
+									<a href="{{ store_link }}">{{ text_store_tab }}</a>
+								</li>
+								<li class="main-nav__item">
+									<a href="{{ brands_link }}">{{ text_brands_tab }}</a>
+								</li>
+								{% if inspiration_link_config !=0 %}
+									<li class="main-nav__item">
+										<a href="{{ inspiration_link }}">{{ text_breath_tab }}</a>
+									</li>
+								{% endif %}
+							</ul>
+						</nav>
+					</div>
+					<div class="header__center">
+						<a href="{{ home }}" class="logo"></a>
+					</div>
+					<div class="header__right">
+						{{ search }}
+						{{ language }}
+						<div class="header__links">
+							<div class="header__link header__link--area no-login">
+								<a href="#" id="no-login-link">
+									<svg>
+										<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#login"></use>
+									</svg>
+								</a>
+								{% if is_logged %}
+									<div class="loged-label">
+										{{ client_name }}
+									</div>
+								{% endif %}
+								<div class="login-popup" id="login-popup">
+									<div class="login-popup__title">{{ text_login_title }}</div>
+									<form class="login-popup__form" id="login-form">
+										<div class="form-block">
+											<input class="main-input" type="email" name="email">
+											<div class="form-label">{{ text_login_email }}</div>
+										</div>
+										<div class="form-block">
+											<input class="main-input" type="password" name="password">
+											<div class="form-label">{{ text_login_pwd }}</div>
+										</div>
+										<a class="forgot-password" href="{{ forgot }}">{{ text_login_forgot }}</a>
+										<button class="submit-button" type="submit">{{ text_login_entry }}</button>
+									</form>
+									<a class="show-all" href="{{ register }}">{{ text_login_no_acc }}</a>
+								</div>
+								
+							</div>
+							<a class="header__link header__link--wishlist" href="{{ wishlist }}">
+								<svg>
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#wishlist"></use>
+								</svg>
+								<div class="count">{{ count_wishlist }}</div>
+							</a>
+							<div class="header__link header__link--basket">
+								<svg>
+									<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#basket"></use>
+								</svg>
+								<div class="count" id="cart-total">{{ count_products }}</div>
+							</div>
+							<div class="cart-add-popup">
+								<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="data/done.svg"></use></svg>
+								<span>{{ text_cart_success_add }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				{% if categories %}
+					<div class="shop-menu">
+						<div class="menu__close">
+							<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#close"></use></svg>
+						</div>
+						<div class="shop-menu__inner">
+							<ul class="shop-menu__list first-level mCustomScrollbar">
+								{% for category in categories %}
+									{% for child in category.children %}
+										<li class="shop-menu__item">
+											{% if child.children_third %}
+												<a href="{{ child.href }}" class="has-submenu" data-sub="sub-{{ child.category_id }}">
+													<span>{{ child.name }}</span>
+													<svg>
+														<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#opener"></use>
+													</svg>
+												</a>
+											{% else %}
+												<a href="{{ child.href }}">{{ child.name }}</a>
+											{% endif %}
+										</li>
+									{% endfor %}
+								{% endfor %}
+							</ul>
+							{% for category in categories %}
+								{% for child in category.children %}
+									{% if child.children_third %}
+										<ul class="shop-menu__list sub second-level sub-{{ child.category_id }} mCustomScrollbar">
+											<li class="shop-menu__item shop-menu__back">
+												<a href="#">
+													<svg>
+														<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#opener"></use>
+													</svg>
+													Назад
+												</a>
+											</li>
+											{% for child2 in child.children_third %}
+												<li class="shop-menu__item">
+													{% if child2.children_fourth %}
+														<a class="has-submenu" data-sub="sub-{{ child2.category_id }}" href="{{ child2.href }}">
+															<span>{{ child2.name }}</span>
+															<svg>
+																<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#opener"></use>
+															</svg>
+														</a>
+													{% else %}
+														<a href="{{ child2.href }}">{{ child2.name }}</a>
+													{% endif %}
+												</li>
+											{% endfor %}
+										</ul>
+									{% endif %}
+								{% endfor %}
+							{% endfor %}
+							{% for category in categories %}
+								{% for child in category.children %}
+									{% if child.children_third %}
+										{% for child2 in child.children_third %}
+											{% if child2.children_fourth %}
+												<ul class="shop-menu__list sub third-level sub-{{ child2.category_id }} mCustomScrollbar">
+													<li class="shop-menu__item shop-menu__back">
+														<a href="#">
+															<svg>
+																<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#opener"></use>
+															</svg>
+															Назад
+														</a>
+													</li>
+													{% for child3 in child2.children_fourth %}
+														<li class="shop-menu__item">
+															<a href="{{ child3.href }}">
+																<span>{{ child3.name }}</span>
+															</a>
+														</li>
+													{% endfor %}
+												</ul>
+											{% endif %}
+										{% endfor %}
+									{% endif %}
+								{% endfor %}
+							{% endfor %}
+						</div>
+					</div>
+				{% endif %}
+			</header>
+			<button class="catalog-btn">
+				{{ text_category }}
+				<svg>
+					<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#opener"></use>
+				</svg>
+			</button>
+			<div class="menu">
+				<div class="menu__inner">
+					<div class="menu__close">
+						<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#close"></use></svg>
+					</div>
+					{% if categories %}
+						<div class="menu__left">
+							<div class="menu__left-box">
+								<div class="menu__subtitle">{{ text_category }}</div>
+								<nav class="left-nav">
+									<ul class="left-nav__list scroll-menu">
+										{% for category in categories %}
+											<li class="left-nav__item">
+												<a href="{{ child.href }}">{{ child.name }}</a>
+											</li>
+										{% endfor %}
+									</ul>
+								</nav>
+							</div>
+						</div>
+					{% endif %}
+					<div class="menu__right">
+						<div class="menu__right-box">
+							<div class="menu__subtitle">{{ store_name }}</div>
+							<nav class="right-nav">
+								<ul class="right-nav__list scroll-text">
+									{% for item in menus %}
+										<li class="right-nav__item">
+											<a href="{{ item.href }}">{{ item.name }}</a>
+										</li>
+									{% endfor %}
+								</ul>
+							</nav>
+							<div class="mobile-language"></div>
+							<ul class="menu-socials">
+								{% if instagram %}
+									<li class="menu-socials__item">
+										<a href="{{ instagram }}" target="_blank">
+											<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#instagram"></use></svg>
+										</a>
+									</li>
+								{% endif %}
+								{% if pinterest %}
+									<li class="menu-socials__item">
+										<a href="{{ pinterest }}" target="_blank">
+											<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#pinterest"></use></svg>
+										</a>
+									</li>
+								{% endif %}
+								{% if facebook %}
+									<li class="menu-socials__item">
+										<a href="{{ facebook }}" target="_blank">
+											<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#facebook"></use></svg>
+										</a>
+									</li>
+								{% endif %}
+								{% if youtube %}
+									<li class="menu-socials__item">
+										<a href="{{ youtube }}" target="_blank">
+											<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="catalog/view/theme/empirehall/images/sprite.svg#youtube"></use></svg>
+										</a>
+									</li>
+								{% endif %}
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>

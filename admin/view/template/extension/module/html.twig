@@ -1,0 +1,230 @@
+{{ header }}{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+          <ul class="nav nav-tabs">
+            <li class="active"><a href="#tab-general" data-toggle="tab">Основное</a></li>
+            <li><a href="#tab-trigger" data-toggle="tab">Тригеры</a></li>
+          </ul>
+          <div class="tab-content">
+            <div class="tab-pane active" id="tab-general"> 
+				<div class="form-group">
+				  <label class="col-sm-2 control-label" for="input-name">{{ entry_name }}</label>
+				  <div class="col-sm-10">
+					<input type="text" name="name" value="{{ name }}" placeholder="{{ entry_name }}" id="input-name" class="form-control" />
+					{% if error_name %}
+					<div class="text-danger">{{ error_name }}</div>
+					{% endif %}
+				  </div>
+				</div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label" for="input-html-tpl"><span data-toggle="tooltip" title="" data-original-title="Введите название '.tpl' файла, который будет подгружен на Front. Папка для '.tpl' файлов: 'html'.">Название шаблона</span></label>
+                  <div class="col-sm-10">
+                      <input type="text" name="layout" placeholder="Шаблон" id="input-html-tpl" value="{{ layout }}" class="form-control" />
+                  </div>
+                </div>  				  
+				<div class="tab-pane">
+				  <ul class="nav nav-tabs" id="language">
+					{% for language in languages %}
+					<li><a href="#language{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>
+					{% endfor %}
+				  </ul>
+				  <div class="tab-content">
+					{% for language in languages %}
+					<div class="tab-pane" id="language{{ language.language_id }}">
+					  <div class="form-group">
+						<label class="col-sm-2 control-label" for="input-title{{ language.language_id }}">{{ entry_title }}</label>
+						<div class="col-sm-10">
+						  <input type="text" name="module_description[{{ language.language_id }}][title]" placeholder="{{ entry_title }}" id="input-heading{{ language.language_id }}" value="{{ module_description[language.language_id] ? module_description[language.language_id].title }}" class="form-control" />
+						</div>
+					  </div>
+					  <div class="form-group">
+						<label class="col-sm-2 control-label" for="input-description{{ language.language_id }}">{{ entry_description }}</label>
+						<div class="col-sm-10">
+						  <textarea name="module_description[{{ language.language_id }}][description]" placeholder="{{ entry_description }}" id="input-description{{ language.language_id }}" data-toggle="summernote" class="form-control">{{ module_description[language.language_id] ? module_description[language.language_id].description }}</textarea>
+						</div>
+					  </div>
+					</div>
+					{% endfor %}
+				  </div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Изображение</label>
+					<div class="col-sm-10"><a href="" id="thumb-image" data-toggle="image" class="img-thumbnail"><img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+						<input type="hidden" name="image" value="{{ image }}" id="input-image" />
+					</div>
+				</div>
+
+				<div class="form-group">
+				  <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+				  <div class="col-sm-10">
+					<select name="status" id="input-status" class="form-control">
+					  {% if status %}
+					  <option value="1" selected="selected">{{ text_enabled }}</option>
+					  <option value="0">{{ text_disabled }}</option>
+					  {% else %}
+					  <option value="1">{{ text_enabled }}</option>
+					  <option value="0" selected="selected">{{ text_disabled }}</option>
+					  {% endif %}
+					</select>
+				  </div>
+				</div>
+            </div>
+            <div class="tab-pane" id="tab-trigger">
+				<ul class="nav nav-tabs" id="language-img">
+				  {% for language in languages %}
+					  <li><a href="#language-img{{ language.language_id }}" data-toggle="tab"><img src="language/{{ language.code }}/{{ language.code }}.png" title="{{ language.name }}" /> {{ language.name }}</a></li>
+				  {% endfor %}					
+				</ul>
+               <div class="tab-content">
+                {% for language in languages %}
+                <div class="tab-pane" id="language-img{{ language.language_id }}">
+                    <div class="page-header clearfix">
+                    <div class="pull-right">
+                      <button type="button" id="add-desc-img-{{ language.language_id }}" data-count="{% if pdi_count[language.language_id] is defined %}{{ pdi_count[language.language_id] }}{% else %}0{% endif %}" data-language="{{ language.language_id }}" data-toggle="tooltip" title="Добавить новое поле" class="btn btn-primary"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <h2 class="text-left">Триггеры <i class="fa fa-comment" style="color: red;" data-toggle="tooltip" title="Добавить поля описаний триггеров"></i></h2>
+                  </div>
+					{% set i = 0 %}
+					{% for language_id, product_desc in product_desc_img %}
+						{% for desc in product_desc %}
+							{% if language_id == language.language_id %}
+								<div id="desc_img_{{ i }}_{{ language_id }}">
+								  <div class="row">
+									<div class="col-sm-11">
+									  <div class="form-group">
+										<label class="col-sm-2 control-label" for="input-name-img3">Название</label>
+										<div class="col-sm-10">
+										  <input type="text" name="product_desc_img[{{ language_id }}][{{ i }}][title]" value="{{ desc.title }}" placeholder="Введите название" class="form-control"/>
+										</div>
+									  </div>
+									  <div class="form-group">
+										<label class="col-sm-2 control-label" for="input-name-img3">Изображение</label>
+										<div class="col-sm-10">
+											<a href="" id="thumb-image-main-features-{{ language_id }}-{{ i }}" data-toggle="image" class="img-thumbnail">
+											{% if desc.thumb is defined and desc.thumb %}	
+												<img src="{{ desc.thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+											{% else %}
+												<img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>
+											{% endif %}
+											<input type="hidden" name="product_desc_img[{{ language_id }}][{{ i }}][image]" value="{{ desc.image }}" id="input-image-main-features-{{ language_id }}-{{ i }}" />
+										</div>
+									  </div>
+									  <div class="form-group">
+										<label class="col-sm-2 control-label" for="input-description{{ language.language_id }}">Описание</label>
+										<div class="col-sm-10">
+										  <textarea name="product_desc_img[{{ language_id }}][{{ i }}][description]" class="form-control summernote" placeholder="Введите описание">{{ desc.description }}</textarea>
+										</div>
+									  </div>
+									</div>
+									<div class="col-sm-1 text-right">
+									  <button type="button" onclick="$('#desc_img_{{ i }}_{{ language_id }}').remove();" data-toggle="tooltip" title="Удалить" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>
+									</div>
+								  </div>
+								</div>
+								<hr />
+								{% set i = i + 1 %}
+							{% endif %}
+						{% endfor %}
+                    {% endfor %}	
+                    <div id="desc-img-{{ language.language_id }}"></div>
+                </div>
+                {% endfor %}
+               </div>
+            </div>   
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <link href="view/javascript/codemirror/lib/codemirror.css" rel="stylesheet" />
+  <link href="view/javascript/codemirror/theme/monokai.css" rel="stylesheet" />
+  <script type="text/javascript" src="view/javascript/codemirror/lib/codemirror.js"></script> 
+  <script type="text/javascript" src="view/javascript/codemirror/lib/xml.js"></script> 
+  <script type="text/javascript" src="view/javascript/codemirror/lib/formatting.js"></script> 
+  <script type="text/javascript" src="view/javascript/summernote/summernote.js"></script>
+  <link href="view/javascript/summernote/summernote.css" rel="stylesheet" />
+  <script type="text/javascript" src="view/javascript/summernote/summernote-image-attributes.js"></script>
+  <script type="text/javascript" src="view/javascript/summernote/opencart.js"></script>
+  <script type="text/javascript"><!--
+$('#language a:first').tab('show');
+$('#language-img a:first').tab('show');
+	{% for language in languages %}
+		$(document).on('click', '#add-desc-img-{{ language.language_id }}', function(){
+			var language  = $(this).attr('data-language');
+			var count     = $(this).attr('data-count');
+			addDescImg(count,language);
+		});
+    {% endfor %}
+
+    function addDescImg(count,language) {
+    
+        if(!count) {
+        count = 1;
+        } else {
+          count++;
+          $('#add-desc-img-'+language).attr('data-count', count);
+        }
+        
+        html = '';
+        html += '<div id="desc_img_'+count+'_'+language+'" style="padding-bottom: 10px;border-bottom: 3px dotted;padding-top: 10px;">';
+        html += '<div class="row">';
+        html += '<div class="col-sm-11">';
+        html += '<div class="form-group">';
+        html += '<label class="col-sm-2 control-label">Название</label>';
+        html += '<div class="col-sm-10">';
+        html += '<input type="text" name="product_desc_img[' + language + '][' + count + '][title]" placeholder="Введите название" class="form-control"/>';
+        html += '</div>';
+        html += '</div>'; 
+        html += '<div class="form-group">';
+        html += '<label class="col-sm-2 control-label" for="input-name-img3">Изображение</label>';
+        html += '<div class="col-sm-10">';
+        html += '<a href="" id="thumb-image-main-features-'+language+'-'+count+'" data-toggle="image" class="img-thumbnail">';
+        html += '<img src="{{ placeholder }}" alt="" title="" data-placeholder="{{ placeholder }}" /></a>';
+        html += '<input type="hidden" name="product_desc_img[' + language + '][' + count + '][image]" value="" id="input-image-main-features-'+language+'-'+count+'" />';
+        html += '</div>';   
+        html += '</div>';
+        html += '<div class="form-group">';
+        html += '<label class="col-sm-2 control-label">Описание</label>';
+        html += '<div class="col-sm-10">';
+        html += '<textarea name="product_desc_img[' + language + '][' + count + '][description]" class="form-control summernote" placeholder="Введите описание"></textarea>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-sm-1">';
+        html += '<button type="button" onclick="$(\'#desc_img_' + count +'_'+language+ '\').remove();" data-toggle="tooltip" title="Удалить" class="btn btn-danger"><i class="fa fa-minus-circle"></i></button>';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>';
+        
+        $('#desc-img-'+ language).append(html);
+        $('.summernote').summernote({height: 150});
+        return true;
+        
+    }
+//--></script></div>
+{{ footer }}

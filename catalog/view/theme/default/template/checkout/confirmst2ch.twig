@@ -1,0 +1,9 @@
+{% if not redirect %}
+<div class="table-responsive">
+</div>
+{{ payment }}
+{% else %} 
+<script type="text/javascript"><!--
+location = '{{ redirect }}';
+//--></script> 
+{% endif %} 

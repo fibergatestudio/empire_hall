@@ -1,0 +1,26 @@
+{% if categories %}
+    <div class="main-catalog" style="background-image: url(front/dist/data/main-catalog-bg.png);">
+        <div class="main-catalog__inner">
+            <div class="main-subtitle main-subtitle--silver">{{ heading_title }}</div>
+            <div class="main-catalog__top">
+                <div class="main-catalog__top-image">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="front/dist/data/title-img.svg" width="575" height="51" alt="{{ heading_title }}" class="lazyload">
+                </div>
+                <a href="{{ categories_link }}" class="show-all">{{ text_all_categories }}</a>
+            </div>
+            <div class="main-catalog__list">
+                {% for category in categories %}
+                    {% if category.top %}
+                    <a href="{{ category.href }}" class="main-catalog__item">
+                        <div class="main-catalog__image">
+                            <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ category.image }}" class="lazyload" width="430" height="524" alt="{{ category.name }}">
+                            <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#catalog-decore"></use></svg>
+                        </div>
+                        <div class="main-catalog__title">{{ category.name }}</div>
+                    </a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}

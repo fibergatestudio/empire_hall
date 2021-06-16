@@ -1,0 +1,79 @@
+{{ header }}
+<div class="gift-card__inner">
+
+    <ul class="gift-card__tabs">
+        {% for category in categories %}
+
+            <li class="gift-card__tabs-item">
+                <a href="#" data-id="{{ category.category_id }}"
+                   class="{% if category_id_child == category.category_id %}active{% endif %}">{{ category.name }}</a>
+            </li>
+
+        {% endfor %}
+
+    </ul>
+
+    <div class="gift-card__box">
+        <div class="gift-card__slider">
+            {% for gift_banner in gift_banners %}
+
+            <div class="gift-card__slide">
+                <img decoding="async" data-src="{{ gift_banner.image }}" width="1200" height="600" alt="{{ h1_child }}" class="lazyload">
+            </div>
+            {% endfor %}
+        </div>
+        <div class="gift-card__item">
+            <div class="gift-card__content">
+                <div class="main-subtitle">{{ h12 }}</div>
+                <div class="gift-card__title">{{ h1_child }}</div>
+                {{ description_child }}
+            </div>
+            <div class="gift-card__form" style="background-image: url('/front/dist/data/gift-card-form-bg.png');">
+                <div class="gift-card__form-inner">
+                    <div class="gift-card__form-title">{{ text_gift_cart_buy }}</div>
+                    {% if products %}
+                        <select name="select-sum">
+                            <option value="0" selected disabled>{{ text_gift_summ }}</option>
+                            {% for product in products %}
+                                <option value="{{ product.product_id }}">{{ product.price }}</option>
+                            {% endfor %}
+                        </select>
+                        <div class="gift-card__quantity">
+                            <div class="gift-card__quantity-title">{{ text_quantity }}</div>
+                            <div class="product-quantity">
+                                <button class="product-quantity__button product-quantity__minus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="7" height="1" viewBox="0 0 7 1">
+                                        <rect class="cls-1" width="7" height="1"/>
+                                    </svg>
+                                </button>
+                                <input class="product-quantity__input" type="number" name="product-quantity" value="1"
+                                       min="1" max="999" readonly>
+                                <button class="product-quantity__button product-quantity__plus">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="7" height="7" viewBox="0 0 7 7">
+                                        <path d="M1308,350h7v1h-7v-1Zm3-3h1v7h-1v-7Z"
+                                              transform="translate(-1308 -347)"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <a class="main-button buy_gift" onclick="return false;" href="#">{{ text_gift_buy }} </a>
+                    {% else %}
+
+                        {{ text_empty_gift }}
+
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.product-quantity').numberPicker();
+    })
+</script>
+
+{{ footer }}

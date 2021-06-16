@@ -1,0 +1,41 @@
+
+
+<div  class="filter-categories__list accordion">
+    {% for category in categories %}
+    {% for child in category.children %}
+    <div class="filter-categories__item {% if child_id == child.category_id %}active{% endif %}">
+        <div class="filter-categories__title"><a class="link" href="{{ child.href }}">{{ child.name }}</a>
+            {% if child.chl_third %}
+            <span class="arrow opener"></span>
+            {% endif %}
+        </div>
+        <div class="filter-categories__content slide">
+            {% if child.chl_third %}
+                {% for third in child.chl_third %}
+            <div class="filter-categories__subitem {% if third_id == third.category_id %}active{% endif %}">
+                <div class="filter-categories__subitem-title">
+                    {% if third.children_fourth %}  <div class="opener"></div>{% endif %}
+                    <a href="{{ third.href }}">{{ third.name }}</a>
+                </div>
+                {% if third.children_fourth %}
+                <div class="filter-categories__content slide">
+                    <ul>
+
+                        {% for fourth in  third.children_fourth %}
+                            <li class="{% if fourth_id == fourth.category_id %}active{% endif %}"><a href="{{ fourth.href }}">{{ fourth.name }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+
+            </div>
+                {% endfor %}
+            {% endif %}
+
+
+        </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+
+</div>

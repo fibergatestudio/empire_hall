@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?>
+<modification>
+    <name>{NAME}</name>
+    <code>{MOD}</code>
+    <id>{MOD}</id>
+    <version>{VERSION}</version>
+    <vqmver required="true">2.4.0</vqmver>
+    <author>{AUTHOR}</author>
+    <link>https://opencartadmin.com</link>
+
+<file path="system/library/response.php" error="skip">
+    <operation error="skip">
+        <search position="after"><![CDATA[private $output;]]></search>
+        <add position="after"><![CDATA[
+	//JC vars
+	private $jetcache_registry = Array();
+	//End of JC vars
+    ]]></add>
+    </operation>
+</file>
+
+<file path="system/library/response.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[public function addHeader]]></search>
+        <add position="before"><![CDATA[
+ 	public function jetcache_setRegistry($registry) {
+		$this->jetcache_registry = $registry;
+	}
+ 	public function jetcache_getHeaders() {
+		return $this->headers;
+	}
+	public function jetcache_getOutput() {
+		return $this->output;
+	}
+    ]]></add>
+    </operation>
+</file>
+
+<file path="system/library/response.php" error="skip">
+      <operation error="skip">
+        <search position="before"><![CDATA[if ($this->output)]]></search>
+        <add position="before"><![CDATA[
+		if (is_callable(array($this->jetcache_registry, 'get'))) {
+			if ($this->jetcache_registry->get('seocms_cache_status')) {
+                $jc_info = NULL;
+                $jc_webp_js = '';
+
+				if (!$this->jetcache_registry->get('page_fromcache') && isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['image_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['image_status'] && isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['image_webp_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['image_webp_status']) {
+ 					$jc_webp_output = $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_webp($this->output);
+ 					$this->output = $jc_webp_output['output'];
+ 					$jc_webp_js = $jc_webp_output['jc_webp_js'];
+				}
+
+				if (isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['cont_ajax_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['cont_ajax_status']) {
+                    if (strpos($this->output, 'jc-cont-ajax') !== false && !$this->jetcache_registry->get('page_fromcache')) {
+	                    $jc_cont_ajax = $this->jetcache_registry->get('controller_jetcache_jetcache')->cont_ajax_response();
+	                    $this->output = str_ireplace('</body>', $jc_cont_ajax . '</body>', $this->output);
+                    }
+				}
+
+				if (!$this->jetcache_registry->get('page_fromcache') && isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['lazy_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['lazy_status']) {
+                	$this->output = $this->jetcache_registry->get('controller_jetcache_jetcache')->jc_lazy($this->output);
+                }
+
+				if (!$this->jetcache_registry->get('page_fromcache')) {
+					$this->output = $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_minify($this->output);
+				}
+
+				if (isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['jetcache_info_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['jetcache_info_status']) {
+					$jc_info = $this->jetcache_registry->get('controller_jetcache_jetcache')->info();
+					if ($jc_info != NULL) {
+						$this->output = str_ireplace('</body>', $jc_info . '</body>', $this->output);
+					}
+				}
+				if (isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['query_log_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['query_log_status'] ||
+				    isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['cont_log_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['cont_log_status'] ||
+				    isset($this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['session_log_status']) && $this->jetcache_registry->get('controller_jetcache_jetcache')->jetcache_settings['session_log_status']
+				) {
+					$this->jetcache_registry->get('controller_jetcache_jetcache')->writeLog();
+				}
+			}
+		}
+    ]]></add>
+    </operation>
+</file>
+
+<file path="system/library/response.php" error="skip">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)echo ([$]ou.*put);~]]></search>
+        <add position="replace"><![CDATA[
+$1echo $2;
+			if (is_callable(array($this->jetcache_registry, 'get'))) {
+	        	if ($this->jetcache_registry->get('seocms_cache_status') && !$this->jetcache_registry->get('page_fromcache')) {
+					if ($jc_info != NULL) {
+						$this->output = str_ireplace($jc_info, '', $this->output);
+					}
+					if ($jc_webp_js != '') {
+						$this->output = str_ireplace($jc_webp_js, '', $this->output);
+					}
+					$this->jetcache_registry->get('controller_jetcache_jetcache')->page_to_cache();
+				}
+			}
+    ]]></add>
+    </operation>
+</file>
+
+<file path="system/engine/model.php" error="skip">
+   <operation error="skip">
+        <search position="after"><![CDATA[<?php]]></search>
+        <add position="after"><![CDATA[
+//$GLOBALS['jetcache_opencart_core_start'] = microtime(true);
+if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+	if (!function_exists('loadlibrary')) {
+		if (function_exists('modification')) {
+			require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+		} else {
+			require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+		}
+	}
+}
+if (defined('VERSION')) {
+	if (!defined('SC_VERSION')) define('SC_VERSION', (int) substr(str_replace('.', '', VERSION), 0, 2));
+}
+
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="system/engine/model.php" error="skip">
+   <operation error="skip">
+        <search position="after"><![CDATA[$this->registry = $registry;]]></search>
+        <add position="after"><![CDATA[
+		if (defined('DIR_CATALOG')) {
+			$this->registry->set('admin_work', true);
+			$this->registry->set('jc_is_admin', true);
+		}
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="system/engine/registry.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function get[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function get($2{
+		if (($key == 'language' || $key == 'document') && __FUNCTION__ == 'get') {
+	        if ($this->get('seocms_cache_status')) {
+				if (isset($this->data['controller_jetcache_jetcache'])) {
+					$this->data['controller_jetcache_jetcache']->hook_Registry_get();
+				}
+			}
+		}
+    ]]></add>
+	</operation>
+</file>
+
+<file path="catalog/controller/startup/startup.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[$this->registry->set('tax']]></search>
+        <add position="before"><![CDATA[
+		if (!function_exists('loadlibrary')) {
+			if (function_exists('modification')) {
+				require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+			} else {
+				require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+			}
+		}
+		agoo_cont('jetcache/jetcache', $this->registry);
+		$this->controller_jetcache_jetcache->hook_maintenance_index();
+    ]]></add>
+	</operation>
+</file>
+
+<file path="catalog/controller/common/maintenance.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[if ($this->config->get('config_maintenance')]]></search>
+        <add position="before"><![CDATA[
+		if (!function_exists('loadlibrary')) {
+			if (function_exists('modification')) {
+				require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+			} else {
+				require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+			}
+		}
+		agoo_cont('jetcache/jetcache', $this->registry);
+		$this->controller_jetcache_jetcache->hook_maintenance_index();
+    ]]></add>
+	</operation>
+</file>
+
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function controller[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function controller($2{
+		if ($this->registry->get('seocms_cache_status')) {
+			if (SC_VERSION < 21) {
+				$data = $args;
+			}
+	    	$output_cont = $this->registry->get('controller_jetcache_jetcache')->hook_Loader_controller('before', $route, $data);
+	    	if ($output_cont != NULL) return $output_cont;
+		}
+    ]]></add>
+	</operation>
+</file>
+
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search position="before" index="0"><![CDATA[return $output;]]></search>
+        <add position="before"><![CDATA[
+		if ($this->registry->get('seocms_cache_status') && SC_VERSION > 15 && isset($route) && isset($data)) {
+	    	$output = $this->registry->get('controller_jetcache_jetcache')->hook_Loader_controller('after', $route, $data, $output);
+		}
+    ]]></add>
+	</operation>
+</file>
+
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search position="replace"><![CDATA[return $action->execute($this->registry);]]></search>
+        <add position="replace"><![CDATA[
+    	$output_cont = $action->execute($this->registry);
+		if ($this->registry->get('seocms_cache_status')) {
+			if ($this->registry->get('seocms_cache_status') && SC_VERSION > 15 && isset($route) && isset($data)) {
+		    	$output_cont = $this->registry->get('controller_jetcache_jetcache')->hook_Loader_controller('after', $route, $data, $output_cont);
+			}
+		}
+		return $output_cont;
+    ]]></add>
+	</operation>
+</file>
+
+<file path="system/engine/loader.php" error="skip">
+   <operation error="skip">
+        <search position="after"><![CDATA[$output = call_user_func_array($callable, $args);]]></search>
+        <add position="after"><![CDATA[
+				if (!$jetcache_from_cache && $this->registry->get('seocms_cache_status')) {
+		       	    $this->registry->get('controller_jetcache_jetcache')->model_to_cache($output, $route, $method, $jc_args);
+				}
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="system/engine/loader.php" error="skip">
+   <operation error="skip">
+        <search position="after"><![CDATA[$this->registry = $registry;]]></search>
+        <add position="after"><![CDATA[
+		if (!$this->registry->get('jetcache_opencart_core_start')) {
+			if (isset($GLOBALS['jetcache_opencart_core_start'])) {
+				$jc_start_microtime = (float)$GLOBALS['jetcache_opencart_core_start'];
+			} else {
+				$jc_start_microtime = microtime(true);
+			}
+			$this->registry->set('jetcache_opencart_core_start', $jc_start_microtime);
+		}
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="system/engine/loader.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[$output = call_user_func_array($callable, $args);]]></search>
+        <add position="replace"><![CDATA[
+				$jetcache_output = false;
+				$jc_args = $args;
+				if ($this->registry->get('seocms_cache_status')) {
+		       	    $jetcache_output = $this->registry->get('controller_jetcache_jetcache')->model_from_cache($route, $method, $jc_args);
+				}
+                if ($jetcache_output === false) {
+                	$output = call_user_func_array($callable, $args);
+                	$jetcache_from_cache = false;
+                } else {
+                	$output = $jetcache_output;
+                	$jetcache_from_cache = true;
+                }
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="system/engine/controller.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function getChild[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function getChild($2{
+		if ($this->registry->get('seocms_cache_status')) {
+			if (SC_VERSION < 20) {
+				$data = $args;
+				$route = $child;
+			}
+	    	$output_cont = $this->registry->get('controller_jetcache_jetcache')->hook_Loader_controller('before', $route, $data);
+	    	if ($output_cont != NULL) return $output_cont;
+		}
+    ]]></add>
+	</operation>
+</file>
+
+
+<file path="system/engine/controller.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[return $controller->output;]]></search>
+        <add position="before"><![CDATA[
+		if ($this->registry->get('seocms_cache_status') && isset($route) && isset($data)) {
+	    	$controller->output = $this->registry->get('controller_jetcache_jetcache')->hook_Loader_controller('after', $route, $data, $controller->output);
+		}
+    ]]></add>
+	</operation>
+</file>
+
+
+
+<file path="catalog/model/catalog/product.php">
+    <operation error="skip">
+        <search limit="1" position="after"><![CDATA[public function getProduct($product_id) {]]></search>
+        <add position="after"><![CDATA[
+		if (is_callable(array('ControllerJetcacheJetcache', 'hook_getProduct'))) {
+			$this->controller_jetcache_jetcache->hook_getProduct($product_id);
+		}
+        ]]></add>
+    </operation>
+</file>
+
+<file path="admin/model/catalog/product.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function editProduct[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function editProduct($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if ((isset($data['asc_jetcache_settings']['add_product']) && $data['asc_jetcache_settings']['add_product']) ||
+	        	(isset($data['asc_jetcache_settings']['edit_product']) && $data['asc_jetcache_settings']['edit_product']) ||
+	        	(isset($data['asc_jetcache_settings']['edit_product_id']) && $data['asc_jetcache_settings']['edit_product_id'])
+	        	) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+			        if (!isset($product_id)) $product_id = false;
+					if (isset($data['asc_jetcache_settings']['edit_product_id']) && $data['asc_jetcache_settings']['edit_product_id']) {
+		                $this->controller_jetcache_jetcache->hook_Product($product_id, 'edit');
+			        } else {
+			        	$this->controller_jetcache_jetcache->hook_Product($product_id, 'add');
+			        }
+            	}
+            }
+    ]]></add>
+    </operation>
+
+</file>
+
+<file path="admin/model/catalog/product.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function addProduct[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function addProduct($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if (isset($data['asc_jetcache_settings']['add_product']) && $data['asc_jetcache_settings']['add_product']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+			        if (!isset($product_id)) $product_id = false;
+	                $this->controller_jetcache_jetcache->hook_Product($product_id, 'add');
+		        }
+            }
+    ]]></add>
+    </operation>
+
+</file>
+
+<file path="admin/model/catalog/product.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function deleteProduct[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function deleteProduct($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if (isset($data['asc_jetcache_settings']['add_product']) && $data['asc_jetcache_settings']['add_product']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+			        if (!isset($product_id)) $product_id = false;
+	                $this->controller_jetcache_jetcache->hook_Product($product_id, 'delete');
+		        }
+            }
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="admin/model/catalog/category.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function addCategory[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function addCategory($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if (isset($data['asc_jetcache_settings']['add_category']) && $data['asc_jetcache_settings']['add_category']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+	                $this->controller_jetcache_jetcache->hook_Category();
+		        }
+            }
+    ]]></add>
+    </operation>
+</file>
+
+<file path="admin/model/catalog/category.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function editCategory[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function editCategory($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if (isset($data['asc_jetcache_settings']['add_category']) && $data['asc_jetcache_settings']['add_category']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+	                $this->controller_jetcache_jetcache->hook_Category();
+		        }
+            }
+    ]]></add>
+    </operation>
+</file>
+
+<file path="admin/model/catalog/category.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function deleteCategory[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function deleteCategory($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if (isset($data['asc_jetcache_settings']['add_category']) && $data['asc_jetcache_settings']['add_category']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+	                $this->controller_jetcache_jetcache->hook_Category();
+		        }
+            }
+    ]]></add>
+    </operation>
+</file>
+
+<file path="admin/model/catalog/category.php">
+    <operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function repairCategories[(](.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+$1function repairCategories($2{
+	        $data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+	        if (isset($data['asc_jetcache_settings']['add_category']) && $data['asc_jetcache_settings']['add_category']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+	                $this->controller_jetcache_jetcache->hook_Category();
+		        }
+            }
+    ]]></add>
+    </operation>
+</file>
+
+<file path="admin/controller/common/developer.php" error="skip">
+    <operation error="skip">
+        <search position="replace"><![CDATA[if (is_dir($directory)) {]]></search>
+        <add position="replace"><![CDATA[if (is_dir($directory) and !glob($directory . '/*')) {]]></add>
+    </operation>
+</file>
+
+<file path="system/library/journal3/document.php" error="skip">
+    <operation error="skip">
+        <search position="before"><![CDATA[public function addCss]]></search>
+        <add position="before"><![CDATA[
+	//Developers Journal  - idiots
+	public function getJCCss() {
+		return $this->css;
+	}
+
+    ]]></add>
+    </operation>
+</file>
+
+</modification>

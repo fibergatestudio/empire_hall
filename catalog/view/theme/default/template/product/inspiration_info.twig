@@ -1,0 +1,83 @@
+{{ header }}
+
+<div class="head-block">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        {% for counter, breadcrumb in breadcrumbs %}
+            {% if counter + 1 < breadcrumbs|length %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% else %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ breadcrumb.text }}</span>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+</div>
+
+<div class="inspiration-single__wrap">
+    <div class="inspiration-single">
+        <div class="inspiration-single__inner">
+            <div class="inspiration-single__title">{{ heading_title }}</div>
+            <div class="inspiration-single__subtitle">{{ heading_subtitle }}</div>
+            {% if description %}
+                <div class="inspiration-single__text text">
+                    {{ description }}
+                </div>
+            {% endif %}
+            {% if products %}
+                <div class="inspiration-single__collection">
+                    <div class="inspiration-single__collection-title">{{ text_prod_collections }}</div>
+                    <div class="inspiration-single__collection-list">
+                        {% for product in products %}
+                            <div class="product__item">
+                                <div class="product__title">
+                                    <a href="{{ product.href }}">{{ product.name }}</a>
+                                </div>
+                                <div class="product__image">
+                                    <a href="{{ product.href }}">
+                                        <img decoding="async" src="{{ product.image }}" width="370" height="370" alt="{{ product.name }}">
+                                    </a>
+                                </div>
+                                <div class="product__box">
+                                    <div class="product__price">
+                                        {% if product.price > 0 %}
+                                            {% if product.special %}
+                                                <div class="product__price-old">{{ product.price }}</div>
+                                                <div class="product__price-new">{{ product.special }}</div>
+                                            {% else %}
+                                                <div class="product__price-new">{{ product.price }}</div>
+                                            {% endif %}
+                                        {% else %}
+                                            <div class="product__no-price-btm" onclick="location.href='{{ product.href }}'">{{ text_no_price }}</div>
+                                        {% endif %}
+                                    </div>
+                                    <span class="product-nav">
+                                <span data-id="{{ product.product_id }}" class="{% if product.is_wishlist %}active{% endif %} add-wishlist product__link link-favorite {% if not logged %} loginza {% endif %}" {% if logged %} onclick="{% if product.is_wishlist %} wishlist.remove('{{ product.product_id }}');  {% else %}wishlist.add('{{ product.product_id }}'); {% endif %}"  {% endif %}>
+                  <svg>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#wishlist"></use>
+                  </svg>
+                </span>
+                                    <a class="product__link" href="{{ product.href }}">
+                                        <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#link-arrow"></use></svg>
+                                    </a></span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+    {% if image %}
+        <div class="inspiration-image">
+            <img decoding="async" src="{{ image }}" width="1860" height="860" alt="{{ heading_title }}">
+            <div class="inspiration-image__button"></div>
+        </div>
+    {% endif %}
+</div>
+
+{{ footer }}

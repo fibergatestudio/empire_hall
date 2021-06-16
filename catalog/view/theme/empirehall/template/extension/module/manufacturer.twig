@@ -1,0 +1,11 @@
+{% if brands %}
+	<div class="main-brands">
+		<div class="main-brands__list">
+			{% for brand in brands %}
+				<div class="main-brands__item">
+					<img src="catalog/view/theme/empirehall/data/logo.svg" data-src="{{ brand.image }}" alt="{{ brand.name }}" class="lazyload">
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}

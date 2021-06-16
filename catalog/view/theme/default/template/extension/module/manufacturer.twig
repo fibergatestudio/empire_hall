@@ -1,0 +1,13 @@
+{% if brands %}
+<div class="main-brands">
+    <div class="main-brands__list">
+        {% for brand in brands %}
+		<div class="main-brands__item">
+			<a href="{{ brand.href }}"> 
+				<img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ brand.image }}" alt="{{ brand.name }}" class="lazyload">
+			</a>
+		</div>
+        {% endfor %}
+	</div>
+</div>
+{% endif %}
