@@ -1,0 +1,138 @@
+{{ header }}
+
+<div class="head-block">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+          <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <span itemprop="name">{{ breadcrumb.text }}</span>
+          <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="head-title">{{ heading_title }}</div>
+</div>
+
+<div class="area">
+  {{ column_left }}
+  <div class="area__main">
+    <div class="area__top">
+      <div class="area__title">{{ heading_title_order }}</div>
+    </div>
+    {% if orders %}
+      <div class="orders-history__wrap">
+        <div class="orders-history__block">
+          <div class="orders-history__head">
+            <div class="orders-history__head-item">{{ column_order_id }}</div>
+            <div class="orders-history__head-item">{{ text_date_added }}</div>
+            <div class="orders-history__head-item">{{ column_status }}</div>
+            <div class="orders-history__head-item">{{ column_quantity }}</div>
+            <div class="orders-history__head-item">{{ column_total_all }}</div>
+            <div class="orders-history__head-item"></div>
+          </div>
+          <div class="orders-history__list">
+            {% for order in orders %}
+              <div class="orders-history__item acardion__item">
+              <div class="orders-history__title acardion__title">
+                <div class="orders-history__title-item orders-history__number">{{ order.order_id }}</div>
+                <div class="orders-history__title-item orders-history__date">{{ order.date }}</div>
+                <div class="orders-history__title-item orders-history__status">{{ order.status }}</div>
+                <div class="orders-history__title-item orders-history__quantity">{{ order.products_total }}</div>
+                <div class="orders-history__price">{{ order.total }}</div>
+                <div class="orders-history__icon"></div>
+              </div>
+              <div class="orders-history__inner acardion__inner">
+                <div class="orders-history__content acardion__content">
+                  {% for product in order.products %}
+                    <div class="order__item">
+                    <div class="order__image">
+                      <a href="{{ product.href }}">
+                        <img decoding="async" src="{{ product.image }}" width="170" height="170" alt="{{ product.name }}">
+                      </a>
+                    </div>
+                    <div class="order__info">
+                      <div class="order__info-top">
+                        <div class="order__top-box">
+                          <div class="order__title">
+                            <a href="{{ product.href }}">{{ product.name }}</a>
+                          </div>
+                          <div class="order__article">
+                            {{ column_model }}:
+                            <span>{{ product.model }}</span>
+                          </div>
+                        </div>
+                        <div class="order__options">
+                          {% if product.option %}
+                            {% for option in product.option %}
+                              <div class="order__options-item">
+                                <div class="order__options-title">{{ option.name }}:</div>
+                                <div class="order__options-value">{{ option.value }}</div>
+                              </div>
+                            {% endfor %}
+                          {% endif %}
+                          <div class="order__options-item">
+                            <div class="order__options-title">{{ column_quantity }}:</div>
+                            <div class="order__options-value">{{ product.quantity }}</div>
+                          </div>
+                          <div class="order__options-item">
+                            <div class="order__options-title">{{ column_price }}:</div>
+                            {% if product.price %}
+                              <div class="order__options-value price">{{ product.price }}</div>
+                            {% else %}
+                              <div class="order__options-value no-price">{{ text_no_price }}</div>
+                            {% endif %}
+                          </div>
+                          <div class="order__options-item">
+                            <div class="order__options-title">{{ column_total }}:</div>
+                            {% if product.price %}
+                              <div class="order__options-value price">{{ product.total }}</div>
+                            {% else %}
+                              <div class="order__options-value no-price">{{ text_no_price }}</div>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                  <div class="order__bottom">
+                    <div class="order__total">
+                      {{ text_all_total }}:
+                      <span>{{ order.total }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    {% else %}
+      <div class="clear-block">
+        <div class="clear-block__image">
+          <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#clear-block-img"></use></svg>
+        </div>
+        <div class="clear-block__content">
+          <div class="clear-block__title">{{ text_no_orders }}</div>
+          <div class="clear-block__text">
+            {{ text_no_orders2 }}
+          </div>
+          <div class="clear-block__contacts">
+            <a href="tel:{{ phone }}">{{ phone }}</a>
+            <a href="tel:{{ phone2 }}">{{ phone2 }}</a>
+          </div>
+          <a class="main-button" href="{{ shopping }}">{{ text_no_orders_btn }}</a>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{{ footer }}

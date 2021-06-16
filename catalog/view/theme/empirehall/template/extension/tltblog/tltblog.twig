@@ -1,0 +1,66 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        {% for counter, breadcrumb in breadcrumbs %}
+            {% if counter + 1 < breadcrumbs|length %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% else %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ breadcrumb.text }}</span>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    <div class="head-title">{{ heading_title }}</div>
+</div>
+
+<div class="article">
+    {% if slides %}
+        <div class="article__slider">
+            {% for slide in slides %}
+                <div class="article__slide">
+                    <img decoding="async" src="{{ slide.image }}" width="1200" height="600" alt="{{ slide.title }}">
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    <div class="article__date">{{ date }}</div>
+    {% if description %}
+        <div class="article__content text">
+            {{ description }}
+        </div>
+    {% endif %}
+</div>
+
+{% if articles %}
+    <div class="similar-news">
+        <div class="similar-news__top">
+            <div class="similar-news__title">{{ text_read_all }}</div>
+            <a class="show-all" href="{{ all_news }}">{{ text_see_all }}</a>
+        </div>
+        <div class="similar-news__list">
+            {% for article in articles %}
+                <div class="news__item">
+                    <div class="news__image">
+                        <a href="{{ article.href }}">
+                            <img decoding="async" src="{{ article.image }}" width="450" height="320" alt="{{ article.title }}">
+                        </a>
+                    </div>
+                    <div class="news__info">
+                        <div class="news__title">
+                            <a href="{{ article.href }}">{{ article.title }}</a>
+                        </div>
+                        <div class="news__date">{{ article.date }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+{{ footer }}

@@ -1,0 +1,82 @@
+{{ header }}
+
+<div class="ajax_gift">
+
+<div class="top-section" style="background-image: url('/front/dist/data/gift-card-cover.JPG');">
+    <div class="head-block head-block--center">
+        <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+            {% for counter, breadcrumb in breadcrumbs %}
+                {% if counter + 1 < breadcrumbs|length %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                        <meta itemprop="position" content="{{ counter+1 }}" />
+                    </li>
+                {% else %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <span itemprop="name">{{ breadcrumb.text }}</span>
+                        <meta itemprop="position" content="{{ counter+1 }}" />
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="top-section__box">
+        <div class="top-section__title">{{ heading_title }}</div>
+    </div>
+</div>
+
+<div class="gift-card">
+
+</div>
+    <script>
+        $(document).on('click', '.buy_gift', function (e) {
+            e.preventDefault();
+            var select = $('select[name=\'select-sum\']').find(":selected").val();
+            var quanty = $('input[name=\'product-quantity\']').val();
+
+            if (select == '0') {
+                $('.select').addClass('main-input error')
+            } else {
+                $('.error').removeClass('main-input error')
+                cart.add(select, quanty)
+            }
+        });
+        $(document).on('click', '.gift-card__tabs-item a', function (e) {
+            e.preventDefault();
+            var id = $(this).data('id');
+            uploadgiftcard(id);
+        });
+        $(document).ready(function () {
+            var id = 158;
+            uploadgiftcard(id);
+        });
+
+        function uploadgiftcard(id) {
+            $('.active').removeClass('active');
+            $.ajax({
+                url: 'index.php?route=product/category/ajaxCategory',
+                type: 'post',
+                data: 'cat_id=' + id,
+                success: function (html) {
+                    $('.ajax_gift .gift-card').html(html)
+                    customSelect.update('selectgift-card__slider');
+                    $('.gift-card__slider').slick({
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                        dots: true,
+                        arrows: true,
+                        prevArrow: '<div class="main-brands__arrow prev-arrow"><svg width="50" height="12" viewBox="0 0 50 12" xmlns="http://www.w3.org/2000/svg"><path d="M6.04651 12L7.10465 10.95L2.87209 6.75L50 6.75L50 5.25L2.87209 5.25L7.10465 1.05L6.04651 -3.84254e-06L5.24537e-07 6L6.04651 12Z" /></svg></div>',
+                        nextArrow: '<div class="main-brands__arrow next-arrow"><svg width="50" height="12" viewBox="0 0 50 12" xmlns="http://www.w3.org/2000/svg"><path d="M43.9535 0L42.8953 1.05L47.1279 5.25H0V6.75H47.1279L42.8953 10.95L43.9535 12L50 6L43.9535 0Z" /></svg></div>',
+                        fade: true,
+                        rows: 0
+                    })
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        }
+    </script>
+</div>
+{{ footer }}

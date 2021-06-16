@@ -1,0 +1,105 @@
+<file path="system/engine/model.php" error="skip">
+   <operation error="skip">
+        <search position="after"><![CDATA[<?php]]></search>
+        <add position="after"><![CDATA[
+if (defined('VERSION')) {
+	if (!defined('SC_VERSION')) define('SC_VERSION', (int) substr(str_replace('.', '', VERSION), 0, 2));
+
+	if (SC_VERSION < 22  && !class_exists('Proxy', false)) {
+	    if (function_exists('modification')) {
+			require_once(modification(DIR_SYSTEM . 'library/jetcache/proxy.php'));
+		} else {
+			require_once(DIR_SYSTEM . 'library/jetcache/proxy.php');
+		}
+	}
+}
+    ]]></add>
+    </operation>
+</file>
+
+
+<file path="system/engine/loader.php" error="skip">
+	<operation error="skip">
+        <search regex="true" position="replace"><![CDATA[~(.*?)function model[(][$]model(.*?)\{~]]></search>
+        <add position="replace"><![CDATA[
+	public function model($route, $data = array()) {
+
+        $route = str_replace('../', '', (string)$route);
+
+		$file  = DIR_APPLICATION . 'model/' . $route . '.php';
+		$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', $route);
+
+		if (is_file($file)) {
+		    if (function_exists('modification')) {
+				include_once(modification($file));
+			} else {
+				include_once($file);
+			}
+
+			if (defined('DIR_CATALOG') || !$this->registry->get('controller_jetcache_jetcache') || ($this->registry->get('controller_jetcache_jetcache') && !$this->registry->get('controller_jetcache_jetcache')->jetcache_settings['jetcache_model_status']) || ($this->registry->get('controller_jetcache_jetcache') && $this->registry->get('controller_jetcache_jetcache')->model_method_access($class) === false) ||(substr($route, 0, strlen('total/')) == 'total/')) {
+				$this->registry->set('model_' . str_replace('/', '_', (string)$route), new $class($this->registry));
+				return;
+		    }
+
+			$proxy = new Proxy();
+
+			foreach (get_class_methods($class) as $method) {
+				$proxy->{$method} = $this->callback($this->registry, $route . '/' . $method);
+			}
+
+		    $this->registry->set('model_' . str_replace('/', '_', (string)$route), $proxy);
+
+		} else {
+			trigger_error('Error: Could not load model ' . $route . '!');
+			exit();
+		}
+	}
+
+	protected function callback($registry, $route) {
+		return function($args) use($registry, $route) {
+			static $model;
+
+			$route = preg_replace('/[^a-zA-Z0-9_\/]/', '', (string)$route);
+
+			$class = 'Model' . preg_replace('/[^a-zA-Z0-9]/', '', substr($route, 0, strrpos($route, '/')));
+
+			// Store the model object
+			$key = substr($route, 0, strrpos($route, '/'));
+
+			if (!isset($model[$key])) {
+				$model[$key] = new $class($registry);
+			}
+
+			$method = substr($route, strrpos($route, '/') + 1);
+
+			$callable = array($model[$key], $method);
+
+			if (is_callable($callable)) {
+				$jetcache_output = false;
+				$jc_args = $args;
+				if ($registry->get('seocms_cache_status')) {
+		       	    $jetcache_output = $registry->get('controller_jetcache_jetcache')->model_from_cache($route, $method, $jc_args);
+				}
+                if ($jetcache_output === false) {
+                	$output = call_user_func_array($callable, $args);
+                	$jetcache_from_cache = false;
+                } else {
+                	$output = $jetcache_output;
+                	$jetcache_from_cache = true;
+                }
+				if (!$jetcache_from_cache && $registry->get('seocms_cache_status')) {
+		       	    $registry->get('controller_jetcache_jetcache')->model_to_cache($output, $route, $method, $jc_args);
+				}
+
+			} else {
+				throw new \Exception('Error: Could not call model/' . $route . '!');
+			}
+
+			return $output;
+		};
+	}
+
+$1function model_original($model$2 {
+    ]]></add>
+	</operation>
+</file>

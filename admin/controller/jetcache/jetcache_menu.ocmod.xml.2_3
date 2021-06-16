@@ -1,0 +1,23 @@
+<file path="admin/controller/common/column_left.php">
+    <operation error="skip">
+        <search  position="before"><![CDATA[return $this->load->view]]></search>
+        <add position="before"><![CDATA[
+			$data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+			if (isset($data['asc_jetcache_settings']['jetcache_menu_status']) && $data['asc_jetcache_settings']['jetcache_menu_status']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+			        if (is_callable(array($this->controller_jetcache_jetcache, 'jc_menu'))) {
+			        	$data['jc_menus'] = $this->controller_jetcache_jetcache->jc_menu();
+			        }
+			    }
+			}
+    ]]></add>
+    </operation>
+</file>

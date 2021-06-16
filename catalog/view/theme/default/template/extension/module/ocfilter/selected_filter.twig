@@ -1,0 +1,18 @@
+{% if selecteds %}
+	{% if selecteds|length > 0 or selecteds|first.values|length > 0 %}
+		<div class="active-filters">
+			<div class="active-filters__title">{{ text_active_filters }}</div>
+			<div class="active-filters__list">
+				{% for option in selecteds %}
+					{% for value in option.values %}
+						<button class="btn btn-xs btn-danger" onclick="location = '{{ value.href }}';">
+							{{ value.name }}
+							<svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#close"></use></svg>
+						</button>
+					{% endfor %}
+				{% endfor %}
+			</div>
+			<button type="button" onclick="location = '{{ link }}';" class="clear-filters">{{ text_cancel_all }}</button>
+		</div>
+	{% endif %}
+{% endif %}

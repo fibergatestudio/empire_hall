@@ -1,0 +1,31 @@
+<file path="admin/controller/common/header.php">
+    <operation error="skip">
+        <search  position="before"><![CDATA[$this->render]]></search>
+        <add position="before"><![CDATA[
+			$this->data['asc_jetcache_settings'] = $this->config->get('asc_jetcache_settings');
+			if (isset($this->data['asc_jetcache_settings']['jetcache_menu_status']) && $this->data['asc_jetcache_settings']['jetcache_menu_status']) {
+				if (file_exists(DIR_SYSTEM . 'helper/seocmsprofunc.php')) {
+					if (!function_exists('loadlibrary')) {
+						if (function_exists('modification')) {
+							require_once(modification(DIR_SYSTEM . 'helper/seocmsprofunc.php'));
+						} else {
+							require_once(DIR_SYSTEM . 'helper/seocmsprofunc.php');
+						}
+					}
+			        agoo_cont_admin('jetcache/jetcache', $this->registry);
+			        if (is_callable(array($this->controller_jetcache_jetcache, 'jc_menu'))) {
+			        	$this->data['jc_menus'] = $this->controller_jetcache_jetcache->jc_menu();
+			        }
+			    }
+			}
+    ]]></add>
+    </operation>
+</file>
+
+<file path="admin/view/template/common/header.tpl">
+    <operation error="skip">
+        <search  position="before"><![CDATA[<li id="store">]]></search>
+        <add position="before"><![CDATA[<?php if (isset($jc_menus)) { echo $jc_menus; } ?>]]></add>
+    </operation>
+</file>
+

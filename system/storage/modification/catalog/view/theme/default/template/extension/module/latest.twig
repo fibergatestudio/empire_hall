@@ -1,0 +1,37 @@
+{% if product_listing %}
+  <h3>{{ heading_title }}</h3>
+
+{% if ee_tracking and ee_impression %}
+  <script type="text/javascript"><!--
+    $(document).ready(function() {
+      setIntervalEE(function() {
+        var ee_data = JSON.parse('{{ ee_impression_data }}');
+        ee_data['url'] = window.location.href;
+        ee_data['title'] = document.title;
+        $.ajax({
+          url: 'index.php?route=extension/module/ee_tracking/listview',
+          type: 'post',
+          data: ee_data,
+          dataType: 'json',
+          success: function(json) {
+            if (json) {
+              console.log(json);
+            }
+          },
+          {% if ee_impression_log %}
+          error: function(xhr, exc, error) {
+            $.post('index.php?route=extension/module/ee_tracking/listviewlog', { 'error': error + ' (exc: ' + exc + ' status: ' + xhr.statusText + ')', 'url': window.location.href }, function( logs ) {
+              console.log(logs);
+            });
+          }
+          {% endif %}
+        });
+      }, {% if ee_ga_callback %}{{ ee_ga_callback }}{% else %}0{% endif %}, {% if ee_generate_cid %}{{ ee_generate_cid }}{% else %}0{% endif %});
+    });
+    //--></script>
+{% endif %}
+            
+  <div class="row">
+    {{ product_listing }}
+  </div>
+{% endif %}

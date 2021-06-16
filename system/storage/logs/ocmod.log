@@ -1,0 +1,1336 @@
+2021-06-16 15:16:08 - MOD: Modification Default
+
+FILE: system/engine/action.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 69
+
+FILE: system/engine/loader.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 77
+LINE: 151
+LINE: 168
+
+FILE: system/library/config.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 59
+
+FILE: system/library/language.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 67
+LINE: 73
+
+FILE: system/library/template/template.php
+REGEX: ~(require|include)(_once)?\(([^)]+)~
+LINE: 18
+
+FILE: system/library/template/twig.php
+CODE: $loader = new \Twig_Loader_Filesystem(DIR_TEMPLATE);
+LINE: 22
+----------------------------------------------------------------
+MOD: Webkul Opencart Cache
+
+FILE: system/framework.php
+CODE: $registry->set('document', new Document());
+LINE: 126
+CODE: $registry->set('cache', new Cache($config->get('cache_engine'), $config->get('cache_expire')));
+LINE: 130
+
+FILE: system/engine/event.php
+CODE: $this->registry = $registry;
+LINE: 29
+
+FILE: system/library/response.php
+CODE: public function setOutput($output) {
+LINE: 67
+
+FILE: admin/model/catalog/product.php
+CODE: $this->cache->delete('product');
+LINE: 162
+LINE: 220
+LINE: 414
+LINE: 427
+LINE: 486
+
+FILE: admin/model/catalog/category.php
+CODE: $this->cache->delete('category');
+LINE: 76
+LINE: 201
+LINE: 222
+
+FILE: admin/model/catalog/filter.php
+CODE: public function addFilter($data) {
+LINE: 8
+CODE: public function editFilter($filter_group_id, $data) {
+LINE: 38
+CODE: public function deleteFilter($filter_group_id) {
+LINE: 73
+
+FILE: admin/model/catalog/information.php
+CODE: $this->cache->delete('information');
+LINE: 56
+LINE: 125
+LINE: 136
+
+FILE: admin/model/localisation/location.php
+CODE: public function addLocation($data) {
+LINE: 8
+CODE: public function editLocation($location_id, $data) {
+LINE: 20
+CODE: public function deleteLocation($location_id) {
+LINE: 30
+
+FILE: admin/model/design/banner.php
+CODE: public function addBanner($data) {
+LINE: 8
+CODE: public function editBanner($banner_id, $data) {
+LINE: 46
+CODE: public function deleteBanner($banner_id) {
+LINE: 65
+
+FILE: catalog/controller/startup/startup.php
+CODE: $this->registry->set('openbay', new Openbay($this->registry));
+LINE: 224
+CODE: $this->registry->set('openbay', new Openbay($this->registry));
+LINE: 241
+
+FILE: catalog/controller/extension/module/featured.php
+CODE: if (!empty($setting['product'])) {
+LINE: 33
+CODE: $product_info = $this->model_catalog_product->getProduct($product_id);
+LINE: 38
+
+FILE: catalog/controller/extension/module/latest.php
+CODE: $results = $this->model_catalog_product->getProducts($filter_data);
+LINE: 20
+
+FILE: catalog/controller/extension/module/category.php
+CODE: $categories = $this->model_catalog_category->getCategories(0);
+LINE: 40
+CODE: $children = $this->model_catalog_category->getCategories($category['category_id']);
+LINE: 77
+
+FILE: catalog/view/theme/default/template/common/header.twig
+CODE: <body>
+NOT FOUND - OPERATIONS ABORTED!
+
+FILE: catalog/view/theme/empirehall/template/common/header.twig
+CODE: <body>
+NOT FOUND - OPERATIONS ABORTED!
+
+FILE: catalog/controller/common/header.php
+CODE: $data['cart'] = $this->load->controller('common/cart');
+LINE: 152
+
+FILE: catalog/model/tool/image.php
+CODE: class ModelToolImage extends Model {
+LINE: 22
+CODE: if ($this->request->server['HTTPS']) {
+LINE: 59
+LINE: 126
+LINE: 172
+LINE: 227
+LINE: 274
+LINE: 332
+
+FILE: catalog/controller/common/menu.php
+CODE: $categories = $this->model_catalog_category->getCategories(0);
+LINE: 12
+CODE: $children = $this->model_catalog_category->getCategories($category['category_id']);
+LINE: 49
+
+FILE: catalog/model/catalog/product.php
+CODE: public function getProduct($product_id) {
+LINE: 6
+CODE: return array(
+LINE: 35
+CODE: 'viewed'           => $query->row['viewed']
+LINE: 105
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
+LINE: 572
+CODE: public function getProductOptions($product_id) {
+LINE: 547
+CODE: return $product_option_data;
+LINE: 600
+
+FILE: catalog/model/catalog/manufacturer.php
+CODE: public function getManufacturer($manufacturer_id) {
+LINE: 2
+CODE: .manufacturer_id = '" . (int)$manufacturer_id . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");
+NOT FOUND - OPERATIONS ABORTED!
+
+FILE: catalog/model/design/banner.php
+CODE: public function getBanner($banner_id) {
+LINE: 2
+CODE: return $query->rows;
+LINE: 44
+
+FILE: catalog/model/catalog/category.php
+CODE: public function getCategoryFilters($category_id) {
+LINE: 33
+CODE: return $filter_group_data;
+LINE: 109
+
+FILE: catalog/model/catalog/information.php
+CODE: public function getInformations() {
+LINE: 8
+CODE: return $query->rows;
+LINE: 51
+LINE: 109
+
+FILE: catalog/model/localisation/location.php
+CODE: public function getLocation($location_id) {
+LINE: 2
+CODE: return $query->row;
+LINE: 45
+----------------------------------------------------------------
+MOD: Complete SEO Package
+
+FILE: admin/controller/module/complete_seo.php
+CODE: $modification_active = false;
+LINE: 445
+
+FILE: catalog/controller/common/search.php
+CODE: return $this->load->view('common/search
+LINE: 21
+CODE: return $this->load->view($this->config->get('config_template') . '/template/common/search.tpl', $data);
+NOT FOUND - OPERATION SKIPPED!
+CODE: return $this->load->view('default/template/common/search.tpl', $data);
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/product/search.php
+CODE: public function index() {
+LINE: 9
+
+FILE: catalog/view/theme/default/template/product/search.twig
+CODE: url = 'index.php?route=product/search';
+LINE: 64
+CODE: url += '&search=' + encodeURIComponent(search);
+LINE: 69
+
+FILE: catalog/view/theme/empirehall/template/product/search.twig
+CODE: url = 'index.php?route=product/search';
+LINE: 64
+CODE: url += '&search=' + encodeURIComponent(search);
+LINE: 69
+
+FILE: catalog/controller/checkout/cart.php
+CODE: public function index() {
+LINE: 7
+
+FILE: catalog/view/theme/default/template/checkout/cart.twig
+CODE: {{ footer }}
+LINE: 123
+
+FILE: catalog/view/theme/empirehall/template/checkout/cart.twig
+CODE: {{ footer }}
+LINE: 123
+CODE: $this->load->model('localisation/language');
+LINE: 46
+CODE: $this->config->set('config_url', HTTP_SERVER);
+LINE: 20
+CODE: if (!empty($this->request->server['HTTP_ACCEPT_LANGUAGE']) && !array_key_exists($code, $languages)) {
+LINE: 65
+
+FILE: system/startup.php
+CODE: DIR_SYSTEM . 'engine/registry.php
+LINE: 99
+
+FILE: catalog/controller/extension/feed/google_sitemap.php
+CODE: public function index() {
+LINE: 7
+
+FILE: catalog/controller/startup/seo_url.php
+CODE: $categories = explode('_', $value);
+NOT FOUND - OPERATIONS ABORTED!
+
+FILE: catalog/controller/product/category.php
+CODE: public function index() {
+NOT FOUND - OPERATIONS ABORTED!
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id']), 'canonical');
+LINE: 421
+LINE: 423
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'] . '&page='. $page), 'canonical');
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'] . (($page - 2) ? '&page='. ($page - 1) : '')), 'prev');
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'] . '&page='. ($page + 1)), 'next');
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'], true), 'canonical');
+NOT FOUND - OPERATION SKIPPED!
+CODE: if ($page == 1) {
+LINE: 425
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $category_info['category_id'], 'SSL'), 'canonical');
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->document->addLink($this->url->link('product/category', 'path=' . $this->request->get['path']), 'canonical');
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/product/product.php
+CODE: if (isset($this->request->get['path'])) {
+LINE: 30
+CODE: public function review() {
+LINE: 640
+CODE: 'href' => $this->url->link('product/category', 'path=' . $this->request->get['path'] . $url)
+LINE: 91
+CODE: $this->url->link('product/product', 'product_id=' . $result['product_id'] . $url)
+NOT FOUND - OPERATIONS ABORTED!
+
+FILE: catalog/controller/common/footer.php
+CODE: function index() {
+LINE: 9
+CODE: function index() {
+LINE: 30
+CODE: $data['title'] = $this->document->getTitle();
+LINE: 58
+CODE: $this->data['title'] = $this->document->getTitle();
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->data['name'] = $this->config->get('config_name');
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->data['action'] = $this->url->link('common/home');
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->session->data['language'] = $this->request->post['language_code'];
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/common/language.php
+CODE: $this->response->redirect($this->request->post['redirect']);
+LINE: 89
+LINE: 150
+CODE: if (isset($this->request->post['code'])) {
+LINE: 48
+CODE: $data['redirect'] = $this->url->link('common/home');
+LINE: 25
+CODE: unset($url_data['route']);
+LINE: 37
+CODE: $data['redirect'] = $this->url->link($route, $url, $this->request->server['HTTPS']);
+LINE: 45
+CODE: $data['redirect'] = $this->url->link($route, $url, isset($this->request->server['HTTPS']) && (($this->request->server['HTTPS'] == 'on') || ($this->request->server['HTTPS'] == '1')));
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/controller/catalog/product.php
+CODE: if ($this->request->post['product_seo_url']) {
+LINE: 1273
+CODE: if ((utf8_strlen($value['meta_title']) < 3) || (utf8_strlen($value['meta_title']) > 255)) {
+NOT FOUND - OPERATION SKIPPED!
+CODE: if ((utf8_strlen($value['meta_title']) < 1) || (utf8_strlen($value['meta_title']) > 255)) {
+LINE: 1264
+CODE: $this->response->setOutput($this->load->view('catalog/product_form
+LINE: 1291
+CODE: $this->template = 'catalog/product_form.tpl';
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/controller/catalog/category.php
+CODE: if ($this->request->post['category_seo_url']) {
+LINE: 566
+CODE: $this->response->setOutput($this->load->view('catalog/category_form
+LINE: 558
+CODE: if ((utf8_strlen($value['meta_title']) < 3) || (utf8_strlen($value['meta_title']) > 255)) {
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/controller/catalog/information.php
+CODE: if ($this->request->post['information_seo_url']) {
+LINE: 526
+CODE: $this->response->setOutput($this->load->view('catalog/information_form
+LINE: 535
+CODE: if ((utf8_strlen($value['meta_title']) < 3) || (utf8_strlen($value['meta_title']) > 255)) {
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/controller/catalog/manufacturer.php
+CODE: if ($this->request->post['manufacturer_seo_url']) {
+LINE: 437
+CODE: if ($this->request->post['manufacturer_seo_url']) {
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->response->setOutput($this->load->view('catalog/manufacturer_form
+LINE: 469
+CODE: $this->db->query("DELETE FROM `" . DB_PREFIX . "seo_url` WHERE query = 'category_id=" . (int)$category_id . "'");
+LINE: 169
+CODE: public function addCategory($data) {
+LINE: 4
+CODE: foreach ($data['category_description'] as $language_id => $value) {
+LINE: 33
+LINE: 138
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "category_description SET
+LINE: 103
+LINE: 276
+CODE: if ($data['keyword']) {
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id
+NOT FOUND - OPERATION SKIPPED!
+CODE: public function editCategory($category_id, $data) {
+LINE: 179
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "category_description SET
+LINE: 103
+LINE: 278
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category_description
+LINE: 525
+CODE: $result['name'],
+LINE: 550
+CODE: $result['name'],
+LINE: 547
+CODE: , (SELECT DISTINCT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id . "') AS keyword
+NOT FOUND - OPERATION SKIPPED!
+CODE: , (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'category_id=" . (int)$category_id . "') AS keyword
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'product_id=" . (int)$product_id . "'");
+LINE: 388
+CODE: if (isset($data['image'])) {
+LINE: 16
+LINE: 258
+CODE: public function addProduct($data) {
+LINE: 4
+CODE: foreach ($data['product_description'] as $language_id => $value) {
+LINE: 47
+LINE: 316
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET
+LINE: 125
+LINE: 370
+LINE: 448
+LINE: 526
+LINE: 702
+CODE: if (isset($data['image'])) {
+LINE: 18
+LINE: 593
+CODE: if ($data['keyword']) {
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id
+NOT FOUND - OPERATION SKIPPED!
+CODE: public function editProduct($product_id, $data) {
+LINE: 620
+CODE: if (isset($data['product_related'])) {
+LINE: 317
+LINE: 1015
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "product_description SET
+LINE: 162
+LINE: 465
+LINE: 543
+LINE: 621
+LINE: 836
+CODE: , (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'product_id=" . (int)$product_id . "') AS keyword
+NOT FOUND - OPERATION SKIPPED!
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_description
+LINE: 1328
+CODE: $result['name'],
+LINE: 1355
+CODE: $result['name'],
+LINE: 1350
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "seo_url WHERE query = 'information_id=" . (int)$information_id . "'");
+LINE: 101
+CODE: if (isset($data['information_store'])) {
+LINE: 16
+LINE: 88
+CODE: public function addInformation($data) {
+LINE: 4
+CODE: foreach ($data['information_description'] as $language_id => $value) {
+LINE: 29
+LINE: 119
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "information_description SET
+LINE: 98
+LINE: 256
+CODE: if ($data['keyword']) {
+NOT FOUND - OPERATION SKIPPED!
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "url_alias WHERE query = 'information_id=" . (int)$information_id
+NOT FOUND - OPERATION SKIPPED!
+CODE: public function editInformation($information_id, $data) {
+LINE: 164
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "information_description SET
+LINE: 98
+LINE: 258
+CODE: , (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'information_id=" . (int)$information_id . "') AS keyword
+NOT FOUND - OPERATION SKIPPED!
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "information_description
+LINE: 437
+CODE: $result['title'],
+LINE: 462
+LINE: 487
+CODE: $result['title'],
+LINE: 461
+LINE: 489
+
+FILE: admin/model/catalog/manufacturer.php
+CODE: $this->db->query("DELETE FROM `" . DB_PREFIX . "seo_url` WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "'");
+LINE: 92
+CODE: if (isset($data['manufacturer_store'])) {
+LINE: 43
+LINE: 126
+CODE: if ($data['keyword']) {
+NOT FOUND - OPERATION SKIPPED!
+CODE: , (SELECT keyword FROM " . DB_PREFIX . "url_alias WHERE query = 'manufacturer_id=" . (int)$manufacturer_id . "') AS keyword
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/view/template/catalog/product_form.twig
+CODE: <label class="col-sm-2 control-label" for="input-filter"><span data-toggle="tooltip" title="{{ help_filter }}">{{ entry_filter }}</span></label>
+LINE: 511
+CODE: <li><a href="#tab-seo" data-toggle="tab">{{ tab_seo }}</a></li>
+LINE: 38
+CODE: {{ entry_sort_order }}</label>
+LINE: 380
+CODE: <div class="tab-pane" id="tab-seo">
+LINE: 1235
+CODE: name="product_seo_url[{{ store.store_id }}][{{ language.language_id }}]
+LINE: 1255
+CODE: {{ entry_meta_title }}</label>
+LINE: 68
+CODE: <input type="text" name="product_description[{{ language.language_id }}][meta_title]" value="{{ product_description[language.language_id] ? product_description[language.language_id].meta_title }}" placeholder="{{ entry_meta_title }}" id="input-meta-title{{ language.language_id }}" class="form-control" />
+LINE: 70
+CODE: <input type="text" name="product_description[{{ language.language_id }}][meta_title]" value="{{ product_description[language.language_id] ? product_description[language.language_id].meta_title }}" placeholder="{{ entry_meta_title }}" id="input-meta-title{{ language.language_id }}" class="form-control"/>
+NOT FOUND - OPERATION SKIPPED!
+CODE: <textarea name="product_description[{{ language.language_id }}][meta_description]" rows="5" placeholder="{{ entry_meta_description }}" id="input-meta-description{{ language.language_id }}" class="form-control">{{ product_description[language.language_id] ? product_description[language.language_id].meta_description }}</textarea>
+LINE: 81
+CODE: <textarea name="product_description[{{ language.language_id }}][meta_keyword]" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword{{ language.language_id }}" class="form-control">{{ product_description[language.language_id] ? product_description[language.language_id].meta_keyword }}</textarea>
+LINE: 90
+CODE: <input type="text" name="product_description[{{ language.language_id }}][tag]" value="{{ product_description[language.language_id] ? product_description[language.language_id].tag }}" placeholder="{{ entry_tag }}" id="input-tag{{ language.language_id }}" class="form-control" />
+LINE: 99
+
+FILE: admin/view/template/catalog/category_form.twig
+CODE: <li><a href="#tab-seo" data-toggle="tab">{{ tab_seo }}</a></li>
+LINE: 31
+CODE: <div class="tab-pane" id="tab-seo">
+LINE: 270
+CODE: name="category_seo_url[{{ store.store_id }}][{{ language.language_id }}]
+LINE: 290
+CODE: {{ entry_meta_title }}</label>
+LINE: 69
+CODE: <input type="text" name="category_description[{{ language.language_id }}][meta_title]" value="{{ category_description[language.language_id] ? category_description[language.language_id].meta_title }}" placeholder="{{ entry_meta_title }}" id="input-meta-title{{ language.language_id }}" class="form-control" />
+LINE: 71
+CODE: <textarea name="category_description[{{ language.language_id }}][meta_description]" rows="5" placeholder="{{ entry_meta_description }}" id="input-meta-description{{ language.language_id }}" class="form-control">{{ category_description[language.language_id] ? category_description[language.language_id].meta_description }}</textarea>
+LINE: 83
+CODE: <textarea name="category_description[{{ language.language_id }}][meta_keyword]" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword{{ language.language_id }}" class="form-control">{{ category_description[language.language_id] ? category_description[language.language_id].meta_keyword }}</textarea>
+LINE: 92
+CODE: <input type="text" name="category_description[{{ language.language_id }}][tag]" value="{{ category_description[language.language_id] ? category_description[language.language_id].tag }}" placeholder="{{ entry_tag }}" id="input-tag{{ language.language_id }}" class="form-control" />
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/view/template/catalog/information_form.twig
+CODE: <li><a href="#tab-seo" data-toggle="tab">{{ tab_seo }}</a></li>
+LINE: 31
+CODE: {{ entry_sort_order }}</label>
+LINE: 154
+CODE: <div class="tab-pane" id="tab-seo">
+LINE: 295
+CODE: name="information_seo_url[{{ store.store_id }}][{{ language.language_id }}]
+LINE: 315
+CODE: {{ entry_meta_title }}</label>
+LINE: 70
+CODE: <input type="text" name="information_description[{{ language.language_id }}][meta_title]" value="{{ information_description[language.language_id] ? information_description[language.language_id].meta_title }}" placeholder="{{ entry_meta_title }}" id="input-meta-title{{ language.language_id }}" class="form-control" />
+LINE: 72
+CODE: <textarea name="information_description[{{ language.language_id }}][meta_description]" rows="5" placeholder="{{ entry_meta_description }}" id="input-meta-description{{ language.language_id }}" class="form-control">{{ information_description[language.language_id] ? information_description[language.language_id].meta_description }}</textarea>
+LINE: 83
+CODE: <textarea name="information_description[{{ language.language_id }}][meta_keyword]" rows="5" placeholder="{{ entry_meta_keyword }}" id="input-meta-keyword{{ language.language_id }}" class="form-control">{{ information_description[language.language_id] ? information_description[language.language_id].meta_keyword }}</textarea>
+LINE: 92
+CODE: <input type="text" name="information_description[{{ language.language_id }}][tag]" value="{{ information_description[language.language_id] ? information_description[language.language_id].tag }}" placeholder="{{ entry_tag }}" id="input-tag{{ language.language_id }}" class="form-control" />
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: admin/view/template/catalog/manufacturer_form.twig
+CODE: <div class="tab-pane" id="tab-seo">
+LINE: 125
+CODE: name="manufacturer_seo_url[{{ store.store_id }}][{{ language.language_id }}]
+LINE: 150
+CODE: $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description
+LINE: 60
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "category c LEFT JOIN " . DB_PREFIX . "category_description
+LINE: 77
+CODE: $query = $this->db->query("SELECT DISTINCT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description
+LINE: 41
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "information i LEFT JOIN " . DB_PREFIX . "information_description
+LINE: 81
+CODE: return $query->row;
+LINE: 43
+CODE: $query = $this->db->query($sql);
+LINE: 90
+CODE: $query->row['name'],
+LINE: 50
+CODE: if ($query->num_rows) {
+LINE: 78
+
+FILE: catalog/controller/product/manufacturer.php
+CODE: data['continue'] = $this->url->link('common/home');
+LINE: 64
+LINE: 253
+LINE: 311
+LINE: 678
+LINE: 735
+CODE: => $this->url->link('product/product', 'manufacturer_id=' . $result['manufacturer_id'] . '&product_id=' . $result['product_id'] . $url)
+NOT FOUND - OPERATION SKIPPED!
+CODE: if ($page == 1) {
+LINE: 652
+CODE: '&page='. (($page - 2) ? '&page='. ($page - 1) : '')
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/information/contact.php
+CODE: data['action'] = $this->url->link('information/contact'
+NOT FOUND - OPERATIONS ABORTED!
+CODE: data['heading_title'] = $product_info['name'];
+LINE: 373
+CODE: $this->model_catalog_product->updateViewed
+LINE: 645
+CODE: $this->document->setTitle($product_info['meta_title']);
+LINE: 279
+CODE: $this->document->setTitle($product_info['name']);
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/product/product.twig
+CODE: alt="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: title="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/product/product.twig
+CODE: alt="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: title="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/product/category.twig
+CODE: alt="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: title="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/product/category.twig
+CODE: alt="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: title="{{ heading_title }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: $data['heading_title'] = $category_info['name'];
+LINE: 126
+LINE: 647
+CODE: => $result['product_id'],
+NOT FOUND - OPERATIONS ABORTED!
+CODE: $this->data['heading_title'] = $category_info['name'];
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/information/information.php
+CODE: data['heading_title'] = $information_info['title'];
+LINE: 42
+CODE: $this->document->setTitle($information_info['meta_title']);
+LINE: 32
+CODE: $this->document->setTitle($information_info['title']);
+NOT FOUND - OPERATION SKIPPED!
+CODE: data['heading_title'] = $manufacturer_info['name'];
+LINE: 127
+CODE: $this->document->setTitle($manufacturer_info['name']);
+LINE: 109
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE keyword = '" . $this->db->escape($part) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "'");
+LINE: 21
+CODE: $this->url->addRewrite($this);
+LINE: 135
+CODE: $this->request->get['route'] = 'information/information';
+LINE: 297
+CODE: if (isset($this->request->get['_route_'])) {
+LINE: 560
+CODE: foreach ($parts as $part) {
+LINE: 149
+CODE: if ($query->num_rows) {
+LINE: 335
+CODE: public function rewrite($link) {
+LINE: 506
+CODE: $categories = explode('_', $value);
+NOT FOUND - OPERATIONS ABORTED!
+CODE: if ($url[0] == 'product_id') {
+LINE: 348
+CODE: if ($url[0] == 'category_id') {
+LINE: 377
+CODE: $url .= '/' . $query->row['keyword'];
+LINE: 556
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "'");
+NOT FOUND - OPERATION SKIPPED!
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "url_alias WHERE `query` = 'category_id=" . (int)$category . "'");
+NOT FOUND - OPERATION SKIPPED!
+CODE: $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "seo_url WHERE `query` = '" . $this->db->escape($key . '=' . (int)$value) . "' AND store_id = '" . (int)$this->config->get('config_store_id') . "' AND language_id = '" . (int)$this->config->get('config_language_id') . "'");
+LINE: 552
+LINE: 575
+CODE: if ($query->row['query'] &&
+LINE: 405
+CODE: return $url_info['scheme']
+NOT FOUND - OPERATION SKIPPED!
+CODE: } elseif ($key == 'path') {
+LINE: 584
+CODE: $query .= '&' . $key . '=' . $value;
+NOT FOUND - OPERATION SKIPPED!
+CODE: return $url_data['scheme']
+NOT FOUND - OPERATION SKIPPED!
+CODE: $parts = MegaFilterCore::prepareSeoParts( $this, $parts );
+NOT FOUND - OPERATION SKIPPED!
+CODE: return $query->rows;
+LINE: 61
+
+FILE: admin/controller/common/column_left.php
+CODE: if ($this->user->hasPermission('access', 'marketplace/event')) {
+LINE: 771
+CODE: if ($this->user->hasPermission('access', 'extension/event')) {
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/common/home.php
+CODE: $this->document->setDescription
+LINE: 93
+CODE: {% for link in links %}
+LINE: 111
+CODE: <head>
+NOT FOUND - OPERATION SKIPPED!
+CODE: {% for link in links %}
+LINE: 38
+CODE: <head>
+LINE: 2
+
+FILE: catalog/controller/error/not_found.php
+CODE: public function index() {
+LINE: 82
+
+FILE: system/library/pagination.php
+CODE: str_replace('&amp;page={page}'
+NOT FOUND - OPERATION SKIPPED!
+CODE: array('&amp;page={page}', '&page={page}')
+NOT FOUND - OPERATION SKIPPED!
+CODE: array('&amp;page={page}', '?page={page}', '&page={page}')
+LINE: 51
+LINE: 54
+LINE: 84
+CODE: str_replace('page={page}',
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: system/engine/controller.php
+CODE: protected function render() {
+NOT FOUND - OPERATION SKIPPED!
+CODE: // Journal Theme Modification
+NOT FOUND - OPERATION SKIPPED!
+CODE: // Journal Theme Modification
+NOT FOUND - OPERATION SKIPPED!
+CODE: } elseif (isset($data['route']) && $data['route'] == 'journal3/blog') {
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: system/library/cart/cart.php
+CODE: $product_data[] = array(
+LINE: 246
+
+FILE: system/library/document.php
+CODE: public function setTitle($title) {
+LINE: 51
+CODE: $this->links[$href] = array(
+LINE: 164
+
+FILE: admin/controller/extension/extension/module.php
+CODE: $files = glob(DIR_APPLICATION . 'controller/extension/module/*.php');
+LINE: 135
+CODE: $data['extensions'][] = array(
+LINE: 178
+
+FILE: admin/controller/extension/extension/feed.php
+CODE: $files = glob(DIR_APPLICATION . 'controller/extension/feed/*.php');
+LINE: 84
+CODE: $data['extensions'][] = array(
+LINE: 106
+CODE: $json['success'] = sprintf($this->language->get('text_success')
+LINE: 333
+CODE: $this->session->data['success'] = $this->language->get('text_remove');
+LINE: 416
+
+FILE: catalog/controller/account/wishlist.php
+CODE: $json['success'] = sprintf($this->language->get('text_success')
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/product/compare.php
+CODE: $json['success'] = sprintf($this->language->get('text_success')
+LINE: 175
+
+FILE: catalog/controller/checkout/success.php
+CODE: if (isset($this->session->data['order_id'])) {
+LINE: 7
+----------------------------------------------------------------
+MOD: Enhanced E-Commerce Tracking
+CODE: public function index() {
+LINE: 4
+CODE: </head>
+LINE: 184
+CODE: {% for script in scripts %}
+LINE: 108
+CODE: </head>
+LINE: 44
+CODE: {% for script in scripts %}
+NOT FOUND - OPERATION SKIPPED!
+CODE: public function index() {
+LINE: 4
+
+FILE: catalog/view/theme/default/template/common/footer.twig
+CODE: </footer>
+LINE: 68
+CODE: </body>
+LINE: 168
+
+FILE: catalog/view/theme/empirehall/template/common/footer.twig
+CODE: </footer>
+LINE: 135
+CODE: </body>
+LINE: 265
+CODE: $results = $this->model_catalog_product->getProductRelated
+LINE: 142
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+CODE: {{ footer }}
+LINE: 383
+CODE: {{ footer }}
+LINE: 383
+CODE: $results = $this->model_catalog_product->getProduct
+LINE: 374
+LINE: 580
+LINE: 835
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+CODE: $results = $this->model_catalog_product->getProduct
+LINE: 261
+LINE: 591
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/product/special.php
+CODE: $results = $this->model_catalog_product->getProduct
+LINE: 106
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+CODE: $results = $this->model_catalog_product->getProduct
+LINE: 223
+LINE: 510
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+CODE: foreach ($this->session->data['compare'] as $key => $product_id) {
+LINE: 72
+CODE: $data['products'][$product_id] = array(
+LINE: 113
+CODE: {{ footer }}
+LINE: 440
+CODE: href="{{ product.href }}"
+LINE: 248
+LINE: 263
+LINE: 285
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+CODE: {{ footer }}
+LINE: 440
+CODE: href="{{ product.href }}"
+LINE: 248
+LINE: 263
+LINE: 285
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+CODE: {{ footer }}
+LINE: 168
+CODE: href="{{ product.href }}"
+LINE: 68
+LINE: 85
+LINE: 141
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+CODE: {{ footer }}
+LINE: 168
+CODE: href="{{ product.href }}"
+LINE: 68
+LINE: 85
+LINE: 141
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/product/manufacturer_info.twig
+CODE: {{ footer }}
+LINE: 153
+CODE: href="{{ product.href }}"
+LINE: 103
+LINE: 120
+LINE: 142
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/product/manufacturer_info.twig
+CODE: {{ footer }}
+LINE: 153
+CODE: href="{{ product.href }}"
+LINE: 103
+LINE: 120
+LINE: 142
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/product/special.twig
+CODE: {{ footer }}
+LINE: 85
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/product/special.twig
+CODE: {{ footer }}
+LINE: 85
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+CODE: {{ footer }}
+LINE: 115
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+CODE: {{ footer }}
+LINE: 115
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/product/compare.twig
+CODE: {{ footer }}
+LINE: 129
+CODE: href="{{ product.href }}"
+LINE: 33
+CODE: onclick="cart.add(
+LINE: 116
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/product/compare.twig
+CODE: {{ footer }}
+LINE: 129
+CODE: href="{{ product.href }}"
+LINE: 33
+CODE: onclick="cart.add(
+LINE: 116
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+CODE: foreach ($products as $product_id) {
+LINE: 57
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/extension/module/bestseller.php
+CODE: foreach ($results as $result) {
+LINE: 46
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+CODE: foreach ($results as $result) {
+LINE: 73
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/extension/module/special.php
+CODE: foreach ($results as $result) {
+LINE: 45
+CODE: $data['products'][] = array(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/extension/module/bestseller.twig
+CODE: {{ heading_title }}
+LINE: 32
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/extension/module/bestseller.twig
+CODE: {{ heading_title }}
+LINE: 32
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/extension/module/featured.twig
+CODE: {{ heading_title }}
+LINE: 33
+CODE: href="{{ product.href }}"
+LINE: 46
+LINE: 61
+LINE: 84
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/extension/module/featured.twig
+CODE: {{ heading_title }}
+LINE: 33
+CODE: href="{{ product.href }}"
+LINE: 46
+LINE: 49
+LINE: 69
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/extension/module/latest.twig
+CODE: {{ heading_title }}
+LINE: 32
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/extension/module/latest.twig
+CODE: {{ heading_title }}
+LINE: 32
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/default/template/extension/module/special.twig
+CODE: {{ heading_title }}
+LINE: 32
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/extension/module/special.twig
+CODE: {{ heading_title }}
+LINE: 32
+CODE: href="{{ product.href }}"
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="cart.add(
+NOT FOUND - OPERATION SKIPPED!
+CODE: onclick="addToCart(
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/controller/extension/module/banner.php
+CODE: foreach ($results as $result) {
+LINE: 33
+CODE: $data['banners'][] = array(
+LINE: 52
+
+FILE: catalog/controller/extension/module/carousel.php
+CODE: foreach ($results as $result) {
+LINE: 35
+CODE: $data['banners'][] = array(
+LINE: 39
+
+FILE: catalog/controller/extension/module/slideshow.php
+CODE: foreach ($results as $result) {
+LINE: 42
+CODE: $data['banners'][] = array(
+LINE: 61
+
+FILE: catalog/view/theme/default/template/extension/module/banner.twig
+CODE: <script type="text/javascript">
+NOT FOUND - OPERATION SKIPPED!
+CODE: href="{{ banner.link }}"
+LINE: 6
+
+FILE: catalog/view/theme/empirehall/template/extension/module/banner.twig
+CODE: <script type="text/javascript">
+NOT FOUND - OPERATION SKIPPED!
+CODE: href="{{ banner.link }}"
+LINE: 6
+
+FILE: catalog/view/theme/default/template/extension/module/carousel.twig
+CODE: <script type="text/javascript">
+LINE: 12
+CODE: href="{{ banner.link }}"
+LINE: 3
+
+FILE: catalog/view/theme/empirehall/template/extension/module/carousel.twig
+CODE: <script type="text/javascript">
+LINE: 12
+CODE: href="{{ banner.link }}"
+LINE: 3
+
+FILE: catalog/view/theme/default/template/extension/module/slideshow.twig
+CODE: <script type="text/javascript">
+NOT FOUND - OPERATION SKIPPED!
+CODE: href="{{ banner.link }}"
+NOT FOUND - OPERATION SKIPPED!
+
+FILE: catalog/view/theme/empirehall/template/extension/module/slideshow.twig
+CODE: <script type="text/javascript">
+NOT FOUND - OPERATION SKIPPED!
+CODE: href="{{ banner.link }}"
+LINE: 17
+CODE: if (!empty($this->request->post['quantity'])) {
+LINE: 428
+CODE: $this->cart->remove(
+LINE: 532
+
+FILE: catalog/controller/checkout/checkout.php
+CODE: $products = $this->cart->getProducts();
+LINE: 33
+
+FILE: catalog/view/theme/default/template/checkout/checkout.twig
+CODE: {{ footer }}
+LINE: 813
+
+FILE: catalog/view/theme/empirehall/template/checkout/checkout.twig
+CODE: {{ footer }}
+LINE: 813
+
+FILE: catalog/controller/checkout/login.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/controller/checkout/register.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/controller/checkout/guest.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/controller/checkout/payment_address.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/controller/checkout/guest_shipping.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/controller/checkout/shipping_address.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/controller/checkout/confirm.php
+CODE: public function index() {
+LINE: 11
+
+FILE: catalog/view/theme/default/template/checkout/login.twig
+CODE: {% if checkout_guest %}
+LINE: 12
+
+FILE: catalog/view/theme/empirehall/template/checkout/login.twig
+CODE: {% if checkout_guest %}
+LINE: 12
+
+FILE: catalog/view/theme/default/template/checkout/register.twig
+CODE: <script type="text/javascript">
+LINE: 365
+
+FILE: catalog/view/theme/empirehall/template/checkout/register.twig
+CODE: <script type="text/javascript">
+LINE: 365
+
+FILE: catalog/view/theme/default/template/checkout/guest.twig
+CODE: <script type="text/javascript">
+LINE: 332
+
+FILE: catalog/view/theme/empirehall/template/checkout/guest.twig
+CODE: <script type="text/javascript">
+LINE: 332
+
+FILE: catalog/view/theme/default/template/checkout/payment_address.twig
+CODE: <script type="text/javascript">
+LINE: 205
+
+FILE: catalog/view/theme/empirehall/template/checkout/payment_address.twig
+CODE: <script type="text/javascript">
+LINE: 205
+
+FILE: catalog/view/theme/default/template/checkout/guest_shipping.twig
+CODE: <script type="text/javascript">
+LINE: 201
+
+FILE: catalog/view/theme/empirehall/template/checkout/guest_shipping.twig
+CODE: <script type="text/javascript">
+LINE: 201
+
+FILE: catalog/view/theme/default/template/checkout/shipping_address.twig
+CODE: <script type="text/javascript">
+LINE: 205
+
+FILE: catalog/view/theme/empirehall/template/checkout/shipping_address.twig
+CODE: <script type="text/javascript">
+LINE: 205
+
+FILE: catalog/controller/checkout/shipping_method.php
+CODE: $method_data[$result['code']] = array(
+LINE: 45
+CODE: $this->response->setOutput($this->load->view('checkout/shipping_method', $data));
+LINE: 123
+
+FILE: catalog/view/theme/default/template/checkout/shipping_method.twig
+CODE: {% if shipping_methods %}
+LINE: 3
+CODE: value="{{ quote.code }}"
+LINE: 58
+LINE: 60
+
+FILE: catalog/view/theme/empirehall/template/checkout/shipping_method.twig
+CODE: {% if shipping_methods %}
+LINE: 3
+CODE: value="{{ quote.code }}"
+LINE: 58
+LINE: 60
+
+FILE: catalog/controller/checkout/payment_method.php
+CODE: $this->response->setOutput($this->load->view('checkout/payment_method', $data));
+LINE: 152
+CODE: if ($method) {
+LINE: 70
+
+FILE: catalog/view/theme/default/template/checkout/payment_method.twig
+CODE: {% if payment_methods %}
+LINE: 3
+CODE: value="{{ payment_method.code }}"
+LINE: 55
+LINE: 57
+
+FILE: catalog/view/theme/empirehall/template/checkout/payment_method.twig
+CODE: {% if payment_methods %}
+LINE: 3
+CODE: value="{{ payment_method.code }}"
+LINE: 55
+LINE: 57
+
+FILE: catalog/view/theme/default/template/checkout/confirm.twig
+CODE: {% if not redirect %}
+LINE: 0
+
+FILE: catalog/view/theme/empirehall/template/checkout/confirm.twig
+CODE: {% if not redirect %}
+LINE: 0
+
+FILE: catalog/model/checkout/order.php
+CODE: $order_id = $this->db->getLastId();
+LINE: 13
+CODE: $this->db->query("INSERT INTO " . DB_PREFIX . "order_history
+LINE: 361
+
+FILE: catalog/controller/account/return.php
+CODE: $this->model_account_return->addReturn($this->request->post);
+LINE: 242
+----------------------------------------------------------------
+MOD: Enhanced E-Commerce Tracking (mod for multilingual brands)
+
+FILE: catalog/model/extension/module/ee_tracking.php
+CODE: m.name AS manufacturer
+LINE: 860
+LINE: 868
+CODE: LEFT JOIN " . DB_PREFIX . "manufacturer m ON (p.manufacturer_id = m.manufacturer_id)
+LINE: 862
+LINE: 878
+----------------------------------------------------------------
+MOD: Export/Import Tool (V3.22) for OpenCart 3.x
+CODE: if ($this->user->hasPermission('access', 'tool/upload')) {
+LINE: 690
+
+FILE: admin/language/en-gb/common/column_left.php
+CODE: $_['text_backup']
+LINE: 8
+
+FILE: admin/language/ru-ru/common/column_left.php
+CODE: $_['text_backup']
+LINE: 11
+----------------------------------------------------------------
+MOD: Localcopy OCMOD Install Fix
+
+FILE: admin/controller/marketplace/install.php
+CODE: if ($safe) {
+LINE: 165
+CODE: if (is_dir($file) && !is_dir($path)) {
+LINE: 221
+----------------------------------------------------------------
+MOD: OCFilter Modification
+CODE: function getForm() {
+LINE: 519
+CODE: $this->language->get('tab_general');
+NOT FOUND - OPERATION SKIPPED!
+CODE: if ($this->user->hasPermission('access', 'catalog/filter')) {
+LINE: 82
+
+FILE: admin/language/en-gb/catalog/product.php
+CODE: $_['text_success']
+LINE: 12
+
+FILE: admin/language/ru-ru/catalog/product.php
+CODE: $_['text_success']
+LINE: 12
+CODE: $_['text_option']
+LINE: 54
+CODE: $_['text_option']
+LINE: 57
+CODE: if (isset($data['product_recurring'])) {
+LINE: 232
+CODE: if (isset($data['product_recurring'])) {
+LINE: 988
+CODE: $data['product_attribute'] = $this->getProductAttributes($product_id);
+LINE: 1228
+CODE: $this->db->query("DELETE FROM " . DB_PREFIX . "product WHERE product_id = '" . (int)$product_id . "'");
+LINE: 1254
+CODE: </script></div>
+LINE: 1862
+CODE: Cart($this->registry));
+LINE: 224
+CODE: $this->url->addRewrite($this);
+LINE: 12
+
+FILE: catalog/controller/extension/seo_pro.php
+CODE: $this->url->addRewrite($this);
+LINE: 33
+CODE: $sql .= " LEFT JOIN " . DB_PREFIX . "product_description
+LINE: 208
+LINE: 813
+CODE: if (!empty($data['filter_manufacturer_id
+LINE: 298
+LINE: 903
+CODE: $data['breadcrumbs'] = array();
+LINE: 58
+CODE: $product_total =
+LINE: 347
+LINE: 354
+CODE: if (isset($this->request->get['filter'])) {
+LINE: 426
+CODE: if (isset($this->request->get['filter'])) {
+LINE: 444
+CODE: if (isset($this->request->get['filter'])) {
+LINE: 479
+CODE: $data['limit'] = $limit;
+LINE: 571
+CODE: public function getLinks
+LINE: 186
+CODE: private $keywords;
+LINE: 22
+CODE: public function setTitle($title) {
+LINE: 67
+CODE: $data['scripts'] = $this->document->getScripts
+LINE: 74
+CODE: </title>
+LINE: 24
+CODE: </title>
+LINE: 23
+----------------------------------------------------------------
+MOD: TLT Blog SEO PRO modification
+----------------------------------------------------------------
+MOD: Очиcтка кэша
+
+FILE: admin/controller/common/header.php
+CODE: $data['logged'] = true;
+LINE: 54
+
+FILE: admin/view/template/common/header.twig
+CODE: <ul class="nav navbar-nav navbar-right">
+LINE: 97
+CODE: <ul class="nav navbar-nav navbar-right">
+LINE: 115
+----------------------------------------------------------------

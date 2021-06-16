@@ -1,0 +1,154 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <span itemprop="name">{{ breadcrumb.text }}</span>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <h1 class="head-title">{{ heading_title }}</h1>
+</div>
+
+<div class="brand-page">
+  {% if image_bg %}
+    <div class="brand-page__main-image brand-page__content">
+      <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ image_bg }}" width="1400" height="680" alt="{{ heading_title }}" class="lazyload">
+    </div>
+  {% endif %}
+  <div class="brand-page__content">
+    <div class="brand-page__content-image ">
+      <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ image }}" width="200" height="110" alt="{{ heading_title }}" class="lazyload">
+    </div>
+    {% if description %}
+      <div class="brand-page__content-text text">
+       {{ description }}
+      </div>
+    {% endif %}
+  </div>
+</div>
+
+{% if categories %}
+  <div class="collection-block">
+    <div class="collection-block__title">{{ collections_title }}</div>
+    <div class="collection-block__nav">
+      <ul class="collection-block__list tabs-list">
+          {% if categories %}
+              <li class="collection-block__item tabs-list__item">
+                  <a class="tabs-list__link active" href="#collection_0">{{ text_coll_all }}</a>
+              </li>
+          {% endif %}
+        {% for category in categories %}
+          {% if category.collections %}
+            <li class="collection-block__item tabs-list__item">
+              <a class="tabs-list__link active" href="#collection_{{ category.id }}">{{ category.name }}</a>
+            </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="tabs-content">
+        <div id="collection_0" class="tab">
+            <div class="collection__list">
+                {% for category in categories %}
+                {% for collection in category.collections %}
+                    <a href="{{ collection.href }}" class="main-catalog__item">
+                        <div class="main-catalog__image">
+                            <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ collection.image }}" width="430" height="524" alt="{{ collection.name }}"  class="lazyload">
+                        </div>
+                        <div class="main-catalog__title">{{ collection.name }}</div>
+                    </a>
+                {% endfor %}
+                {% endfor %}
+
+            </div>
+        </div>
+
+
+      {% for category in categories %}
+        {% if category.collections %}
+          <div id="collection_{{ category.id }}" class="tab">
+            <div class="collection__list">
+              {% for collection in category.collections %}
+                <a href="{{ collection.href }}" class="main-catalog__item">
+                <div class="main-catalog__image">
+                  <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ collection.image }}" width="430" height="524" alt="{{ collection.name }}" class="lazyload">
+                </div>
+                <div class="main-catalog__title">{{ collection.name }}</div>
+              </a>
+              {% endfor %}
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% if products %}
+  <div class="collection-products">
+    <div class="collection-products__title">{{ products_title }}</div>
+    <div class="collection-products__list">
+      {% for product in products %}
+        <div class="product__item">
+        <div class="product__title">
+          <a href="{{ product.href }}">{{ product.name }}</a>
+
+            <ol class="breadcrumb brand-breadcrumb">
+                {% if  product.manufacturer_href %}
+                    <li>
+                        <a href="{{ product.manufacturer_href }}"><span>{{ product.manufacturer }}</span></a>
+                    </li>
+                {% endif %}
+                {% if product.collection %}
+                    <li>
+                        <a href="{{ product.collection_href }}"><span>{{ product.collection }}</span></a>
+                    </li>
+                {% endif %}
+            </ol>
+
+        </div>
+        <div class="product__image">
+          <a href="{{ product.href }}">
+            <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ product.image }}" width="370" height="370" alt="{{ product.name }}" class="lazyload">
+          </a>
+        </div>
+        <div class="product__box">
+            <div class="product__price">
+                {% if product.price > 0 %}
+                    {% if product.special %}
+                        <div class="product__price-old">{{ product.price }}</div>
+                        <div class="product__price-new">{{ product.special }}</div>
+                    {% else %}
+                        <div class="product__price-new">{{ product.price }}</div>
+                    {% endif %}
+                {% else %}
+                    <div class="product__no-price-btm" onclick="location.href='{{ product.href }}'">{{ text_no_price }}</div>
+                {% endif %}
+            </div> <span class="product-nav">
+          <span data-id="{{ product.product_id }}" class="{% if product.is_wishlist %}active{% endif %} add-wishlist product__link link-favorite {% if not logged %} loginza {% endif %}" {% if logged %} onclick="{% if product.is_wishlist %} wishlist.remove('{{ product.product_id }}');  {% else %}wishlist.add('{{ product.product_id }}'); {% endif %}"  {% endif %}>
+                  <svg>
+                    <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/front/dist/images/sprite.svg#wishlist"></use>
+                  </svg>
+                </span>
+          <a class="product__link" href="{{ product.href }}">
+            <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#link-arrow"></use></svg>
+          </a></span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <a href="{{ all_prod_manufacture }}" class="show-all">{{ text_all_combinations }}</a>
+  </div>
+{% endif %}
+
+{{ footer }}

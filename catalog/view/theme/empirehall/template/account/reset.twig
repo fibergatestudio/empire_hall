@@ -1,0 +1,44 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+          <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <span itemprop="name">{{ breadcrumb.text }}</span>
+          <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="head-title">{{ heading_title_res }}</div>
+</div>
+
+<div class="password-text">{{ text_password_desc }}</div>
+
+<div class="form-box">
+  <form action="{{ action }}" method="post">
+    <div class="form-block">
+      <input class="main-input{% if error_password %} error{% endif %}" type="password" name="password" value="{{ password }}">
+      <div class="form-label">{{ entry_password }}</div>
+      {% if error_password %}
+        <p class="error">{{ error_password }}</p>
+      {% endif %}
+    </div>
+    <div class="form-block">
+      <input class="main-input{% if error_confirm %} error{% endif %}" type="password" name="confirm" value="{{ confirm }}">
+      <div class="form-label">{{ entry_confirm }}</div>
+      {% if error_confirm %}
+        <p class="error">{{ error_confirm }}</p>
+      {% endif %}
+    </div>
+    <button type="submit" class="main-button">{{ button_continue }}</button>
+  </form>
+</div>
+
+{{ footer }}

@@ -1,0 +1,37 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <span itemprop="name">{{ breadcrumb.text }}</span>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+  <div class="head-title">{{ heading_title_forgot }}</div>
+</div>
+
+<div class="password-text">{{ text_email }}</div>
+
+<div class="form-box">
+  <form action="{{ action }}" method="post">
+    <div class="form-block">
+      <input class="main-input{% if error_warning %} error{% endif %}" type="email" name="email" value="{{ email }}">
+      <div class="form-label">{{ entry_email }}</div>
+      {% if error_warning %}
+        <p class="error">{{ error_warning }}</p>
+      {% endif %}
+    </div>
+    <button type="submit" class="main-button">{{ button_continue }}</button>
+  </form>
+</div>
+
+{{ footer }}

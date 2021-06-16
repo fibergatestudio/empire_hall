@@ -1,0 +1,32 @@
+{% if banners %}
+	<div class="main-section"> 
+		<div class="main-section__slider">
+			{% for banner in banners %}
+				<div class="main-section__slide">
+					<div class="shadow"></div>
+					{% if ((banner.title) or (banner.description)) %}
+						<div class="main-section__content">
+							{% if banner.title %}
+								<div class="main-section__title">{{ banner.title }}</div>
+							{% endif %}
+							{% if banner.description %}
+								<div class="main-section__text">{{ banner.description }}</div>
+							{% endif %}
+						</div>
+					{% endif %}
+					{% if banner.link %}
+						<a href="{{ banner.link }}" class="main-section__button">
+							<span>
+								<svg viewBox="0 0 100 100" style="display: block; width: 100%;">
+									<path d="M 50,50 m 0,-49.5 a 49.5,49.5 0 1 1 0,99 a 49.5,49.5 0 1 1 0,-99" stroke="#fff" stroke-width="1" fill-opacity="0" ></path>
+								</svg>
+							</span>
+							{{ text_to_catalog }}
+						</a>
+					{% endif %}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endif %}
+

@@ -1,0 +1,74 @@
+{{ header }}
+<div class="head-block head-block--center">
+    <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+        {% for counter, breadcrumb in breadcrumbs %}
+            {% if counter + 1 < breadcrumbs|length %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% else %}
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ breadcrumb.text }}</span>
+                    <meta itemprop="position" content="{{ counter+1 }}" />
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ol>
+    <div class="head-title">{{ heading_title_reg }}</div>
+</div>
+<div class="form-box">
+    <form action="{{ action }}" method="post">
+        <div class="form-block">
+            <input class="main-input{% if error_full_name %} error{% endif %}" type="text" name="firstname" value="{{ firstname }}">
+            <div class="form-label">{{ entry_full_name }}</div>
+            {% if error_full_name %}
+                <p class="error">{{ error_full_name }}</p>
+            {% endif %}
+        </div>
+        <div class="form-block hidden">
+            <input class="main-input{% if error_lastname %} error{% endif %}" type="text" name="lastname" value="{{ lastname }}">
+            <div class="form-label">{{ entry_lastname }}</div>
+            {% if error_lastname %}
+                <p class="error">{{ error_lastname }}</p>
+            {% endif %}
+        </div>
+        <div class="form-block">
+            <input class="main-input{% if error_email or error_warning %} error{% endif %}" type="email" name="email" value="{{ email }}">
+            <div class="form-label">{{ entry_email }}</div>
+            {% if error_email %}
+                <p class="error">{{ error_email }}</p>
+            {% endif %}
+            {% if error_warning %}
+                <p class="error">{{ error_warning }}</p>
+            {% endif %}
+        </div>
+        <div class="form-block telephone-block">
+            <input class="main-input{% if error_telephone %} error{% endif %}" type="tel" name="telephone" value="{{ telephone }}">
+            <div class="form-label">{{ entry_telephone }}</div>
+            {% if error_telephone %}
+                <p class="error">{{ error_telephone }}</p>
+            {% endif %}
+        </div>
+        <div class="form-block">
+            <input class="main-input{% if error_password %} error{% endif %}" type="password" name="password" value="{{ password }}">
+            <div class="form-label">{{ entry_password }}</div>
+            {% if error_password %}
+                <p class="error">{{ error_password }}</p>
+            {% endif %}
+        </div>
+        <div class="form-block hidden">
+            <input class="main-input{% if error_confirm %} error{% endif %}" type="password" name="confirm" value="{{ confirm }}">
+            <div class="form-label">{{ entry_confirm }}</div>
+            <input type="hidden" name="newsletter" value="0" />
+            <input type="hidden" name="agree" value="1" />
+            {% if error_confirm %}
+                <p class="error">{{ error_confirm }}</p>
+            {% endif %}
+        </div>
+        <button type="submit" class="main-button">{{ entry_register_btn }}</button>
+        <a class="show-all" id="open-login" href="{{ login_page }}">{{ entry_login }}</a>
+    </form>
+</div>
+
+{{ footer }}

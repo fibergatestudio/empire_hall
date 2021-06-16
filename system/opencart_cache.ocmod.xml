@@ -1,0 +1,1070 @@
+<?xml version="1.0" encoding="UTF-8"?>
+  <modification>
+  <name>Webkul Opencart Cache</name>
+  <version>1.0.0</version>
+  <code>wk_cache</code>
+  <author>Webkul</author>
+  <link>http://webkul.com</link>
+
+  <file path="system/framework.php">
+    <operation>
+      <search><![CDATA[
+        $registry->set('document', new Document());
+      ]]></search>
+      <add position="replace"><![CDATA[
+        //webkul cache
+        $registry->set('wkcache', new wkcache\wkcache($registry));
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        $registry->set('cache', new Cache($config->get('cache_engine'), $config->get('cache_expire')));
+      ]]></search>
+      <add position="before" offset="1"><![CDATA[
+        // webkul cache code
+        if(!defined('DIR_CATALOG')) {
+          require_once(DIR_SYSTEM.'library/wkcache/page.php');
+          $page = new Wkcache\Page($registry);
+          $key = str_replace('/','-', $_SERVER['REQUEST_URI']);
+          $cache = $page->get($page->customer_id.'-'.$key);
+          if(!$page->no_cache) {
+            $key = str_replace('/','-', $_SERVER['REQUEST_URI']);
+            $cache = $page->get($page->customer_id.'-'.$key);
+            if(!is_null($cache->get())) {
+              $response = new Response($registry);
+              $response->setOutput($cache->get());
+              $response->output();
+              return;
+            }
+          }
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="system/engine/event.php">
+    <operation>
+      <search><![CDATA[
+        $this->registry = $registry;
+      ]]></search>
+      <add position="after"><![CDATA[
+        $GLOBALS['registry'] = $registry;
+      ]]></add>
+    </operation>
+  </file>
+
+
+  <file path="system/library/response.php">
+    <operation>
+      <search><![CDATA[
+        public function setOutput($output) {
+      ]]></search>
+      <add position="after"><![CDATA[
+       		global $registry;
+          $registry->set('wkcache', new Wkcache\Wkcache($registry));
+          $output = $registry->get('wkcache')->changeOutput($output);
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/model/catalog/product.php">
+    <operation>
+      <search><![CDATA[
+        $this->cache->delete('product');
+      ]]></search>
+      <add position="replace"><![CDATA[
+        $this->cache->delete('product');
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('product','product_images','product_options'), 'files');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/model/catalog/category.php">
+    <operation>
+      <search><![CDATA[
+        $this->cache->delete('category');
+      ]]></search>
+      <add position="replace"><![CDATA[
+        $this->cache->delete('category');
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('category_module','header_category'), 'files');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/model/catalog/filter.php">
+    <operation>
+      <search><![CDATA[
+        public function addFilter($data) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('filter_module'), 'files');
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        public function editFilter($filter_group_id, $data) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('filter_module'), 'files');
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        public function deleteFilter($filter_group_id) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('filter_module'), 'files');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/model/catalog/information.php">
+    <operation>
+      <search><![CDATA[
+        $this->cache->delete('information');
+      ]]></search>
+      <add position="replace"><![CDATA[
+        $this->cache->delete('information');
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('information_module'), 'files');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/model/localisation/location.php">
+    <operation>
+      <search><![CDATA[
+        public function addLocation($data) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('store_location'), 'files');
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        public function editLocation($location_id, $data) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('store_location'), 'files');
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        public function deleteLocation($location_id) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('store_location'), 'files');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="admin/model/design/banner.php">
+    <operation>
+      <search><![CDATA[
+        public function addBanner($data) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('banner_design'), 'files');
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        public function editBanner($banner_id, $data) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('banner_design'), 'files');
+        }
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        public function deleteBanner($banner_id) {
+      ]]></search>
+      <add position="after"><![CDATA[
+        if($this->config->get('module_oc_cache_status') && file_exists(DIR_APPLICATION . '../vendor/autoload.php')){
+          $webkulcache = $this->load->library('cart/webkulcache');
+          $this->webkulcache->deleteCache(array('banner_design'), 'files');
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/startup/startup.php">
+    <operation>
+      <search><![CDATA[
+        $this->registry->set('openbay', new Openbay($this->registry));
+      ]]></search>
+      <add position="after"><![CDATA[
+        //webkul cache
+        $this->registry->set('wkcache', new Wkcache\Wkcache($this->registry));
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        $this->registry->set('openbay', new Openbay($this->registry));
+      ]]></search>
+      <add position="after"><![CDATA[
+
+        // webkul cache code
+        if(!defined('DIR_CATALOG')) {
+          require_once(DIR_SYSTEM.'library/wkcache/page.php');
+          $page = new Wkcache\Page($this->registry);
+          $key = str_replace('/','-', $_SERVER['REQUEST_URI']);
+          $cache = $page->get($page->customer_id.'-'.$key);
+
+          if(!$page->no_cache) {
+            $key = str_replace('/','-', $_SERVER['REQUEST_URI']);
+            $cache = $page->get($page->customer_id.'-'.$key);
+            if(!is_null($cache->get())) {
+              $response = new Response($this->registry);
+              $response->setOutput($cache->get());
+              $response->output();
+              die();
+            }
+          }
+        }
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/extension/module/featured.php">
+    <operation>
+      <search><![CDATA[
+        if (!empty($setting['product'])) {
+      ]]></search>
+      <add position="before"><![CDATA[
+          /**
+          * opencart cache code start here
+          */
+        $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+          if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_featured')['status']) && $this->config->get('module_oc_cache_featured')['status'])){
+          static  $product_container  = array();
+                  $getCacheInstance   = $this->webkulcache->get_InstanceCache('files');
+                  $CachedString       = $getCacheInstance->getItem('product_featured');
+                  $product_container  = $CachedString->get('product_featured'.$lang_store_id);
+          }
+          /**
+            * opencart cache code end here
+            */
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        $product_info = $this->model_catalog_product->getProduct($product_id);
+      ]]></search>
+      <add position="replace"><![CDATA[
+        /**
+        * opencart cache code start here
+        */
+        if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_featured')['status']) && $this->config->get('module_oc_cache_featured')['status'])){
+            if(!isset($product_container['product_featured'.$lang_store_id][$product_id])){
+                $product_info  = $this->model_catalog_product->getProduct($product_id);
+                $product_container['product_featured'.$lang_store_id][$product_info['product_id']] = $product_info;
+                if($this->config->get('module_oc_cache_featured')['expire'])
+                  $CachedString->set($product_container)->expiresAfter($this->config->get('module_oc_cache_featured')['expire']);
+                else
+                  $CachedString->set($product_container);
+
+                $getCacheInstance->save($CachedString);
+            }else{
+              $product_info = $product_container['product_featured'.$lang_store_id][$product_id];
+            }
+        }else{
+          $product_info   = $this->model_catalog_product->getProduct($product_id);
+        }
+        /**
+        * opencart cache code end here
+        */
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/extension/module/latest.php">
+    <operation>
+      <search><![CDATA[
+        $results = $this->model_catalog_product->getProducts($filter_data);
+      ]]></search>
+      <add position="replace"><![CDATA[
+        /**
+        * opencart cache code start here
+        */
+        $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+        if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_latest')['status']) && $this->config->get('module_oc_cache_latest')['status'])){
+          static  $product_container  = array();
+          $getCacheInstance   = $this->webkulcache->get_InstanceCache('files');
+          $CachedString       = $getCacheInstance->getItem('product_latest');
+          $product_container  = $CachedString->get('product_latest'.$lang_store_id);
+          if(!isset($product_container['product_latest'.$lang_store_id])){
+            $results = $this->model_catalog_product->getProducts($filter_data);
+            $product_container['product_latest'.$lang_store_id] = $results;
+            if($this->config->get('module_oc_cache_latest')['expire'])
+              $CachedString->set($product_container)->expiresAfter($this->config->get('module_oc_cache_latest')['expire']);
+            else
+              $CachedString->set($product_container);
+
+            $getCacheInstance->save($CachedString);
+          } else {
+            $results = $product_container['product_latest'.$lang_store_id];
+          }
+        } else {
+          $results = $this->model_catalog_product->getProducts($filter_data);
+        }
+        /**
+        * opencart cache code end here
+        */
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/controller/extension/module/category.php">
+    <operation>
+      <search><![CDATA[
+        $categories = $this->model_catalog_category->getCategories(0);
+      ]]></search>
+      <add position="replace"><![CDATA[
+        /**
+          * opencart cache code start here
+          */
+        $category_cache_status = false;
+        $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+        if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_category')['status']) && $this->config->get('module_oc_cache_category')['status'])){
+            $category_cache_status = true;
+            static  $category_mod_container = array();
+                    $getCacheInstance   = $this->webkulcache->get_InstanceCache('files');
+                    $CachedString       = $getCacheInstance->getItem('category_module');
+                    $category_mod_container = $CachedString->get('category_module'.$lang_store_id);
+                    if(!isset($category_mod_container['category_module'.$lang_store_id])){
+                        $categories = $this->model_catalog_category->getCategories(0);
+                        $category_mod_container['category_module'.$lang_store_id] = $categories;
+                        if($this->config->get('module_oc_cache_category')['expire'])
+                          $CachedString->set($category_mod_container)->expiresAfter($this->config->get('module_oc_cache_category')['expire']);
+                        else
+                          $CachedString->set($category_mod_container);
+
+                        $getCacheInstance->save($CachedString);
+                    }else{
+                        $categories = $category_mod_container['category_module'.$lang_store_id];
+                    }
+        }else{
+            $categories = $this->model_catalog_category->getCategories(0);
+        }
+        /**
+        * opencart cache code end here
+        */
+      ]]></add>
+    </operation>
+
+    <operation>
+      <search><![CDATA[
+          $children = $this->model_catalog_category->getCategories($category['category_id']);
+      ]]></search>
+      <add position="replace"><![CDATA[
+        /**
+          * opencart cache code start here
+          */
+          if($this->config->get('module_oc_cache_status') && $category_cache_status){
+            if(!isset($category_mod_container['chield_category'.$lang_store_id.'.'.$category['category_id']])){
+                $children = $this->model_catalog_category->getCategories($category['category_id']);
+                if($children){
+                  foreach ($children as $key => $cat) {
+                      $category_mod_container['chield_category'.$lang_store_id.'.'.$category['category_id']][$cat['category_id']] = $children[$key];
+                  }
+                }
+              if($this->config->get('module_oc_cache_category')['expire'])
+                $CachedString->set($category_mod_container)->expiresAfter($this->config->get('module_oc_cache_category')['expire']);
+              else
+                $CachedString->set($category_mod_container);
+
+                $getCacheInstance->save($CachedString);
+            }else{
+                $children = $category_mod_container['chield_category'.$lang_store_id.'.'.$category['category_id']];
+            }
+          }else{
+            $children = $this->model_catalog_category->getCategories($category['category_id']);
+          }
+          /**
+          * opencart cache code end here
+          */
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/view/theme/*/template/common/header.twig">
+
+    <operation>
+      <search><![CDATA[<body>]]></search>
+      <add position="after"><![CDATA[
+        {% if module_oc_cache_status is defined and module_oc_cache_status %}
+          {{ oc_cache }}
+        {% endif %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        <script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
+      ]]></search>
+      <add position="before"><![CDATA[
+        {% if module_oc_cache_js_cdn is defined and module_oc_cache_js_cdn['jquery'] is defined and  module_oc_cache_js_cdn['jquery'] %}
+          <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js" type="text/javascript"></script>
+        {% else %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        <script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js" type="text/javascript"></script>
+      ]]></search>
+      <add position="after"><![CDATA[
+        {% endif %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+      ]]></search>
+      <add position="before"><![CDATA[
+      {% if module_oc_cache_js_cdn is defined and module_oc_cache_js_cdn['bootstrap'] is defined and  module_oc_cache_js_cdn['bootstrap'] %}
+          <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
+      {% else %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+      <script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+      ]]></search>
+      <add position="after"><![CDATA[
+        {% endif %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+      ]]></search>
+      <add position="before"><![CDATA[
+      {% if module_oc_cache_css_cdn is defined and module_oc_cache_css_cdn['bootstrap'] is defined and  module_oc_cache_css_cdn['bootstrap'] %}
+          <link href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+      {% else %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        <link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+      ]]></search>
+      <add position="after"><![CDATA[
+        {% endif %}
+      ]]></add>
+    </operation>
+    <operation>
+      <search><![CDATA[
+        <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+      ]]></search>
+      <add position="before"><![CDATA[
+      {% if module_oc_cache_css_cdn is defined and module_oc_cache_css_cdn['font-awesome'] is defined and  module_oc_cache_css_cdn['font-awesome'] %}
+        <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" rel="stylesheet" type="text/css" />
+      {% else %}
+      ]]></add>
+    </operation>
+        <operation>
+      <search><![CDATA[
+        <link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+      ]]></search>
+      <add position="after"><![CDATA[
+        {% endif %}
+      ]]></add>
+    </operation>
+
+  </file>
+
+  <file path="catalog/controller/common/header.php">
+    <operation>
+      <search><![CDATA[
+      $data['cart'] = $this->load->controller('common/cart');
+      ]]></search>
+      <add position="after"><![CDATA[
+        	$data['module_oc_cache_status'] = false;
+
+          if(isset($this->request->get['route'])){
+        				$this->request->get['route'] = $this->request->get['route'];
+        			} else {
+        				$this->request->get['route'] = 'common/home';
+        			}
+
+        	if($this->config->get('module_oc_cache_status') && !preg_match("/account\/|checkout\/|common\/cart\/info/", $this->request->get['route'])) {
+
+
+			  $data['module_oc_cache_status'] = true;
+		    $data['oc_cache'] = $this->load->controller('common/oc_cache');
+
+			$_config_keys = array(
+				'module_oc_cache_image_lazyload',
+				'module_oc_cache_image_webp',
+				'module_oc_cache_combine_js',
+        'module_oc_cache_js_cdn',
+        'module_oc_cache_css_cdn',
+		    );
+
+		    foreach($_config_keys as $_config_key) {
+			   $data[$_config_key] = $this->config->get($_config_key);
+		    }
+
+		}
+      ]]></add>
+    </operation>
+  </file>
+
+  <file path="catalog/model/tool/image.php">
+    <operation>
+      <search><![CDATA[class ModelToolImage extends Model {]]></search>
+      <add position="after"><![CDATA[
+        private function compress($source, $destination) {
+          $info = getimagesize($source);
+          if ($info['mime'] == 'image/jpeg' || $info['mime'] == 'image/jpg')
+            $image = imagecreatefromjpeg($source);
+
+          elseif ($info['mime'] == 'image/gif')
+            $image = imagecreatefromgif($source);
+
+          elseif ($info['mime'] == 'image/png')
+            $image = imagecreatefrompng($source);
+
+          $quality = 100;
+
+          if($this->config->get('module_oc_cache_image_compression_quality')) {
+            $quality = $this->config->get('module_oc_cache_image_compression_quality');
+          }
+
+          imagejpeg($image, $destination, $quality);
+        }
+      ]]></add>
+    </operation>
+
+    <operation>
+      <search><![CDATA[if ($this->request->server['HTTPS']) {]]></search>
+      <add position="before"><![CDATA[
+        if ($this->config->get('module_oc_cache_status') && $this->config->get('module_oc_cache_image_webp')) {
+
+            $this->registry->set('webp', new wkcache\webp());
+
+            $quality = 100;
+
+            if ($this->config->get('module_oc_cache_compression_status')  && $this->config->get('module_oc_cache_image_compression')) {
+              $quality = $this->config->get('module_oc_cache_image_compression');
+            }
+
+            $result = $this->webp->convertImage(DIR_IMAGE . $image_new,100);
+
+            if (isset($result['success']) && $result['success'] && isset($result['data']['path'])) {
+
+              if ($this->request->server['HTTPS']) {
+                return $this->config->get('config_ssl') . 'image/' . $image_new.'.webp';
+              } else {
+                return $this->config->get('config_url') . 'image/' . $image_new.'.webp';
+              }
+            }
+        }
+        if($this->config->get('module_oc_cache_status') && $this->config->get('module_oc_cache_compression_status')  && $this->config->get('module_oc_cache_image_compression')) {
+          $this->compress(DIR_IMAGE . $image_new, DIR_IMAGE .$image_new);
+        }
+
+      ]]></add>
+    </operation>
+  </file>
+
+        <file path="catalog/controller/common/menu.php">
+            <operation>
+              <search><![CDATA[
+                  $categories = $this->model_catalog_category->getCategories(0);
+              ]]></search>
+              <add position="replace"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                $category_cache_status = false;
+                $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+                if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_menu_layout')['status']) && $this->config->get('module_oc_cache_menu_layout')['status'])){
+                    $category_cache_status = true;
+                    static  $category_container = array();
+                            $getCacheInstance   = $this->webkulcache->get_InstanceCache('files');
+                            $CachedString       = $getCacheInstance->getItem('header_category');
+                            $category_container = $CachedString->get('header_category'.$lang_store_id);
+                            if(!isset($category_container['header_category'.$lang_store_id])){
+                                $categories = $this->model_catalog_category->getCategories(0);
+                                $category_container['header_category'.$lang_store_id] = $categories;
+                                if($this->config->get('module_oc_cache_menu_layout')['expire'])
+                                  $CachedString->set($category_container)->expiresAfter($this->config->get('module_oc_cache_menu_layout')['expire']);
+                                else
+                                  $CachedString->set($category_container);
+
+                                $getCacheInstance->save($CachedString);
+                            }else{
+                                $categories = $category_container['header_category'.$lang_store_id];
+                            }
+                }else{
+                    $categories = $this->model_catalog_category->getCategories(0);
+                }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+
+            <operation>
+              <search><![CDATA[
+                  $children = $this->model_catalog_category->getCategories($category['category_id']);
+              ]]></search>
+              <add position="replace"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                  if($this->config->get('module_oc_cache_status') && $category_cache_status){
+                    if(!isset($category_container['chield_category'.$lang_store_id.'.'.$category['category_id']])){
+                        $children = $this->model_catalog_category->getCategories($category['category_id']);
+                        if($children){
+                          foreach ($children as $key => $cat) {
+                              $category_container['chield_category'.$lang_store_id.'.'.$category['category_id']][$cat['category_id']] = $children[$key];
+                          }
+                        }
+                      if($this->config->get('module_oc_cache_menu_layout')['expire'])
+                        $CachedString->set($category_container)->expiresAfter($this->config->get('module_oc_cache_menu_layout')['expire']);
+                      else
+                        $CachedString->set($category_container);
+
+                        $getCacheInstance->save($CachedString);
+                    }else{
+                        $children = $category_container['chield_category'.$lang_store_id.'.'.$category['category_id']];
+                    }
+                  }else{
+                    $children = $this->model_catalog_category->getCategories($category['category_id']);
+                  }
+                  /**
+                  * opencart cache code end here
+                  */
+              ]]></add>
+            </operation>
+        </file>
+
+         <file path="catalog/model/catalog/product.php">
+            <operation>
+              <search><![CDATA[public function getProduct($product_id) {]]></search>
+              <add position="replace"><![CDATA[
+                private static $getCacheInstance = null;
+                public function getProduct($product_id) {
+                /**
+                 * opencart cache code start here
+                 */
+                  $cache_product_status = false;
+                  if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_product')['status']) && $this->config->get('module_oc_cache_product')['status'])){
+                      $cache_product_status = true;
+                      $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+
+                    if (self::$getCacheInstance == null) {
+                      self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                    }
+                    $CachedString     = self::$getCacheInstance->getItem('product');
+                    $product_container = $CachedString->get('product'.$lang_store_id);
+                      if(isset($product_container['product'.$lang_store_id][$product_id])){
+                        return $product_container['product'.$lang_store_id][$product_id];
+                      }
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+
+            <operation>
+              <search><![CDATA[return array(]]></search>
+              <add position="replace"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 $product_array = array(
+              ]]></add>
+            </operation>
+
+            <operation>
+              <search><![CDATA['viewed'           => $query->row['viewed']]]></search>
+              <add position="after" offset="1"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 if($cache_product_status && !isset($product_container['product'.$lang_store_id][$product_id])){
+                    $product_container['product'.$lang_store_id][$product_id] = $product_array;
+                    if($this->config->get('module_oc_cache_product')['expire'])
+                      $CachedString->set($product_container)->expiresAfter($this->config->get('module_oc_cache_product')['expire']);
+                    else
+                      $CachedString->set($product_container);
+
+                    self::$getCacheInstance->save($CachedString);
+                    return $product_container['product'.$lang_store_id][$product_id];
+                  }else{
+                    return $product_array;
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+
+            <operation>
+              <search><![CDATA[
+                $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
+              ]]></search>
+              <add position="replace"><![CDATA[
+                /**
+                * opencart cache code start here
+                */
+                  if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_product')['status']) && $this->config->get('module_oc_cache_product')['status'])){
+                      $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+                    if (self::$getCacheInstance == null) {
+                        self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                    }
+                    $CachedString     = self::$getCacheInstance->getItem('product_images');
+                    $product_container= $CachedString->get('product_images'.$lang_store_id);
+                    if(!isset($product_container['product_images'.$lang_store_id][$product_id])){
+                      $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
+                      $product_container['product_images'.$lang_store_id][$product_id] = $query->rows;
+                        if($this->config->get('module_oc_cache_product')['expire'])
+                          $CachedString->set($product_container)->expiresAfter($this->config->get('module_oc_cache_product')['expire']);
+                        else
+                          $CachedString->set($product_container);
+
+                        self::$getCacheInstance->save($CachedString);
+                    }else{
+                      return $product_container['product_images'.$lang_store_id][$product_id];
+                    }
+                }else{
+                  $query = $this->db->query("SELECT * FROM " . DB_PREFIX . "product_image WHERE product_id = '" . (int)$product_id . "' ORDER BY sort_order ASC");
+                }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+             <operation>
+              <search><![CDATA[public function getProductOptions($product_id) {]]></search>
+              <add position="after"><![CDATA[
+                /*
+                * opencart cache code start here
+                */
+                $cache_product_option_status = false;
+                if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_product')['status']) && $this->config->get('module_oc_cache_product')['status'])){
+                      $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+                    $cache_product_option_status = true;
+                    if (self::$getCacheInstance == null) {
+                        self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                    }
+                    $CachedString     = self::$getCacheInstance->getItem('product_options');
+                    $product_container= $CachedString->get('product_options'.$lang_store_id);
+                    if(isset($product_container['product_options'.$lang_store_id][$product_id])){
+                      return $product_container['product_options'.$lang_store_id][$product_id];
+                    }
+                }
+                /*
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+             <operation>
+              <search><![CDATA[return $product_option_data;]]></search>
+              <add position="before"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 if($cache_product_option_status){
+                    $product_container['product_options'.$lang_store_id][$product_id] = $product_option_data;
+                      if($this->config->get('module_oc_cache_product')['expire'])
+                          $CachedString->set($product_container)->expiresAfter($this->config->get('module_oc_cache_product')['expire']);
+                      else
+                          $CachedString->set($product_container);
+
+                      self::$getCacheInstance->save($CachedString);
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+          </file>
+
+          <file path="catalog/model/catalog/manufacturer.php">
+            <operation>
+              <search><![CDATA[public function getManufacturer($manufacturer_id) {]]></search>
+              <add position="replace"><![CDATA[
+                private static $getCacheInstance = null;
+                public function getManufacturer($manufacturer_id) {
+                /**
+                 * opencart cache code start here
+                 */
+                  $cache_manufacturer_status = false;
+                  if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_manufacturer')['status']) && $this->config->get('module_oc_cache_manufacturer')['status'])){
+                      $cache_manufacturer_status = true;
+                      $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+                      if (self::$getCacheInstance == null) {
+                          self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                      }
+                      $CachedString           = self::$getCacheInstance->getItem('manufacturer');
+                      $manufacturer_container = $CachedString->get('manufacturer'.$lang_store_id);
+                      if(isset($manufacturer_container['manufacturer'.$lang_store_id][$manufacturer_id])){
+                          return $manufacturer_container['manufacturer'.$lang_store_id][$manufacturer_id];
+                      }
+                    }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+            <operation>
+              <search><![CDATA[.manufacturer_id = '" . (int)$manufacturer_id . "' AND m2s.store_id = '" . (int)$this->config->get('config_store_id') . "'");]]></search>
+              <add position="after"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 if($cache_manufacturer_status){
+                    $manufacturer_container['manufacturer'.$lang_store_id][$manufacturer_id] = $query->row;
+                    if($this->config->get('module_oc_cache_manufacturer')['expire'])
+                        $CachedString->set($manufacturer_container)->expiresAfter($this->config->get('module_oc_cache_manufacturer')['expire']);
+                    else
+                        $CachedString->set($manufacturer_container);
+
+                    self::$getCacheInstance->save($CachedString);
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+          </file>
+
+
+
+          <file path="catalog/model/design/banner.php">
+           <operation>
+              <search><![CDATA[public function getBanner($banner_id) {]]></search>
+              <add position="replace"><![CDATA[
+                  private static $getCacheInstance = null;
+                  public function getBanner($banner_id) {
+                    /**
+                     * opencart cache code start here
+                     */
+                    $cache_banner_status = false;
+                    if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_banner_module')['status']) && $this->config->get('module_oc_cache_banner_module')['status'])){
+                      $cache_banner_status = true;
+                        $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+
+                        if (self::$getCacheInstance == null) {
+                          self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                        }
+                      $CachedString     = self::$getCacheInstance->getItem('banner_design');
+                      $banner_container = $CachedString->get('banner_design'.$lang_store_id);
+                        if(isset($banner_container['banner_design'.$lang_store_id][$banner_id])){
+                            return $banner_container['banner_design'.$lang_store_id][$banner_id];
+                        }
+                    }
+                    /**
+                    * opencart cache code end here
+                    */
+              ]]></add>
+            </operation>
+            <operation>
+              <search><![CDATA[return $query->rows;]]></search>
+              <add position="before"><![CDATA[
+                 /**
+                 * opencart cache code start here
+                 */
+                 if($cache_banner_status){
+                    $banner_container['banner_design'.$lang_store_id][$banner_id] = $query->rows;
+                    if($this->config->get('module_oc_cache_banner_module')['expire'])
+                      $CachedString->set($banner_container)->expiresAfter($this->config->get('module_oc_cache_banner_module')['expire']);
+                    else
+                      $CachedString->set($banner_container);
+
+                    self::$getCacheInstance->save($CachedString);
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+          </file>
+
+          <file path="catalog/model/catalog/category.php">
+           <operation>
+              <search><![CDATA[public function getCategoryFilters($category_id) {]]></search>
+              <add position="replace"><![CDATA[
+                  private static $getCacheInstance = null;
+                  public function getCategoryFilters($category_id) {
+                     /**
+                     * opencart cache code start here
+                     */
+                    $cache_filter_status = false;
+                    if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_filter_module')['status']) && $this->config->get('module_oc_cache_filter_module')['status'])){
+                      $cache_filter_status = true;
+                        $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+
+                        if (self::$getCacheInstance == null) {
+                          self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                        }
+                      $CachedString     = self::$getCacheInstance->getItem('filter_module');
+                      $filter_container = $CachedString->get('filter_module'.$lang_store_id);
+                        if(isset($filter_container['filter_module'.$lang_store_id][$category_id])){
+                            return $filter_container['filter_module'.$lang_store_id][$category_id];
+                        }
+                    }
+                    /**
+                    * opencart cache code end here
+                    */
+              ]]></add>
+            </operation>
+            <operation>
+              <search><![CDATA[return $filter_group_data;]]></search>
+              <add position="before"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 if($cache_filter_status){
+                    $filter_container['filter_module'.$lang_store_id][$category_id] = $filter_group_data;
+                    if($this->config->get('module_oc_cache_filter_module')['expire'])
+                      $CachedString->set($filter_container)->expiresAfter($this->config->get('module_oc_cache_filter_module')['expire']);
+                    else
+                      $CachedString->set($filter_container);
+
+                    self::$getCacheInstance->save($CachedString);
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+          </file>
+
+          <file path="catalog/model/catalog/information.php">
+           <operation>
+              <search><![CDATA[public function getInformations() {]]></search>
+              <add position="replace"><![CDATA[
+                  private static $getCacheInstance = null;
+                  public function getInformations() {
+                     /**
+                     * opencart cache code start here
+                     */
+                    $cache_information_status = false;
+                    if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_information_module')['status']) && $this->config->get('module_oc_cache_information_module')['status'])){
+                      $cache_information_status = true;
+                        $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+
+                        if (self::$getCacheInstance == null) {
+                          self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                        }
+                      $CachedString     = self::$getCacheInstance->getItem('information_module');
+                      $info_container = $CachedString->get('information_module'.$lang_store_id);
+                        if(isset($info_container['information_module'.$lang_store_id])){
+                            return $info_container['information_module'.$lang_store_id];
+                        }
+                    }
+                    /**
+                    * opencart cache code end here
+                    */
+              ]]></add>
+            </operation>
+            <operation>
+              <search><![CDATA[return $query->rows;]]></search>
+              <add position="before"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 if($cache_information_status){
+                    $info_container['information_module'.$lang_store_id] = $query->rows;
+                    if($this->config->get('module_oc_cache_information_module')['expire'])
+                      $CachedString->set($info_container)->expiresAfter($this->config->get('module_oc_cache_information_module')['expire']);
+                    else
+                      $CachedString->set($info_container);
+
+                    self::$getCacheInstance->save($CachedString);
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+          </file>
+
+          <file path="catalog/model/localisation/location.php">
+           <operation>
+              <search><![CDATA[public function getLocation($location_id) {]]></search>
+              <add position="replace"><![CDATA[
+                  private static $getCacheInstance = null;
+                  public function getLocation($location_id) {
+                     /**
+                       * opencart cache code start here
+                       */
+                      $cache_store_location_status = false;
+                      if($this->config->get('module_oc_cache_status') && (isset($this->config->get('module_oc_cache_store_location')['status']) && $this->config->get('module_oc_cache_store_location')['status'])){
+                        $cache_store_location_status = true;
+                          $lang_store_id = '.'.(int)$this->config->get('config_language_id') . '.' . (int)$this->config->get('config_store_id');
+
+                          if (self::$getCacheInstance == null) {
+                            self::$getCacheInstance = $this->webkulcache->get_InstanceCache('files');
+                          }
+                        $CachedString     = self::$getCacheInstance->getItem('store_location');
+                        $store_location_container = $CachedString->get('store_location'.$lang_store_id);
+                          if(isset($store_location_container['store_location'.$lang_store_id][$location_id])){
+                              return $store_location_container['store_location'.$lang_store_id][$location_id];
+                          }
+                      }
+                      /**
+                      * opencart cache code end here
+                      */
+              ]]></add>
+            </operation>
+            <operation>
+              <search><![CDATA[return $query->row;]]></search>
+              <add position="before"><![CDATA[
+                /**
+                 * opencart cache code start here
+                 */
+                 if($cache_store_location_status){
+                    $store_location_container['store_location'.$lang_store_id][$location_id] = $query->row;
+                    if($this->config->get('module_oc_cache_store_location')['expire'])
+                      $CachedString->set($store_location_container)->expiresAfter($this->config->get('module_oc_cache_store_location')['expire']);
+                    else
+                      $CachedString->set($store_location_container);
+
+                    self::$getCacheInstance->save($CachedString);
+                  }
+                /**
+                * opencart cache code end here
+                */
+              ]]></add>
+            </operation>
+          </file>
+</modification>

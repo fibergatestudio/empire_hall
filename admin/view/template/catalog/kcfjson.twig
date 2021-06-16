@@ -1,0 +1,44 @@
+{% for language in languages %}
+<div class="tab-pane" id="language_kcf{{ language.language_id }}">	
+	{% for feeld in kcf_feelds[language.language_id] %}
+		{% if feeld.type == 1 %}
+			<div class="form-group">
+				<label class="col-sm-2 control-label" for="input-meta-title{{ language.language_id }}"><span data-toggle="tooltip" title="{{ feeld.title }}">{{ feeld.name }}</span></label>
+				<div class="col-sm-10">
+					<div class="input-group">
+						<span class="input-group-addon"><img src="{{ feeld.kcfv_lang_img }}" title="{{ feeld.kcfv_lang_title }}"></span>
+						<input name="kfc_feeld[{{ language.language_id }}][{{ feeld.kcfv_feeld_id }}]" value="{{ feeld.kcfv_value ? feeld.kcfv_value : '' }}" class="form-control" type="text">
+					</div>				
+				</div>
+			</div>
+		{% elseif feeld.type == 2 %}
+			<div class="form-group">
+				<label class="col-sm-2 control-label" for="input-meta-title{{ language.language_id }}"><span data-toggle="tooltip" title="{{ feeld.title }}">{{ feeld.name }}</span></label>
+				<div class="col-sm-10">
+					<div class="input-group">
+						<span class="input-group-addon"><img src="{{ feeld.kcfv_lang_img }}" title="{{ feeld.kcfv_lang_title }}"></span>
+						<textarea name="kfc_feeld[{{ language.language_id }}][{{ feeld.kcfv_feeld_id }}]" rows="5" class="form-control">{{ feeld.kcfv_value ? feeld.kcfv_value : '' }}</textarea>
+					</div>
+				</div>
+			</div>
+		{% elseif feeld.type == 3 %}
+			<div class="form-group">
+				<label class="col-sm-2 control-label" for="input-meta-title{{ language.language_id }}"><span data-toggle="tooltip" title="{{ feeld.title }}">{{ feeld.name }}</span></label>
+				<div class="col-sm-10">	
+					<div class="input-group">
+						<span class="input-group-addon"><img src="{{ feeld.kcfv_lang_img }}" title="{{ feeld.kcfv_lang_title }}"></span>
+						<a href="" id="thumb-image-{{ feeld.kcfv_feeld_id }}-{{ language.language_id }}" data-toggle="image" class="img-thumbnail">
+							{% if feeld.kcfv_value %}
+								<img src="{{ img_start }}{{ feeld.kcfv_value }}" alt="" title="" data-placeholder="{{ placeholder }}" height="100px" />
+							{% else %}
+								<img src="{{ thumb }}" alt="" title="" data-placeholder="{{ placeholder }}" height="100px" />
+							{% endif %}
+						</a>
+						<input type="hidden" name="kfc_feeld[{{ language.language_id }}][{{ feeld.kcfv_feeld_id }}]" value="{{ feeld.kcfv_value }}" id="input-image-{{ feeld.kcfv_feeld_id }}-{{ language.language_id }}" />
+					</div>
+				</div>
+			</div>			
+		{% endif %}	
+	{% endfor %}
+</div>
+{% endfor %}

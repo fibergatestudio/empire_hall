@@ -1,0 +1,6 @@
+<file path="admin/view/template/common/column_left.twig">
+    <operation error="skip">
+        <search position="before"><![CDATA[</nav>]]></search>
+        <add position="before"><![CDATA[{% if (jc_menus is defined) %} {{ jc_menus }} {% endif %}]]></add>
+    </operation>
+</file>

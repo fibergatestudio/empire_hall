@@ -1,0 +1,30 @@
+<div class="service-block">
+    <div class="service-block__box">
+        <div class="service-block__box-image">
+            <img decoding="async" src="front/dist/data/delivery.JPG" width="1400" height="460" alt="{{ heading_title }}">
+        </div>
+        <div class="service-block__box-title">{{ heading_title }}</div>
+    </div>
+    <div class="service-block__content">
+        <div class="service-block__text text">
+            {{ html }}
+        </div>
+        {% if triggers %}
+            <div class="service-block__list">
+                {% for trigger in triggers %}
+                <div class="service-block__item">
+                    <div class="service-block__item-image">
+                        <img decoding="async" src="image/{{ trigger.image }}" width="87" height="118" alt="{{ trigger.title }}">
+                    </div>
+                    <div class="service-block__item-content">
+                        <div class="service-block__item-title">{{ trigger.title }}</div>
+                        <div class="service-block__item-text text">
+                            {{ trigger.description }}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>

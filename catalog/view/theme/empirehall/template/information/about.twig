@@ -1,0 +1,83 @@
+{{ header }}
+
+<div class="top-section" style="background-image: url('{{ gallerys[0]['popup'] }}');">
+    <div class="head-block head-block--center">
+        <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+            {% for counter, breadcrumb in breadcrumbs %}
+                {% if counter + 1 < breadcrumbs|length %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+                        <meta itemprop="position" content="{{ counter+1 }}" />
+                    </li>
+                {% else %}
+                    <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                        <span itemprop="name">{{ breadcrumb.text }}</span>
+                        <meta itemprop="position" content="{{ counter+1 }}" />
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+    </div>
+    <div class="top-section__box">
+        <div class="top-section__title">{{ store_name }}</div>
+        <div class="top-section__text">{{ store_subtitle }}</div>
+    </div>
+</div>
+
+<div class="about-content">
+    <div class="about-content__image">
+        <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ image }}" width="594" height="715" alt="{{ h1 }}" class="lazyload">
+        <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#about-content-decore"></use></svg>
+    </div>
+    <div class="about-content__content">
+        <div class="about-content__title">{{ h1 }}</div>
+        <div class="about-content__text">
+            {{ description }}
+        </div>
+        <div class="about-content__quote">{{ about_text }}</div>
+    </div>
+</div>
+
+
+{{ content_top }}
+
+{% if brands %}
+    <div class="about-brands">
+        <div class="about-brands__slider">
+            {% for brand in brands %}
+                <div class="about-brands__slide">
+                    <div class="about-brands__image">
+                        <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ brand.image }}" alt="{{ brand.name }}" class="lazyload">
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
+<div class="about-image">
+    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ gallerys[1]['popup'] }}" width="1920" height="900" alt="{{ h1 }}" class="lazyload">
+</div>
+
+{% if triggers %}
+    <div class="about-advantages" style="background-image: url(front/dist/data/main-catalog-bg.png);">
+        <div class="about-advantages__inner">
+            <div class="about-advantages__title">{{ text_advantages }}</div>
+            <div class="about-advantages__list">
+                {% for trigger in triggers %}
+                    <div class="main-advantages__item" style="background-image: url(front/dist/data/advantages-bg.png);">
+                    <div class="main-advantages__box">
+                        <div class="main-advantages__image">
+                            <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" data-src="{{ trigger.image }}" width="80" height="109" alt="{{ trigger.title }}" class="lazyload">
+                        </div>
+                        <div class="main-advantages__title">{{ trigger.title }}</div>
+                        <div class="main-advantages__text">{{ trigger.description }}</div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{{ footer }}

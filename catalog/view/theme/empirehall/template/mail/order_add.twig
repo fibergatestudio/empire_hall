@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Order</title>
+</head>
+
+
+<body style="font-size: 14px; line-height: 21px; background-color: #fff; font-family: 'Arial', sans-serif; color:#434343;">
+<div style="width: 600px; margin: 0 auto;">
+  <div style="text-align: center; padding: 17px 0;">
+    <img decoding="async" src="{{ domain_url }}/front/dist/data/logo.png" width="133" height="24" alt="{{ domain_name }}">
+  </div>
+
+  <div style="background-image: url('{{ domain_url }}/front/dist/data/top-image-order.png'); height: 290px;"></div>
+
+  <div style="padding: 30px;">
+    <p style="font-size: 24px;line-height: 26px;font-weight: bold; margin: 0 0 7px;">{{ text_order_id }} №{{ order_id }}</p>
+    <p style="margin: 0 0 60px; color:#000;">{{ text_order_status }} {{ order_status }}</p>
+    <p style="color:#000; font-size: 18px;line-height: 20px;font-weight: bold; margin: 0;">{{ text_order_detail }}</p>
+  </div>
+  <table style="width: 100%;">
+    {% for product in products %}
+      <tr>
+        <td style="padding: 34px 0 34px 30px;vertical-align: top;width: 98px;border-top: 1px solid #EFEFEF;">
+          <img decoding="async" style="vertical-align:top;" src="{{ product.image }}" width="98" height="98" alt="{{ product.name }}">
+        </td>
+        <td style="padding: 34px 0 34px 20px; text-align:left; border-top: 1px solid #EFEFEF;">
+          <p style="margin:0;">{{ product.name }}</p>
+          <ul style="color:#828282;margin:0;padding:0;list-style:none; font-size:12px; line-height:26px;">
+            <li>{{ text_model }}: {{ product.model }}</li>
+            <li>{{ text_quantity }}: {{ product.quantity }}</li>
+            {% for option in product.option %}
+             <li>{{  option.name }}: {{  option.value }}</li>
+            {% endfor %}
+            <li>{{ text_price }}: {{ product.total }}</li>
+          </ul>
+        </td>
+      </tr>
+    {% endfor %}
+  </table>
+  <table style="padding: 20px 0;border: solid #EFEFEF; border-width: 1px 0;width:100%; color: #000000;">
+    <tr>
+      <td style="width: 210px;padding:10px 0 10px 30px;">{{ text_date_added }}</td>
+      <td style="padding:10px 0;">{{ date_added }}</td>
+    </tr>
+    <tr>
+      <td style="width: 210px;padding:10px 0 10px 30px;">{{ text_order_name }}</td>
+      <td style="padding:10px 0;">{{ firstname }}</td>
+    </tr>
+    <tr>
+      <td style="width: 210px;padding:10px 0 10px 30px;">{{ text_email }}</td>
+      <td style="padding:10px 0;">{{ email }}</td>
+    </tr>
+    <tr>
+      <td style="width: 210px;padding:10px 0 10px 30px;">{{ text_telephone }}</td>
+      <td style="padding:10px 0;">{{ telephone }}</td>
+    </tr>
+  </table>
+{#  {% for total in totals %}#}
+    <p style="font-size: 18px; line-height: 20px; font-weight: bold; margin:0;padding:25px 0 19px 30px;">{{ text_order_total }} {{ totals[0].text }}</p>
+{#  {% endfor %}#}
+  <hr style="border: solid #EFEFEF; border-width: 1px 0 0;">
+  <div style="padding: 30px;">
+    <div style="text-align: center; padding: 17px 0;">
+      <img decoding="async" src="{{ domain_url }}/front/dist/data/logo.png" width="133" height="24" alt="{{ domain_name }}">
+    </div>
+    <p style="margin: 15px 0 25px; text-align: center;">{{ order_copy }}</p>
+  </div>
+</div>
+</body>
+</html>

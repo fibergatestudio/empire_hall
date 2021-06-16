@@ -1,0 +1,32 @@
+<div class="area__sidebar">
+  <div class="area__box">
+    <div class="area__userinfo">
+      <div class="area__userinfo-avatar">
+        <img decoding="async" src="front/dist/images/no-avatar.svg" width="29" height="29" alt="{{ fullname }}">
+      </div>
+      <div class="area__userinfo-name">{{ fullname }}</div>
+    </div>
+  </div>
+  <nav class="area__nav">
+    <ul class="area__nav-list">
+      <li class="area__nav-item{% if current_url == account %} active{% endif %}">
+        <a href="{{ account }}">{{ text_account }}</a>
+      </li>
+      <li class="area__nav-item{% if current_url == order %} active{% endif %}">
+        <a href="{{ order }}">{{ text_order }}</a>
+      </li>
+      <li class="area__nav-item{% if current_url == wishlist %} active{% endif %}">
+        <a href="{{ wishlist }}">{{ text_wishlist }}</a>
+      </li>
+      <li class="area__nav-item{% if current_url == password %} active{% endif %}">
+        <a href="{{ password }}">{{ text_password }}</a>
+      </li>
+      <li class="area__nav-item{% if current_url == pdf %} active{% endif %}">
+        <a href="{{ pdf }}">{{ text_pdf }}</a>
+      </li>
+      <li class="area__nav-item">
+        <a href="{{ logout }}">{{ text_logout }}</a>
+      </li>
+    </ul>
+  </nav>
+</div>

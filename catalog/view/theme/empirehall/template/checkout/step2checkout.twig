@@ -1,0 +1,197 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+	<ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+		{% for counter, breadcrumb in breadcrumbs %}
+			{% if counter + 1 < breadcrumbs|length %}
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+					<a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+					<meta itemprop="position" content="{{ counter+1 }}" />
+				</li>
+			{% else %}
+				<li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+					<span itemprop="name">{{ breadcrumb.text }}</span>
+					<meta itemprop="position" content="{{ counter+1 }}" />
+				</li>
+			{% endif %}
+		{% endfor %}
+	</ol>
+</div>
+
+<div class="checkout-block">
+	<div class="checkout-block__steps">
+		<div class="checkout-block__step checkout-block__step-1">
+			<div class="checkout-block__step-title">{{ heading_title }}</div>
+			<div class="checkout-block__step-content">
+				<ul class="checkout-block__top tabs-list"{% if check_logged %} style="display: none;"{% endif %}>
+					<li class="checkout-block__item tabs-list__item">
+						<a class="checkout-block__link tabs-list__link active" href="#new">{{ text_new_customer }}</a>
+					</li>
+					<li class="checkout-block__item">
+						<a class="checkout-block__link tabs-list__link" href="#login">{{ text_returning_customer }}</a>
+					</li>
+				</ul>
+				<div class="checkout-block__content">
+					<div id="new" class="tab">
+						<form class="checkout-block__form" id="order-info">
+							<div class="form-block">
+								<input class="main-input" type="text" value="{{ firstname }}" name="firstname">
+								<label class="form-label">{{ entry_firstname }}</label>
+							</div>
+							<div class="form-block">
+								<input class="main-input" type="text" value="{{ lastname }}" name="lastname">
+								<label class="form-label">{{ entry_lastname }}</label>
+							</div>
+							<div class="form-block">
+								<input class="main-input" type="tel" value="{{ telephone }}" name="telephone">
+								<label class="form-label">{{ entry_telephone }}</label>
+							</div>
+							<div class="form-block">
+								<input class="main-input" type="email" value="{{ email }}" name="email">
+								<label class="form-label">{{ entry_email }}</label>
+							</div>
+
+							<input class="main-input" type="hidden" value="free_checkout" name="payment_method">
+							<input class="main-input" type="hidden" value="free.free" name="shipping_method">
+
+							<div class="main-button" id="button-confirm">{{ text_consult_manager }}</div>
+							<div class="checkout-block__alert">{{ text_call_manager }}</div>
+						</form>
+					</div>
+					{% if not check_logged %}
+					<div id="login" class="tab">
+						<form class="checkout-block__form" id="checkout-login">
+							<div class="form-block">
+								<input class="main-input" type="email" name="auth_email" value="{{ email }}">
+								<label class="form-label">{{ entry_email }}</label>
+							</div>
+							<div class="form-block">
+								<input class="main-input" type="password" name="auth_password" value="">
+								<label class="form-label">{{ entry_password }}</label>
+							</div>
+							<div class="main-button" id="check-login-btn">{{ text_consult_manager }}</div>
+							<div class="checkout-block__alert">{{ text_call_manager }}</div>
+						</form>
+					</div>
+					{% endif %}
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div class="basket-block"></div>
+</div>
+{{ content_bottom }}
+{{ column_right }}
+<script type="text/javascript">
+	updateCart();
+
+	$('#button-confirm').on('click', function(e) {
+		e.preventDefault();
+		$('select, input').removeClass('error');
+		$('#order-info').find('p.error').remove();
+		$('p.error').remove();
+		$.ajax({
+			url: 'index.php?route=checkout/step2checkout/validateStepFirst',
+			type: 'post',
+			dataType: 'json',
+			data: $("#order-info").serialize(),
+			success: function(json) {
+
+				if (json['no_products']) {
+					location.reload();
+				} else {
+					if(json['success']) {
+						location.href = json['redirect'];
+					}
+				}
+
+				if(json['error']) {
+					for(var key in json['error']) {
+						if(json['error'].hasOwnProperty(key)) {
+							$('#order-info').find('[name="'+key+'"]').addClass('error');
+							$('#order-info').find('[name="'+key+'"]').parent().append('<p class="error">{{ text_cart_error }}</p>');
+						}
+					}
+				}
+			}
+		});
+	});
+
+	// Кликнули на крестик/+/- для удаления/редактирования количества товара
+	$(document).on('click', '.reprodcheckout', function() {
+		var card_id = $(this).attr('data-card_id');
+		cart.remove(card_id);
+		setTimeout(function(){
+			updateCart();
+		}, 300);
+
+	});
+
+	$(document).on('click', '.incart_inc, .incart_dec', function () {
+		setTimeout(function(){
+			updateCart();
+		}, 300);
+	});
+
+	$(document).on('click', '#check-login-btn', function (event) {
+		event.preventDefault();
+
+		var data = $('input[name=\'auth_email\'], input[name=\'auth_password\']');
+
+		$.ajax({
+			url: 'index.php?route=checkout/step2checkout/login',
+			type: 'post',
+			data: data,
+			dataType: 'json',
+			beforeSend: function() {
+				$('input').removeClass('error');
+				$('p.error').remove();
+			},
+			success: function (json) {
+				if (json['error']) {
+					$.each(json['error'], function (key, value) {
+						$("input[name='" + key + "']").addClass('error');
+						$('#checkout-login').find('[name="'+key+'"]').parent().append('<p class="error">' + value + '</p>');
+					});
+
+				}
+
+				if (json['success']) {
+					$('#login-form input').val('');
+					window.location.href = json['authorize'];
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+
+	});
+
+	// Подгружаем товары и totals
+	function updateCart() {
+	  $.ajax({
+		url: 'index.php?route=checkout/step2checkout/getCartProducts',
+		dataType: 'html',
+		success: function (html) {
+			$('.basket-block').html(html);
+			var totals = Number($('.basket-block__total span').text().split(' ')[0].split(',')[0]);
+
+			if(totals>0){
+                $('#button-confirm').text('{{ text_consult_buy }}')
+			}else {
+				$('#button-confirm').text('{{ text_consult_manager }}')
+			}
+			setTimeout(function() {
+				$('.scroll-text').mCustomScrollbar();
+			}, 300);
+		},
+		error: function (xhr, ajaxOptions, thrownError) {
+		  alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+		}
+	  });
+	}
+</script>
+
+{{ footer }}

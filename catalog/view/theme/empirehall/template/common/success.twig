@@ -1,0 +1,30 @@
+{{ header }}
+
+<div class="head-block head-block--center">
+  <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+    {% for counter, breadcrumb in breadcrumbs %}
+      {% if counter + 1 < breadcrumbs|length %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+          <a itemprop="item" href="{{ breadcrumb.href }}"><span itemprop="name">{{ breadcrumb.text }}</span></a>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% else %}
+        <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+            <span itemprop="name">{{ breadcrumb.text }}</span>
+            <meta itemprop="position" content="{{ counter+1 }}" />
+        </li>
+      {% endif %}
+    {% endfor %}
+  </ol>
+</div>
+
+<div class="checkout-done">
+  <div class="checkout-done__image">
+    <img decoding="async" src="front/dist/data/done.svg" width="100" height="100" alt="{{ heading_title_suc }}">
+  </div>
+  <div class="checkout-done__title">{{ heading_title_suc }}</div>
+  <div class="checkout-done__text">{{ text_message }}</div>
+  <a href="{{ continue }}" class="main-button">{{ text_onhome_btn }}</a>
+</div>
+
+{{ footer }}

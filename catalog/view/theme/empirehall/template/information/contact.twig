@@ -1,0 +1,69 @@
+{{ header }}
+<div class="contacts-block">
+
+  <div class="contacts-info">
+    <div class="contacts-info__main-title">{{ heading_title }}</div>
+    <div class="contacts-info__box">
+      <div class="contacts-info__list">
+        <div class="contacts-info__item">
+          <div class="contacts-info__icon">
+            <img decoding="async" class="icon-baloon"  src="/front/dist/images/baloon.svg" alt="">
+          </div>
+          <div class="contacts-info__content">
+            <div class="contacts-info__title">{{ text_address }}:</div>
+            <div class="contacts-info__value">{{ address }}</div>
+          </div>
+        </div>
+        <div class="contacts-info__item">
+          <div class="contacts-info__icon">
+            <img decoding="async" class="icon-phone-gradient"  src="/front/dist/images/phone-gradient.svg" alt="">
+          </div>
+          <div class="contacts-info__content">
+            <div class="contacts-info__title">{{ text_telephone }}:</div>
+            <div class="contacts-info__value">
+              <a href="tel:+380670050250">{{ telephone }}</a>
+            </div>
+          </div>
+        </div>
+        <div class="contacts-info__item">
+          <div class="contacts-info__icon">
+            <img decoding="async" class="icon-timer"  src="/front/dist/images/timer.svg" alt="">
+          </div>
+          <div class="contacts-info__content">
+            <div class="contacts-info__title">{{ text_open }}:</div>
+            <div class="contacts-info__value">
+              {{ open }}
+            </div>
+          </div>
+        </div>
+        <div class="contacts-info__item">
+          <div class="contacts-info__icon">
+            <img decoding="async" class="icon-email-gradient"  src="/front/dist/images/email-gradient.svg" alt="">
+          </div>
+          <div class="contacts-info__content">
+            <div class="contacts-info__title">{{ text_email }}:</div>
+            <div class="contacts-info__value">
+              <a href="mailto:{{ email }}">{{ email }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <a class="main-button" href="#" id="open-callback">{{ text_contact_btn }}</a>
+
+    </div>
+  </div>
+
+
+  <div id="map" class="map"></div>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCHplik-UNNQaY9rb0wwLjuxVw5I6Qt1uU"></script>
+<script>
+  var markersData = [
+    {
+    {{ geocode }}
+    }
+  ]
+  var MarkerImageSrc = 'front/dist/images/marker.png';
+</script>
+{{ footer }}

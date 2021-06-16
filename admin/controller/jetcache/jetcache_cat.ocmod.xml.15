@@ -1,0 +1,30 @@
+<file path="catalog/controller/common/header.php" error="skip">
+	<operation error="skip">
+        <search position="after"><![CDATA[$this->data['categories'] = array();]]></search>
+        <add position="after"><![CDATA[
+        // jetcache for 1.5.x
+		$jetcache_categories = array();
+		$jetcache_settings = $this->config->get('asc_jetcache_settings');
+		if (isset($jetcache_settings['jetcache_widget_status']) && $jetcache_settings['jetcache_widget_status'] && isset($jetcache_settings['header_categories_status']) && $jetcache_settings['header_categories_status']) {
+			$jetcache_categories = $this->registry->get('controller_jetcache_jetcache')->hook_header_categories($this->data['categories']);
+		}
+		if (!empty($jetcache_categories) && is_array($jetcache_categories)) {
+			$this->data['categories'] = $jetcache_categories;
+		} else {
+    ]]></add>
+	</operation>
+</file>
+
+
+<file path="catalog/controller/common/header.php" error="skip">
+	<operation error="skip">
+        <search position="before"><![CDATA[$this->children = array]]></search>
+        <add position="before"><![CDATA[
+        // jetcache for 1.5.x
+		if (isset($jetcache_settings['jetcache_widget_status']) && $jetcache_settings['jetcache_widget_status'] && isset($jetcache_settings['header_categories_status']) && $jetcache_settings['header_categories_status']) {
+			$this->registry->get('controller_jetcache_jetcache')->hook_header_categories($this->data['categories']);
+		}
+	}
+    ]]></add>
+	</operation>
+</file>

@@ -1,0 +1,72 @@
+﻿{% if options or show_price %}
+	
+<div class="ocf-offcanvas ocfilter-mobile hidden-sm hidden-md hidden-lg">
+  <div class="ocfilter-mobile-handle">
+    <!--<button type="button" class="btn btn-primary" data-toggle="offcanvas"><i class="fa fa-filter"></i></button>-->
+  </div>
+  <div class="ocf-offcanvas-body"></div>
+</div>
+
+<div class="catalog__filter-box filter">
+<div class="catalog__filter-overlay js-close-catalog"></div>
+    <div class="catalog__filter">
+        <div class="panel ocfilter panel-default panel-ocfilter" id="ocfilter">
+            <!--<span class="close-panel js-close-catalog">{{ text_hide }}</span>-->
+          <div class="hidden" id="ocfilter-button">
+            <button class="btn btn-primary disabled" data-loading-text="<i class='fa fa-refresh fa-spin'></i> Загрузка.."></button>
+          </div>
+          <div class="list-group">
+              {% include 'default/template/extension/module/ocfilter/selected_filter.twig' %}
+              {#<div class="list-group__title">#}
+                  {#<div class="list-group__title-icon"><svg width="20" height="20"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#filter"></use></svg></div>#}
+                  {#<div class="list-group__title-text">{{ heading_title }}</div>#}
+              {#</div>#}
+              <div class="filter-inner">{% include 'default/template/extension/module/ocfilter/filter_price.twig' %}{% include 'default/template/extension/module/ocfilter/filter_list.twig' %}</div>
+          </div>
+        </div>
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+    function customF() {
+        $('body').append($('.ocfilter-mobile').remove().get(0).outerHTML);
+
+        var options = {
+            mobile: $('.ocfilter-mobile').is(':visible'),
+            php: {
+                searchButton : {{ search_button ? 'true' : 'false' }},
+                showPrice    : {{ show_price ? 'true' : 'false' }},
+                showCounter  : {{ show_counter ? 'true' : 'false' }},
+                manualPrice  : {{ manual_price ? 'true' : 'false' }},
+                link         : '{{ link }}',
+                path         : '{{ path }}',
+                params       : '{{ params }}',
+                index        : '{{ index }}'
+            },
+            text: {
+                show_all: '{{ text_show_all }}',
+                hide    : '{{ text_hide }}',
+                load    : '{{ text_load }}',
+                any     : '{{ text_any }}',
+                select  : '{{ button_select }}'
+            }
+        };
+
+        if (options.mobile) {
+            //$('.ocf-offcanvas-body').html($('#ocfilter').remove().get(0).outerHTML);
+        }
+
+        $('[data-toggle="offcanvas"]').on('click', function(e) {
+            $(this).toggleClass('active');
+            $('body').toggleClass('modal-open');
+            $('.ocfilter-mobile').toggleClass('active');
+        });
+
+        $('#ocfilter').ocfilter(options);
+
+    }
+
+    customF();
+});
+</script>
+{% endif %}

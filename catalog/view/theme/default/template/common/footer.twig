@@ -1,0 +1,164 @@
+﻿<footer class="footer">
+    {% if menus %}
+        <nav class="footer-nav">
+            <ul class="footer-nav__list">
+                {% for item in menus %}
+                    <li class="footer-nav__item">
+                        <a href="{{ item.href }}">{{ item.name }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </nav>
+    {% endif %}
+    <div class="footer-info">
+        <div class="footer-info__inner">
+            <div class="logo">
+                <a href="{{ home }}">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" width="157" height="28" alt="" data-src="front/dist/data/logo-white.svg" class="lazyload">
+                </a>
+            </div>
+            <div class="copyright">{{ powered }}</div>
+            <div class="copyright">
+            	{{ address_text }}<br>
+            	{{ address }}
+            </div>
+            <div class="copyright">
+            	{{ schedule_text }}<br>
+            	{{ schedule }}
+            </div>
+            <div class="copyright">{{ company_text }}</div>
+            <ul class="socials">
+                <li class="socials__item">
+                    <a rel="noopener" href="{{ instagram }}" target="_blank">
+                        <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#instagram"></use></svg>
+                    </a>
+                </li>
+                <li class="socials__item">
+                    <a rel="noopener" href="{{ pinterest }}" target="_blank">
+                        <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#pinterest"></use></svg>
+                    </a>
+                </li>
+                <li class="socials__item">
+                    <a rel="noopener" href="{{ facebook }}" target="_blank">
+                        <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#facebook"></use></svg>
+                    </a>
+                </li>
+                <li class="socials__item">
+                    <a rel="noopener" href="{{ youtube }}" target="_blank">
+                        <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#youtube"></use></svg>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="footer-subscribe">
+        <form class="footer-subscribe__form" method="post" id="subscribe-form">
+            <div class="form-block">
+                <input class="footer-subscribe__input" type="email" name="subscribe_email" placeholder="{{ text_subscribe }}">
+            </div>
+            <button class="footer-subscribe__button" type="submit" id="subscribe-send">
+                <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#subscribe-button"></use></svg>
+            </button>
+        </form>
+    </div>
+
+</footer>
+<div class="popup popup-callback">
+    <div class="popup__overlay"></div>
+    <div class="popup__holder">
+        <div class="popup__close">
+            <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#close"></use></svg>
+        </div>
+        <div class="popup__content">
+            <div class="popup__title">{{ text_callback_title }}</div>
+            <form class="popup__form" method="post" id="callback-form">
+                <div class="form-block">
+                    <input class="main-input" type="text" name="callback_name">
+                    <div class="form-label">{{ text_form_name }}</div>
+                </div>
+                <div class="form-block">
+                    <input class="main-input" type="tel" name="callback_phone">
+                    <div class="form-label">{{ text_form_phone }}</div>
+                </div>
+                <button class="submit-button" type="submit" id="callback-send">{{ text_callback_btn }}</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-success">
+    <div class="popup__overlay"></div>
+    <div class="popup__holder">
+        <div class="popup__close">
+            <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#close"></use></svg>
+        </div>
+        <div class="popup__content">
+            <div class="success-popup">
+                <div class="success-popup__image">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" width="100" height="100" alt="" data-src="front/dist/data/logo-white.svg" class="lazyload">
+                </div>
+                <div class="success-popup__title">{{ text_success_text }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-subscribe">
+    <div class="popup__overlay"></div>
+    <div class="popup__holder">
+        <div class="popup__close">
+            <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#close"></use></svg>
+        </div>
+        <div class="popup__content">
+            <div class="success-popup">
+                <div class="success-popup__image">
+                    <img decoding="async" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAANSURBVBhXYzh8+PB/AAffA0nNPuCLAAAAAElFTkSuQmCC" width="116" height="140" alt="" data-src="front/dist/data/logo-white.svg" class="lazyload">
+                </div>
+                <div class="success-popup__title">{{ text_subscribe_success }}</div>
+                <div class="success-popup__text">{{ text_subscribe_success2 }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popup popup-about">
+    <div class="popup__overlay"></div>
+    <div class="popup__holder popup__holder--about">
+        <div class="popup__close">
+            <svg><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="front/dist/images/sprite.svg#close"></use></svg>
+        </div>
+        <div class="about-popup" style="background-image: url('front/dist/data/about-popup-image.jpg');">
+            <div class="about-popup__inner">
+                <div class="about-popup__box">
+                    <div class="about-popup__title">{{ text_emp_coll }}</div>
+                    <div class="about-popup__text">{{ text_emp_coll_text }}</div>
+                    <a class="main-button" href="{{ shopping }}">{{ text_to_catalog }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="cart">{{ cart }}</div>
+
+</div>
+
+
+<script src="catalog/view/javascript/jquery.maskedinput.min.js"></script>
+<script src="catalog/view/javascript/common.js?v1"></script>
+<!--<script src="front/dist/js/app.js"></script>-->
+{% for script in scripts %}
+    <script src="{{ script }}" ></script>
+{% endfor %}
+
+<script type="text/javascript">
+  (function(d, w, s) {
+  var widgetHash = 'sqevo1y6nt5qwf2dnx4j', gcw = d.createElement(s); gcw.type = 'text/javascript'; gcw.async = true;
+  gcw.src = '//widgets.binotel.com/getcall/widgets/'+ widgetHash +'.js';
+  var sn = d.getElementsByTagName(s)[0]; sn.parentNode.insertBefore(gcw, sn);
+  })(document, window, 'script');
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+{% if show_values_limit > 0 and option.values|length > show_values_limit %}
+{% set hidden_values = option.values[show_values_limit:] %}
+{% set values = option.values[:show_values_limit] %}
+{% else %}
+{% set hidden_values = [] %}
+{% set values = option.values %}
+{% endif %}
+{#{{ values|length }}#}
+
+
+   <div class="option-values__wrap">
+            <div class="option-values ocf-option-values option-values--radio">
+{% for value in values %}
+    {% include 'default/template/extension/module/ocfilter/value_item.twig' %}
+{% endfor %}
+            </div>
+       {% if values|length>=7 %}
+           <div style="display: none;" class="option-values__more" data-close="Скрыть" data-open="Показать еще">
+               <span>Показать еще</span>
+           </div>
+       {% endif %}
+   </div>
+
+
+
+{% if hidden_values|length > 0 %}
+<div class="collapse" id="ocfilter-hidden-values-{{ option.option_id }}">
+  {% for value in hidden_values %}
+  {% include 'default/template/extension/module/ocfilter/value_item.twig' %}
+  {% endfor %}
+</div>
+<div class="collapse-value">
+    <div class="option-values__more filter-more" data-target="#ocfilter-hidden-values-{{ option.option_id }}" data-toggle="collapse" data-close="{{ text_hide }}" data-open="{{ text_show_all }}">
+        <span>{{ text_show_all }}</span>
+    </div>
+</div>
+{% endif %}
